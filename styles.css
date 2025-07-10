@@ -1864,9 +1864,7 @@ body::before {
     padding: 2rem;
     margin-bottom: 2rem;
     color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    position: relative;
     box-shadow: 0 8px 25px rgba(185, 28, 28, 0.2);
 }
 
@@ -1874,6 +1872,7 @@ body::before {
     display: flex;
     align-items: center;
     gap: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .profile-avatar {
@@ -1887,51 +1886,104 @@ body::before {
     font-size: 2rem;
     color: white;
     border: 3px solid rgba(255, 255, 255, 0.3);
+    flex-shrink: 0;
+}
+
+.profile-name-section {
+    flex: 1;
 }
 
 .profile-name-section h3 {
     margin: 0 0 0.5rem 0;
     font-size: 1.75rem;
     font-weight: 700;
+    line-height: 1.2;
 }
 
 .profile-name-section p {
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.75rem 0;
     font-size: 1.1rem;
     opacity: 0.9;
+    line-height: 1.3;
 }
 
 .profile-status {
     background: rgba(34, 197, 94, 0.9);
-    padding: 0.25rem 0.75rem;
+    padding: 0.375rem 1rem;
     border-radius: var(--radius-full);
     font-size: 0.875rem;
     font-weight: 500;
+    display: inline-block;
 }
 
+/* Quick Action Buttons - Redesigned */
 .profile-quick-actions {
     display: flex;
-    gap: 1rem;
+    gap: 0.75rem;
+    justify-content: flex-start;
 }
 
 .quick-action-btn {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
-    padding: 0.75rem 1.5rem;
+    padding: 0.625rem 1.25rem;
     border-radius: var(--radius-md);
     cursor: pointer;
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     font-weight: 500;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    white-space: nowrap;
 }
 
 .quick-action-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.quick-action-btn i {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+/* Alternative: Floating Action Buttons */
+.profile-floating-actions {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.floating-action-btn {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+}
+
+.floating-action-btn:hover {
     background: rgba(255, 255, 255, 0.25);
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.floating-action-btn i {
+    font-size: 0.875rem;
 }
 
 /* Profile Sections Grid */
@@ -2106,4 +2158,210 @@ select.form-input {
 input[type="date"].form-input::-webkit-calendar-picker-indicator {
     color: var(--gray-500);
     cursor: pointer;
+} 
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .profile-overview-card {
+        padding: 1.5rem;
+    }
+    
+    .profile-avatar-section {
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .profile-avatar {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .profile-name-section h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .profile-name-section p {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .profile-status {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.75rem;
+    }
+    
+    .profile-quick-actions {
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .quick-action-btn {
+        flex: 1;
+        min-width: 120px;
+        padding: 0.75rem 1rem;
+        font-size: 0.8rem;
+        justify-content: center;
+    }
+    
+    /* Floating buttons for mobile */
+    .profile-floating-actions {
+        top: 1rem;
+        right: 1rem;
+        gap: 0.375rem;
+    }
+    
+    .floating-action-btn {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .floating-action-btn i {
+        font-size: 0.8rem;
+    }
+    
+    .profile-sections-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .section-header {
+        padding: 0.875rem 1rem;
+    }
+    
+    .section-header h4 {
+        font-size: 0.9rem;
+    }
+    
+    .section-content {
+        padding: 1rem;
+    }
+    
+    .info-row {
+        margin-bottom: 1rem;
+    }
+    
+    .form-input, .info-display {
+        padding: 0.625rem 0.75rem;
+        font-size: 0.875rem;
+    }
+    
+    .security-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .status-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .status-item {
+        text-align: left;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 0.375rem 0.75rem;
+        font-size: 0.75rem;
+    }
+    
+    .profile-actions-bar {
+        flex-direction: column;
+        align-items: center;
+        padding: 1.5rem 0;
+    }
+    
+    .profile-actions-bar .btn {
+        width: 100%;
+        max-width: 280px;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-overview-card {
+        margin: 0 -1rem 2rem -1rem;
+        border-radius: 0;
+        padding: 1.25rem;
+    }
+    
+    .profile-avatar-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    
+    .profile-avatar {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+        margin: 0 auto;
+    }
+    
+    .profile-name-section h3 {
+        font-size: 1.25rem;
+    }
+    
+    .profile-name-section p {
+        font-size: 0.9rem;
+    }
+    
+    .profile-status {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.75rem;
+    }
+    
+    .profile-quick-actions {
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    
+    .quick-action-btn {
+        padding: 0.625rem 1rem;
+        font-size: 0.75rem;
+        min-width: 100px;
+    }
+    
+    /* Alternative: Stack buttons vertically on very small screens */
+    .profile-quick-actions.vertical {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .profile-quick-actions.vertical .quick-action-btn {
+        width: 160px;
+    }
+    
+    .profile-floating-actions {
+        top: 0.75rem;
+        right: 0.75rem;
+    }
+    
+    .floating-action-btn {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .floating-action-btn i {
+        font-size: 0.75rem;
+    }
+    
+    .profile-sections-grid {
+        margin: 0 -1rem 2rem -1rem;
+    }
+    
+    .profile-section {
+        margin: 0 1rem 1rem 1rem;
+        border-radius: var(--radius-md);
+    }
+    
+    .section-header {
+        padding: 0.75rem 1rem;
+    }
+    
+    .section-content {
+        padding: 0.875rem 1rem;
+    }
 } 
