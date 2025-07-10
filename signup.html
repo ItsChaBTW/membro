@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - MEMBRO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .auth-container::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 70%, rgba(185, 28, 28, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(20, 184, 166, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, rgba(185, 28, 28, 0.05) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: -1;
+            animation: gradientShift 10s ease-in-out infinite alternate;
+        }
+        
+        @keyframes gradientShift {
+            0% { opacity: 0.8; transform: scale(1) rotate(0deg); }
+            100% { opacity: 1; transform: scale(1.1) rotate(2deg); }
+        }
+        
+        .auth-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 
+                0 32px 64px rgba(0, 0, 0, 0.12),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+        }
+        
+        @media (min-width: 768px) {
+            .auth-card {
+                max-width: 600px;
+            }
+            
+            .auth-header {
+                padding: 3rem 3rem 2rem;
+            }
+            
+            .auth-body {
+                padding: 0 3rem 3rem;
+            }
+            
+            .form-field input,
+            .form-field select {
+                padding: 1.125rem 1.125rem 1.125rem 3.25rem;
+                font-size: 1rem;
+            }
+            
+            .form-field .field-icon {
+                left: 1.125rem;
+                font-size: 1rem;
+            }
+            
+            .auth-btn {
+                padding: 1.25rem 2rem;
+                font-size: 1.1rem;
+            }
+            
+            .social-btn {
+                padding: 1rem;
+                font-size: 1rem;
+            }
+            
+            .form-row {
+                gap: 1.5rem;
+            }
+        }
+        
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+        
+        .auth-header {
+            padding: 2.5rem 2rem 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .logo-container {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 
+                0 16px 32px rgba(185, 28, 28, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            position: relative;
+            animation: logoFloat 4s ease-in-out infinite;
+        }
+        
+        .logo-container img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+        }
+        
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(2deg); }
+        }
+        
+        .auth-header h1 {
+            font-size: 1.875rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .auth-header p {
+            color: var(--gray-600);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+        
+        .auth-body {
+            padding: 0 2rem 2.5rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-field {
+            position: relative;
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-field label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            font-size: 0.875rem;
+        }
+        
+        .form-field .field-wrapper {
+            position: relative;
+        }
+        
+        .form-field input,
+        .form-field select {
+            width: 100%;
+            padding: 0.875rem 0.875rem 0.875rem 2.75rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+        }
+        
+        .form-field input:focus,
+        .form-field select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1);
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .form-field .field-icon {
+            position: absolute;
+            left: 0.875rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            transition: color 0.3s ease;
+            font-size: 0.9rem;
+            z-index: 2;
+        }
+        
+        .form-field input:focus + .field-icon,
+        .form-field select:focus + .field-icon {
+            color: var(--primary);
+        }
+        
+        .password-strength {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+        }
+        
+        .strength-indicator {
+            height: 3px;
+            background: var(--gray-200);
+            border-radius: 2px;
+            margin-top: 0.25rem;
+            overflow: hidden;
+        }
+        
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+        
+        .strength-weak { background: var(--danger); }
+        .strength-medium { background: var(--warning); }
+        .strength-strong { background: var(--secondary); }
+        
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            line-height: 1.5;
+        }
+        
+        .terms-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            margin-top: 2px;
+        }
+        
+        .terms-checkbox a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        
+        .terms-checkbox a:hover {
+            color: var(--secondary-dark);
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        
+        .auth-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .auth-btn:hover::before {
+            left: 100%;
+        }
+        
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 32px rgba(185, 28, 28, 0.25);
+        }
+        
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: var(--gray-400);
+            font-size: 0.875rem;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gray-200), transparent);
+        }
+        
+        .divider span {
+            padding: 0 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+        }
+        
+        .social-login {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .social-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            color: var(--gray-700);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .social-btn:hover {
+            border-color: var(--secondary);
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-1px);
+        }
+        
+        .social-btn i {
+            font-size: 1rem;
+        }
+        
+        .auth-footer {
+            text-align: center;
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+        
+        .auth-footer a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+        
+        .auth-footer a:hover {
+            color: var(--secondary-dark);
+        }
+        
+        @media (max-width: 640px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            
+            .auth-container {
+                padding: 1rem;
+            }
+            
+            .auth-header {
+                padding: 2rem 1.5rem 1.25rem;
+            }
+            
+            .auth-body {
+                padding: 0 1.5rem 2rem;
+            }
+            
+            .auth-header h1 {
+                font-size: 1.625rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="logo-container">
+                    <img src="logo.png" alt="MEMBRO Logo">
+                </div>
+                <h1>Join MEMBRO</h1>
+                <p>Create your community account</p>
+                </div>
+
+            <div class="auth-body">
+                    <form id="signupForm">
+                    <div class="form-row">
+                            <div class="form-field">
+                            <label for="firstName">First Name</label>
+                            <div class="field-wrapper">
+                                <input type="text" id="firstName" name="firstName" placeholder="John" required>
+                                <i class="fas fa-user field-icon"></i>
+                            </div>
+                        </div>
+                        
+                            <div class="form-field">
+                            <label for="lastName">Last Name</label>
+                            <div class="field-wrapper">
+                                <input type="text" id="lastName" name="lastName" placeholder="Doe" required>
+                                <i class="fas fa-user field-icon"></i>
+                            </div>
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                        <label for="email">Email Address</label>
+                        <div class="field-wrapper">
+                            <input type="email" id="email" name="email" placeholder="john.doe@example.com" required>
+                            <i class="fas fa-envelope field-icon"></i>
+                        </div>
+                        </div>
+
+                            <div class="form-field">
+                        <label for="phone">Phone Number</label>
+                        <div class="field-wrapper">
+                            <input type="tel" id="phone" name="phone" placeholder="+1 (555) 123-4567" required>
+                                <i class="fas fa-phone field-icon"></i>
+                            </div>
+                    </div>
+                    
+                            <div class="form-field">
+                        <label for="unitNumber">Unit Number</label>
+                        <div class="field-wrapper">
+                            <input type="text" id="unitNumber" name="unitNumber" placeholder="e.g., 1205" required>
+                                <i class="fas fa-home field-icon"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                        <label for="password">Password</label>
+                        <div class="field-wrapper">
+                            <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+                            <i class="fas fa-lock field-icon"></i>
+                        </div>
+                            <div class="password-strength">
+                                <div class="strength-indicator">
+                                    <div class="strength-bar" id="strengthBar"></div>
+                            </div>
+                            <span id="strengthText">Password strength</span>
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <div class="field-wrapper">
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                            <i class="fas fa-check-circle field-icon"></i>
+                        </div>
+                        </div>
+
+                    <div class="terms-checkbox">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                        </div>
+
+                    <button type="submit" class="auth-btn" id="submitBtn" disabled>
+                        <i class="fas fa-user-plus"></i>
+                        Create Account
+                        </button>
+                    </form>
+
+                    <div class="divider">
+                    <span>or sign up with</span>
+                    </div>
+
+                <div class="social-login">
+                    <a href="#" class="social-btn">
+                        <i class="fab fa-google"></i>
+                    </a>
+                    <a href="#" class="social-btn">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-btn">
+                        <i class="fab fa-apple"></i>
+                    </a>
+            </div>
+
+                <div class="auth-footer">
+                    Already have an account? <a href="login.html">Sign in here</a>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('signupForm');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const terms = document.getElementById('terms');
+        const submitBtn = document.getElementById('submitBtn');
+        const strengthBar = document.getElementById('strengthBar');
+        const strengthText = document.getElementById('strengthText');
+
+        // Password strength checker
+        password.addEventListener('input', function() {
+            const value = this.value;
+            let strength = 0;
+            let strengthLabel = '';
+            
+            if (value.length >= 8) strength++;
+            if (/[a-z]/.test(value)) strength++;
+            if (/[A-Z]/.test(value)) strength++;
+            if (/[0-9]/.test(value)) strength++;
+            if (/[^A-Za-z0-9]/.test(value)) strength++;
+            
+            const percentage = (strength / 5) * 100;
+            strengthBar.style.width = percentage + '%';
+            
+            if (strength < 2) {
+                strengthBar.className = 'strength-bar strength-weak';
+                strengthLabel = 'Weak';
+            } else if (strength < 4) {
+                strengthBar.className = 'strength-bar strength-medium';
+                strengthLabel = 'Medium';
+            } else {
+                strengthBar.className = 'strength-bar strength-strong';
+                strengthLabel = 'Strong';
+            }
+            
+            strengthText.textContent = `Password strength: ${strengthLabel}`;
+            validateForm();
+        });
+        
+        // Form validation
+        function validateForm() {
+            const isPasswordMatch = password.value === confirmPassword.value && password.value.length > 0;
+            const isTermsChecked = terms.checked;
+            const isPasswordStrong = password.value.length >= 8;
+            
+            submitBtn.disabled = !(isPasswordMatch && isTermsChecked && isPasswordStrong);
+        }
+        
+        confirmPassword.addEventListener('input', validateForm);
+        terms.addEventListener('change', validateForm);
+        
+        // Form submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (password.value !== confirmPassword.value) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            // Simulate account creation
+            alert('Account created successfully! Please check your email for verification.');
+                window.location.href = 'verify-otp.html';
+        });
+    </script>
+</body>
+</html> 

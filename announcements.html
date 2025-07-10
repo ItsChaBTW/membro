@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community News - MEMBRO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"><img src="logo.png" alt="MEMBRO Logo"></div>
+                    <div class="logo-text">
+                        <h1>MEMBRO</h1>
+                        <span>Your Home Portal</span>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="user-details">
+                        <span class="user-name">John Doe</span>
+                        <span class="user-unit">Unit 1205</span>
+                    </div>
+                    <button class="notification-btn" onclick="toggleNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">5</span>
+                    </button>
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <button class="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <!-- Notification Modal -->
+                    <div class="notification-modal" id="notificationModal">
+            <div class="notification-overlay" onclick="closeNotifications()"></div>
+            <div class="notification-panel">
+                <div class="notification-header">
+                    <h3>Notifications</h3>
+                    <button class="close-btn" onclick="closeNotifications()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="notification-tabs">
+                    <button class="tab-btn active" onclick="switchTab('all')">View all</button>
+                    <button class="tab-btn" onclick="switchTab('mentions')">Mentions</button>
+                </div>
+                
+                <div class="notification-content">
+                    <div class="notification-item unread" data-type="comment">
+                        <div class="notification-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Frankie+Sullivan&background=3b82f6&color=ffffff&size=40" alt="Frankie Sullivan">
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Frankie Sullivan</strong> commented on your post
+                            </div>
+                            <div class="notification-preview">
+                                This is looking great! Let's get started on it.
+                            </div>
+                            <div class="notification-time">Friday 2:20pm</div>
+                        </div>
+                        <div class="notification-date">Sep 20, 2024</div>
+                        <div class="unread-indicator"></div>
+                    </div>
+                    
+                    <div class="notification-item unread" data-type="follow">
+                        <div class="notification-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Amelie+Laurent&background=10b981&color=ffffff&size=40" alt="Amelie Laurent">
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Amelie Laurent</strong> followed you
+                            </div>
+                            <div class="notification-time">Friday 10:04am</div>
+                        </div>
+                        <div class="notification-date">Sep 20, 2024</div>
+                        <div class="unread-indicator"></div>
+                    </div>
+                    
+                    <div class="notification-item unread" data-type="upload">
+                        <div class="notification-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Mikah+DiStefano&background=f59e0b&color=ffffff&size=40" alt="Mikah DiStefano">
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Mikah DiStefano</strong> uploaded 2 attachments
+                            </div>
+                            <div class="notification-attachments">
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-video"></i>
+                                    <div class="attachment-info">
+                                        <span class="attachment-name">Prototype recording 02.mp4</span>
+                                        <span class="attachment-size">16 MB</span>
+                                    </div>
+                                    <i class="fas fa-download attachment-action"></i>
+                                </div>
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-video"></i>
+                                    <div class="attachment-info">
+                                        <span class="attachment-name">Prototype recording 01.mp4</span>
+                                        <span class="attachment-size">14 MB</span>
+                                    </div>
+                                    <i class="fas fa-download attachment-action"></i>
+                                </div>
+                            </div>
+                            <div class="notification-time">Thursday 2:20pm</div>
+                        </div>
+                        <div class="notification-date">Sep 20, 2024</div>
+                        <div class="unread-indicator"></div>
+                    </div>
+                    
+                    <div class="notification-item" data-type="billing">
+                        <div class="notification-avatar">
+                            <div class="system-avatar">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Payment Reminder</strong>
+                            </div>
+                            <div class="notification-preview">
+                                Your monthly payment of $1,250 is due on March 15th
+                            </div>
+                            <div class="notification-time">2 hours ago</div>
+                        </div>
+                        <div class="notification-date">Today</div>
+                    </div>
+                    
+                    <div class="notification-item" data-type="maintenance">
+                        <div class="notification-avatar">
+                            <div class="system-avatar" style="background: var(--warning);">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Maintenance Update</strong>
+                            </div>
+                            <div class="notification-preview">
+                                Your service request #2024-156 has been completed
+                            </div>
+                            <div class="notification-time">Yesterday</div>
+                        </div>
+                        <div class="notification-date">Sep 19, 2024</div>
+                    </div>
+                </div>
+                
+                <div class="notification-footer">
+                    <button class="mark-read-btn" onclick="markAllAsRead()">
+                        <i class="fas fa-check-double"></i>
+                        Mark all as read
+                    </button>
+                    <button class="view-all-btn" onclick="viewAllNotifications()">
+                        View all notifications
+                    </button>
+                    <a href="notification-settings.html" class="unsubscribe-link">
+                        <i class="fas fa-cog"></i>
+                        Notification Settings
+                    </a>
+                </div>
+            </div>
+        </div>
+                </div>
+            </div>
+        </header>
+
+         <!-- Desktop Sidebar -->
+         <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item ">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="profile.html" class="nav-link">
+                        <i class="fas fa-user"></i>
+                        <span>My Information</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="billing.html" class="nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Bills & Payments</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="announcements.html" class="nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        <span>Community News</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="services.html" class="nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        <span>Book Services/Facilities</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="properties.html" class="nav-link">
+                        <i class="fas fa-key"></i>
+                        <span>My Properties</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="complaints.html" class="nav-link">
+                        <i class="fas fa-tools"></i>
+                        <span>Request Service</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h2>Community News</h2>
+                <p>Stay informed about what's happening in your community</p>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="card">
+                <div class="card-body">
+                    <div style="display: grid; grid-template-columns: 1fr auto; gap: 1rem; margin-bottom: 1rem;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <input type="search" class="form-control" placeholder="Search announcements..." style="margin-bottom: 0;">
+                        </div>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-search"></i>
+                            Search
+                        </button>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.5rem 1rem;">All</button>
+                        <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.5rem 1rem;">Maintenance</button>
+                        <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.5rem 1rem;">Events</button>
+                        <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.5rem 1rem;">Policy Changes</button>
+                        <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.5rem 1rem;">Emergency</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Latest Announcements -->
+            <div class="card" style="border-left: 4px solid var(--danger);">
+                <div class="card-header" style="background: #fef2f2; color: var(--danger);">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Important Notice
+                    <span style="float: right; font-size: 0.75rem; background: var(--danger); color: white; padding: 0.25rem 0.75rem; border-radius: var(--radius-lg);">NEW</span>
+                </div>
+                <div class="card-body">
+                    <h3 style="color: var(--gray-900); margin-bottom: 1rem; font-size: 1.25rem; font-weight: 600;">
+                        Scheduled Water Service Interruption
+                    </h3>
+                    <p style="color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
+                        Water service in Building A will be temporarily interrupted on <strong>March 12th from 9:00 AM to 3:00 PM</strong> for scheduled pipe maintenance. Please plan accordingly and store water for essential needs.
+                    </p>
+                    <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.875rem; color: var(--gray-500);">
+                        <span><i class="fas fa-calendar"></i> Posted: March 8, 2024</span>
+                        <span><i class="fas fa-user"></i> Building Management</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-swimmer"></i>
+                    Pool & Recreation
+                    <span style="float: right; font-size: 0.75rem; background: var(--info); color: white; padding: 0.25rem 0.75rem; border-radius: var(--radius-lg);">UPDATE</span>
+                </div>
+                <div class="card-body">
+                    <h3 style="color: var(--gray-900); margin-bottom: 1rem; font-size: 1.25rem; font-weight: 600;">
+                        Pool Maintenance Completed
+                    </h3>
+                    <p style="color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
+                        The swimming pool maintenance has been completed and the pool is now open for regular use. The pool deck has also been cleaned and all equipment is functioning normally. New safety equipment has been installed.
+                    </p>
+                    <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.875rem; color: var(--gray-500);">
+                        <span><i class="fas fa-calendar"></i> Posted: March 6, 2024</span>
+                        <span><i class="fas fa-user"></i> Facilities Team</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-calendar-alt"></i>
+                    Community Events
+                </div>
+                <div class="card-body">
+                    <h3 style="color: var(--gray-900); margin-bottom: 1rem; font-size: 1.25rem; font-weight: 600;">
+                        Monthly Residents Meeting
+                    </h3>
+                    <p style="color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
+                        Join us for our monthly residents meeting on <strong>March 20th at 7:00 PM</strong> in the community room. We'll discuss upcoming improvements, budget updates, and address any resident concerns. Light refreshments will be provided.
+                    </p>
+                    <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.875rem; color: var(--gray-500); margin-bottom: 1rem;">
+                        <span><i class="fas fa-calendar"></i> Posted: March 5, 2024</span>
+                        <span><i class="fas fa-user"></i> HOA Board</span>
+                    </div>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-calendar-check"></i>
+                        Add to Calendar
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-tools"></i>
+                    Maintenance Updates
+                </div>
+                <div class="card-body">
+                    <h3 style="color: var(--gray-900); margin-bottom: 1rem; font-size: 1.25rem; font-weight: 600;">
+                        Elevator Inspection Scheduled
+                    </h3>
+                    <p style="color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
+                        Annual elevator inspections will take place on <strong>March 14th from 8:00 AM to 12:00 PM</strong>. During this time, elevators may be temporarily out of service for 15-30 minutes at a time. We apologize for any inconvenience.
+                    </p>
+                    <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.875rem; color: var(--gray-500);">
+                        <span><i class="fas fa-calendar"></i> Posted: March 3, 2024</span>
+                        <span><i class="fas fa-user"></i> Maintenance Team</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-shield-alt"></i>
+                    Security Notice
+                </div>
+                <div class="card-body">
+                    <h3 style="color: var(--gray-900); margin-bottom: 1rem; font-size: 1.25rem; font-weight: 600;">
+                        New Security Measures Implemented
+                    </h3>
+                    <p style="color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
+                        We've enhanced our building security with new key card readers at all entrances and upgraded our camera system. All residents will receive new access cards by March 15th. Please ensure your guest information is up to date.
+                    </p>
+                    <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.875rem; color: var(--gray-500);">
+                        <span><i class="fas fa-calendar"></i> Posted: March 1, 2024</span>
+                        <span><i class="fas fa-user"></i> Security Team</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-leaf"></i>
+                    Green Initiatives
+                </div>
+                <div class="card-body">
+                    <h3 style="color: var(--gray-900); margin-bottom: 1rem; font-size: 1.25rem; font-weight: 600;">
+                        New Recycling Program Launch
+                    </h3>
+                    <p style="color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
+                        We're excited to announce our new comprehensive recycling program starting March 18th. New recycling bins will be placed on each floor, and we'll have weekly collection for paper, plastic, and electronics. Detailed guidelines will be posted soon.
+                    </p>
+                    <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.875rem; color: var(--gray-500);">
+                        <span><i class="fas fa-calendar"></i> Posted: February 28, 2024</span>
+                        <span><i class="fas fa-user"></i> Green Committee</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-car"></i>
+                    Parking Updates
+                </div>
+                <div class="card-body">
+                    <h3 style="color: var(--gray-900); margin-bottom: 1rem; font-size: 1.25rem; font-weight: 600;">
+                        Visitor Parking Changes
+                    </h3>
+                    <p style="color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
+                        Effective March 1st, visitor parking will be limited to 3 hours on weekdays and 6 hours on weekends. Visitors must register at the front desk and display a temporary permit. Long-term visitor parking can be arranged through the management office.
+                    </p>
+                    <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.875rem; color: var(--gray-500);">
+                        <span><i class="fas fa-calendar"></i> Posted: February 26, 2024</span>
+                        <span><i class="fas fa-user"></i> Parking Management</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Load More -->
+            <div style="text-align: center; margin: 2rem 0;">
+                <button class="btn btn-secondary btn-large">
+                    <i class="fas fa-chevron-down"></i>
+                    Load More Announcements
+                </button>
+            </div>
+
+            <!-- Stay Connected -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-bell"></i>
+                    Stay Connected
+                </div>
+                <div class="card-body">
+                    <p style="margin-bottom: 1.5rem; color: var(--gray-600); font-size: 0.875rem;">
+                        Never miss important updates. Make sure your notification preferences are set up to receive timely announcements.
+                    </p>
+                    <div style="display: grid; gap: 1rem;">
+                        <a href="profile.html" class="btn btn-primary btn-block">
+                            <i class="fas fa-cog"></i>
+                            Update Notification Settings
+                        </a>
+                        <button class="btn btn-secondary btn-block">
+                            <i class="fas fa-envelope"></i>
+                            Subscribe to Email Updates
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav">
+            <ul class="mobile-nav-menu">
+                <li class="mobile-nav-item">
+                    <a href="index.html" class="mobile-nav-link">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="profile.html" class="mobile-nav-link">
+                        <i class="fas fa-user"></i>
+                        Profile
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="announcements.html" class="mobile-nav-link active">
+                        <i class="fas fa-bullhorn"></i>
+                        News
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="billing.html" class="mobile-nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        Billing
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="services.html" class="mobile-nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        Services
+                    </a>
+                </li>
+                <li class="mobile-nav-item mobile-nav-more">
+                    <button class="mobile-nav-link" onclick="toggleMobileMore()">
+                        <i class="fas fa-ellipsis-h"></i>
+                        More
+                    </button>
+                    <div class="mobile-nav-dropdown" id="mobileMoreDropdown">
+                        <a href="properties.html" class="mobile-nav-dropdown-item">
+                            <i class="fas fa-key"></i>
+                            Properties
+                        </a>
+                        <a href="complaints.html" class="mobile-nav-dropdown-item">
+                            <i class="fas fa-tools"></i>
+                            Request Service
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <script>
+         // Notification Modal Functions
+         function toggleNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.toggle('active');
+        }
+
+        function closeNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.remove('active');
+        }
+
+        function switchTab(tab) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Filter notifications based on tab
+            const notifications = document.querySelectorAll('.notification-item');
+            notifications.forEach(item => {
+                if (tab === 'all') {
+                    item.style.display = 'flex';
+                } else if (tab === 'mentions') {
+                    // Show only comment/mention type notifications
+                    if (item.dataset.type === 'comment' || item.dataset.type === 'follow') {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        function markAllAsRead() {
+            // Remove unread class from all notifications
+            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+            });
+            
+            // Update notification badge
+            const badge = document.querySelector('.notification-badge');
+            badge.textContent = '0';
+            badge.style.display = 'none';
+            
+            // Show success message
+            showToast('All notifications marked as read');
+        }
+
+        function viewAllNotifications() {
+            // This would typically navigate to a dedicated notifications page
+            showToast('Opening full notifications page...');
+            // window.location.href = 'notifications.html';
+        }
+
+        function showToast(message) {
+            // Create and show a toast notification
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--primary);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 8px;
+                z-index: 10000;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Fade in
+            setTimeout(() => {
+                toast.style.opacity = '1';
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // Close notification modal when clicking outside
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('notificationModal');
+            const notificationBtn = document.querySelector('.notification-btn');
+            
+            if (modal.classList.contains('active') && 
+                !modal.contains(event.target) &&
+                !notificationBtn.contains(event.target)) {
+                closeNotifications();
+            }
+        });
+
+        // Close notification modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeNotifications();
+            }
+        });
+
+        // Mark individual notifications as read when clicked
+        document.querySelectorAll('.notification-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if (this.classList.contains('unread')) {
+                    this.classList.remove('unread');
+                    updateNotificationBadge();
+                }
+            });
+        });
+
+        function updateNotificationBadge() {
+            const unreadCount = document.querySelectorAll('.notification-item.unread').length;
+            const badge = document.querySelector('.notification-badge');
+            
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount;
+                badge.style.display = 'block';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        // Mobile More Dropdown Functions
+        function toggleMobileMore() {
+            const dropdown = document.getElementById('mobileMoreDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close mobile more dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('mobileMoreDropdown');
+            const moreButton = document.querySelector('.mobile-nav-more .mobile-nav-link');
+            
+            if (dropdown.classList.contains('active') && 
+                !dropdown.contains(event.target) &&
+                !moreButton.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Close mobile more dropdown with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const dropdown = document.getElementById('mobileMoreDropdown');
+                dropdown.classList.remove('active');
+            }
+        });
+        // Mobile More Dropdown Functions
+        function toggleMobileMore() {
+            const dropdown = document.getElementById('mobileMoreDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close mobile more dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('mobileMoreDropdown');
+            const moreButton = document.querySelector('.mobile-nav-more .mobile-nav-link');
+            
+            if (dropdown && dropdown.classList.contains('active') && 
+                !dropdown.contains(event.target) &&
+                !moreButton.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Close mobile more dropdown with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const dropdown = document.getElementById('mobileMoreDropdown');
+                if (dropdown) {
+                    dropdown.classList.remove('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

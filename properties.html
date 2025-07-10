@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Properties - MEMBRO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Properties Page Specific Styles */
+        .properties-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .property-type-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .property-type-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .property-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+        }
+
+        .property-type-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .property-count {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .property-description {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .view-properties-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .view-properties-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(30, 64, 175, 0.3);
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .quick-stat-item {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            text-align: center;
+        }
+
+        .quick-stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .quick-stat-label {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .recent-activity {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .view-all-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .view-all-link:hover {
+            color: var(--primary-dark);
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1rem;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-date {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .property-alerts {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            border-left: 4px solid var(--warning);
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            border-left: 4px solid var(--info);
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .alert-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 0.25rem;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .alert-text {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .alert-item.alert-success {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+
+        /* Property Type Selector */
+        .property-type-selector {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            border: 1px solid var(--gray-200);
+        }
+
+        .selector-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .selector-header h3 {
+            margin: 0 0 0.5rem 0;
+            color: var(--gray-900);
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .selector-header p {
+            margin: 0;
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+
+        .type-toggle {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .type-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.5rem;
+            border: 2px solid var(--gray-300);
+            background: var(--white);
+            border-radius: 12px;
+            color: var(--gray-700);
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .type-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .type-btn.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .type-btn i {
+            font-size: 1rem;
+        }
+
+        /* Updated Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .quick-stat-item {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+            border: 1px solid var(--gray-200);
+            transition: all 0.3s ease;
+        }
+
+        .quick-stat-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgb(0 0 0 / 0.1);
+        }
+
+        .quick-stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            font-size: 1.25rem;
+        }
+
+        .quick-stat-content {
+            flex: 1;
+        }
+
+        .quick-stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .quick-stat-label {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Property Layout */
+        .property-layout {
+            margin-bottom: 2rem;
+        }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .property-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid var(--gray-200);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+        }
+
+        .property-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgb(0 0 0 / 0.15);
+            border-color: var(--primary);
+        }
+
+        .property-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .property-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.25rem;
+        }
+
+        .condo-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); }
+        .condo-secondary { background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%); }
+        .condo-warning { background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%); }
+        .condo-info { background: linear-gradient(135deg, var(--info) 0%, #0891b2 100%); }
+
+        .subdivision-primary { background: linear-gradient(135deg, #065f46 0%, #059669 100%); }
+        .subdivision-secondary { background: linear-gradient(135deg, #7c2d12 0%, #ea580c 100%); }
+        .subdivision-info { background: linear-gradient(135deg, var(--info) 0%, #0891b2 100%); }
+
+        .property-badge {
+            background: var(--primary);
+            color: var(--white);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 700;
+        }
+
+        .property-card-content h4 {
+            margin: 0 0 0.5rem 0;
+            color: var(--gray-900);
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+
+        .property-card-content p {
+            margin: 0 0 1rem 0;
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+
+        .property-details {
+            margin-bottom: 1.5rem;
+        }
+
+        .property-details span {
+            color: var(--gray-500);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .property-card-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .view-btn {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .view-btn i {
+            transition: transform 0.3s ease;
+        }
+
+        .property-card:hover .view-btn i {
+            transform: translateX(4px);
+        }
+
+        /* Property Type Indicator */
+        .property-type-indicator {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+            border-left: 6px solid var(--primary);
+        }
+
+        .indicator-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .indicator-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+        }
+
+        .indicator-content {
+            flex: 1;
+        }
+
+        .indicator-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .indicator-description {
+            color: var(--gray-600);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .indicator-note {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: 12px;
+            color: var(--gray-700);
+            font-size: 0.875rem;
+        }
+
+        .indicator-note i {
+            color: var(--info);
+        }
+
+        /* Subdivision Layout */
+        .subdivision-layout {
+            margin-top: 2rem;
+        }
+
+        .subdivision-layout .property-type-indicator {
+            border-left-color: var(--secondary);
+        }
+
+        .subdivision-layout .indicator-icon {
+            background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .property-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .type-toggle {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .type-btn {
+                justify-content: center;
+            }
+
+            .property-card {
+                padding: 1.25rem;
+            }
+
+            .property-card-header {
+                margin-bottom: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Professional Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"><img src="logo.png" alt="MEMBRO Logo"></div>
+                    <div class="logo-text">
+                        <h1>MEMBRO</h1>
+                        <span>Your Home Portal</span>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="user-details">
+                        <span class="user-name">John Doe</span>
+                        <span class="user-unit">Unit 1205</span>
+                    </div>
+                    <button class="notification-btn" onclick="toggleNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">5</span>
+                    </button>
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <button class="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <!-- Notification Modal -->
+                    <div class="notification-modal" id="notificationModal">
+                        <div class="notification-overlay" onclick="closeNotifications()"></div>
+                        <div class="notification-panel">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                <button class="close-btn" onclick="closeNotifications()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="notification-tabs">
+                                <button class="tab-btn active" onclick="switchTab('all')">View all</button>
+                                <button class="tab-btn" onclick="switchTab('mentions')">Mentions</button>
+                            </div>
+                            
+                            <div class="notification-content">
+                                <div class="notification-item unread" data-type="property">
+                                    <div class="notification-avatar">
+                                        <div class="system-avatar" style="background: var(--primary);">
+                                            <i class="fas fa-home"></i>
+                                        </div>
+                                    </div>
+                                    <div class="notification-body">
+                                        <div class="notification-text">
+                                            <strong>Property Update</strong>
+                                        </div>
+                                        <div class="notification-preview">
+                                            Your Unit 1205 maintenance request has been completed
+                                        </div>
+                                        <div class="notification-time">2 hours ago</div>
+                                    </div>
+                                    <div class="notification-date">Today</div>
+                                    <div class="unread-indicator"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-footer">
+                                <button class="mark-read-btn" onclick="markAllAsRead()">
+                                    <i class="fas fa-check-double"></i>
+                                    Mark all as read
+                                </button>
+                                <button class="view-all-btn" onclick="viewAllNotifications()">
+                                    View all notifications
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Desktop Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="profile.html" class="nav-link">
+                        <i class="fas fa-user"></i>
+                        <span>My Information</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="billing.html" class="nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Bills & Payments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="announcements.html" class="nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        <span>Community News</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="services.html" class="nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        <span>Book Services/Facilities</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="properties.html" class="nav-link">
+                        <i class="fas fa-key"></i>
+                        <span>My Properties</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="complaints.html" class="nav-link">
+                        <i class="fas fa-tools"></i>
+                        <span>Request Service</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h2>My Properties</h2>
+                <p>Manage and view details of your units, lots, and registered vehicles in the community.</p>
+            </div>
+
+            <!-- Property Type Selector -->
+            <div class="property-type-selector">
+                <div class="selector-header">
+                    <h3>Property Category</h3>
+                    <p>Choose your property type to view relevant assets</p>
+                </div>
+                <div class="type-toggle">
+                    <button class="type-btn active" data-type="condo" onclick="switchPropertyType('condo')">
+                        <i class="fas fa-building"></i>
+                        <span>Condominium Owner</span>
+                    </button>
+                    <button class="type-btn" data-type="subdivision" onclick="switchPropertyType('subdivision')">
+                        <i class="fas fa-home"></i>
+                        <span>Subdivision Resident</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="quick-stats" id="condoStats">
+                <div class="quick-stat-item">
+                    <div class="quick-stat-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="quick-stat-content">
+                        <div class="quick-stat-value">2</div>
+                        <div class="quick-stat-label">Condo Units</div>
+                    </div>
+                </div>
+                <div class="quick-stat-item">
+                    <div class="quick-stat-icon">
+                        <i class="fas fa-parking"></i>
+                    </div>
+                    <div class="quick-stat-content">
+                        <div class="quick-stat-value">2</div>
+                        <div class="quick-stat-label">Parking Slots</div>
+                    </div>
+                </div>
+                <div class="quick-stat-item">
+                    <div class="quick-stat-icon">
+                        <i class="fas fa-warehouse"></i>
+                    </div>
+                    <div class="quick-stat-content">
+                        <div class="quick-stat-value">1</div>
+                        <div class="quick-stat-label">Storage</div>
+                    </div>
+                </div>
+                <div class="quick-stat-item">
+                    <div class="quick-stat-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="quick-stat-content">
+                        <div class="quick-stat-value">3</div>
+                        <div class="quick-stat-label">Vehicles</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-stats" id="subdivisionStats" style="display: none;">
+                <div class="quick-stat-item">
+                    <div class="quick-stat-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="quick-stat-content">
+                        <div class="quick-stat-value">1</div>
+                        <div class="quick-stat-label">House & Lot</div>
+                    </div>
+                </div>
+                <div class="quick-stat-item">
+                    <div class="quick-stat-icon">
+                        <i class="fas fa-map"></i>
+                    </div>
+                    <div class="quick-stat-content">
+                        <div class="quick-stat-value">2</div>
+                        <div class="quick-stat-label">Land Parcels</div>
+                    </div>
+                </div>
+                <div class="quick-stat-item">
+                    <div class="quick-stat-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="quick-stat-content">
+                        <div class="quick-stat-value">2</div>
+                        <div class="quick-stat-label">Vehicles</div>
+                    </div>
+                </div>
+                <div class="quick-stat-item">
+                    <div class="quick-stat-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="quick-stat-content">
+                        <div class="quick-stat-value">$450</div>
+                        <div class="quick-stat-label">Monthly Dues</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Condo Property Layout -->
+            <div class="property-layout" id="condoLayout">
+                <div class="property-grid">
+                    <div class="property-card" onclick="location.href='units.html'">
+                        <div class="property-card-header">
+                            <div class="property-icon condo-primary">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="property-badge">2</div>
+                        </div>
+                        <div class="property-card-content">
+                            <h4>Condominium Units</h4>
+                            <p>SMDC Grace Residences</p>
+                            <div class="property-details">
+                                <span>Unit 802 • Unit 1205</span>
+                            </div>
+                        </div>
+                        <div class="property-card-footer">
+                            <span class="view-btn">View Units <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="property-card" onclick="location.href='lots.html?type=parking'">
+                        <div class="property-card-header">
+                            <div class="property-icon condo-secondary">
+                                <i class="fas fa-parking"></i>
+                            </div>
+                            <div class="property-badge">2</div>
+                        </div>
+                        <div class="property-card-content">
+                            <h4>Owned Parking</h4>
+                            <p>Dedicated parking slots</p>
+                            <div class="property-details">
+                                <span>P-25A • P-802</span>
+                            </div>
+                        </div>
+                        <div class="property-card-footer">
+                            <span class="view-btn">View Parking <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="property-card" onclick="location.href='lots.html?type=other'">
+                        <div class="property-card-header">
+                            <div class="property-icon condo-warning">
+                                <i class="fas fa-warehouse"></i>
+                            </div>
+                            <div class="property-badge">1</div>
+                        </div>
+                        <div class="property-card-content">
+                            <h4>Other Lots</h4>
+                            <p>Storage & amenity spaces</p>
+                            <div class="property-details">
+                                <span>Storage Lot S-12C</span>
+                            </div>
+                        </div>
+                        <div class="property-card-footer">
+                            <span class="view-btn">View Lots <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="property-card" onclick="location.href='vehicles.html'">
+                        <div class="property-card-header">
+                            <div class="property-icon condo-info">
+                                <i class="fas fa-car"></i>
+                            </div>
+                            <div class="property-badge">3</div>
+                        </div>
+                        <div class="property-card-content">
+                            <h4>Registered Vehicles</h4>
+                            <p>Access permits & stickers</p>
+                            <div class="property-details">
+                                <span>2 Active • 1 Expiring</span>
+                            </div>
+                        </div>
+                        <div class="property-card-footer">
+                            <span class="view-btn">View Vehicles <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subdivision Property Layout -->
+            <div class="property-layout" id="subdivisionLayout" style="display: none;">
+                <div class="property-grid">
+                    <div class="property-card" onclick="location.href='house-lots.html'">
+                        <div class="property-card-header">
+                            <div class="property-icon subdivision-primary">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div class="property-badge">1</div>
+                        </div>
+                        <div class="property-card-content">
+                            <h4>House and Lot</h4>
+                            <p>Integrated property ownership</p>
+                            <div class="property-details">
+                                <span>Block 5, Lot 12 • 240 sqm</span>
+                            </div>
+                        </div>
+                        <div class="property-card-footer">
+                            <span class="view-btn">View Property <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="property-card" onclick="location.href='lots.html?type=land'">
+                        <div class="property-card-header">
+                            <div class="property-icon subdivision-secondary">
+                                <i class="fas fa-map"></i>
+                            </div>
+                            <div class="property-badge">2</div>
+                        </div>
+                        <div class="property-card-content">
+                            <h4>Land Parcels</h4>
+                            <p>Investment & development lots</p>
+                            <div class="property-details">
+                                <span>2 Vacant lots available</span>
+                            </div>
+                        </div>
+                        <div class="property-card-footer">
+                            <span class="view-btn">View Lots <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="property-card" onclick="location.href='vehicles.html'">
+                        <div class="property-card-header">
+                            <div class="property-icon subdivision-info">
+                                <i class="fas fa-car"></i>
+                            </div>
+                            <div class="property-badge">2</div>
+                        </div>
+                        <div class="property-card-content">
+                            <h4>Registered Vehicles</h4>
+                            <p>Gate access & permits</p>
+                            <div class="property-details">
+                                <span>2 Active permits</span>
+                            </div>
+                        </div>
+                        <div class="property-card-footer">
+                            <span class="view-btn">View Vehicles <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Property Activity -->
+            <div class="recent-activity">
+                <div class="activity-header">
+                    <div class="activity-title">Recent Property Activity</div>
+                    <a href="#" class="view-all-link">View All Activity</a>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon" style="background: var(--secondary);">
+                        <i class="fas fa-wrench"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-text">Maintenance completed for Unit 802</div>
+                        <div class="activity-date">2 hours ago</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon" style="background: var(--info);">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-text">Vehicle access granted for Parking Lot P-25A</div>
+                        <div class="activity-date">6 hours ago</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon" style="background: var(--warning);">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-text">Garden Lot G-08B seasonal lease renewed</div>
+                        <div class="activity-date">1 day ago</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon" style="background: var(--primary);">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-text">Unit 1205 rental agreement updated</div>
+                        <div class="activity-date">3 days ago</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon" style="background: var(--info);">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-text">Storage Lot S-12C access card activated</div>
+                        <div class="activity-date">1 week ago</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Alerts -->
+            <div class="property-alerts">
+                <div class="activity-header">
+                    <div class="activity-title">Property Alerts & Notifications</div>
+                </div>
+
+                <div class="alert-item alert-warning">
+                    <div class="alert-icon">
+                        <i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i>
+                    </div>
+                    <div class="alert-content">
+                        <div class="alert-title">Garden Lot Renewal Due</div>
+                        <div class="alert-text">Your Garden Lot G-08B seasonal lease expires on December 31, 2024. Renew now to secure your space for next season.</div>
+                    </div>
+                </div>
+
+                <div class="alert-item alert-info">
+                    <div class="alert-icon">
+                        <i class="fas fa-info-circle" style="color: var(--info);"></i>
+                    </div>
+                    <div class="alert-content">
+                        <div class="alert-title">Property Assessment Update</div>
+                        <div class="alert-text">Annual property assessment for Unit 802 and Unit 1205 are available for review in your documents section.</div>
+                    </div>
+                </div>
+
+                <div class="alert-item alert-success">
+                    <div class="alert-icon">
+                        <i class="fas fa-check-circle" style="color: var(--secondary);"></i>
+                    </div>
+                    <div class="alert-content">
+                        <div class="alert-title">Storage Access Updated</div>
+                        <div class="alert-text">Your Storage Lot S-12C access permissions have been successfully updated with 24/7 availability.</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav">
+            <ul class="mobile-nav-menu">
+                <li class="mobile-nav-item">
+                    <a href="index.html" class="mobile-nav-link">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="profile.html" class="mobile-nav-link">
+                        <i class="fas fa-user"></i>
+                        Profile
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="announcements.html" class="mobile-nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        News
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="billing.html" class="mobile-nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        Billing
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="services.html" class="mobile-nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        Services
+                    </a>
+                </li>
+                <li class="mobile-nav-item mobile-nav-more">
+                    <button class="mobile-nav-link" onclick="toggleMobileMore()">
+                        <i class="fas fa-ellipsis-h"></i>
+                        More
+                    </button>
+                    <div class="mobile-nav-dropdown" id="mobileMoreDropdown">
+                        <a href="properties.html" class="mobile-nav-dropdown-item active">
+                            <i class="fas fa-key"></i>
+                            Properties
+                        </a>
+                        <a href="complaints.html" class="mobile-nav-dropdown-item">
+                            <i class="fas fa-tools"></i>
+                            Request Service
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <script>
+        // Notification functions
+        function toggleNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.toggle('active');
+        }
+
+        function closeNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.remove('active');
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function markAllAsRead() {
+            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+            });
+        }
+
+        function viewAllNotifications() {
+            // Navigate to notifications page
+        }
+
+        // Close notification modal when clicking outside
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('notificationModal');
+            const notificationBtn = document.querySelector('.notification-btn');
+            
+            if (modal && modal.classList.contains('active') && 
+                !modal.contains(event.target) &&
+                !notificationBtn.contains(event.target)) {
+                closeNotifications();
+            }
+        });
+
+        // Property Type Switching Functions
+        function switchPropertyType(type) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.type-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            document.querySelector(`[data-type="${type}"]`).classList.add('active');
+            
+            // Hide all layouts and stats
+            document.getElementById('condoLayout').style.display = 'none';
+            document.getElementById('subdivisionLayout').style.display = 'none';
+            document.getElementById('condoStats').style.display = 'none';
+            document.getElementById('subdivisionStats').style.display = 'none';
+            
+            // Show selected layout and stats
+            if (type === 'condo') {
+                document.getElementById('condoLayout').style.display = 'block';
+                document.getElementById('condoStats').style.display = 'grid';
+            } else if (type === 'subdivision') {
+                document.getElementById('subdivisionLayout').style.display = 'block';
+                document.getElementById('subdivisionStats').style.display = 'grid';
+            }
+        }
+
+        // Mobile More Dropdown Functions
+        function toggleMobileMore() {
+            const dropdown = document.getElementById('mobileMoreDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close mobile more dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('mobileMoreDropdown');
+            const moreButton = document.querySelector('.mobile-nav-more .mobile-nav-link');
+            
+            if (dropdown && dropdown.classList.contains('active') && 
+                !dropdown.contains(event.target) &&
+                !moreButton.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Close mobile more dropdown with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const dropdown = document.getElementById('mobileMoreDropdown');
+                if (dropdown) {
+                    dropdown.classList.remove('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

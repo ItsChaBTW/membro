@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Units - MEMBRO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Units Page Specific Styles */
+        .breadcrumb {
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-dark);
+        }
+
+        .breadcrumb span {
+            color: var(--gray-500);
+            margin: 0 0.5rem;
+        }
+
+        .unit-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .unit-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 2rem;
+            position: relative;
+        }
+
+        .unit-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .unit-address {
+            font-size: 1.125rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .unit-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .unit-content {
+            padding: 2rem;
+        }
+
+        .unit-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-section {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: 16px;
+        }
+
+        .detail-section h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .detail-label {
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: var(--gray-900);
+            font-weight: 600;
+        }
+
+        .maintenance-history {
+            background: var(--white);
+            border-radius: 16px;
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+        }
+
+        .maintenance-header {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .maintenance-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .maintenance-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .maintenance-item:last-child {
+            border-bottom: none;
+        }
+
+        .maintenance-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .maintenance-content {
+            flex: 1;
+        }
+
+        .maintenance-type {
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .maintenance-description {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .maintenance-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .maintenance-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-in-progress {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .unit-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            border: none;
+        }
+
+        .action-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(30, 64, 175, 0.3);
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .action-btn-secondary {
+            background: var(--white);
+            color: var(--gray-700);
+            border: 2px solid var(--gray-300);
+        }
+
+        .action-btn-secondary:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+            color: var(--gray-700);
+            text-decoration: none;
+        }
+
+        .documents-section {
+            background: var(--white);
+            border-radius: 16px;
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+
+        .documents-header {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .document-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .document-item:last-child {
+            border-bottom: none;
+        }
+
+        .document-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .document-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 0.875rem;
+        }
+
+        .document-details {
+            flex: 1;
+        }
+
+        .document-name {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .document-meta {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .download-btn {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .download-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .unit-details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .unit-actions {
+                flex-direction: column;
+            }
+
+            .maintenance-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .maintenance-icon {
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Professional Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"><img src="logo.png" alt="MEMBRO Logo"></div>
+                    <div class="logo-text">
+                        <h1>MEMBRO</h1>
+                        <span>Your Home Portal</span>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="user-details">
+                        <span class="user-name">John Doe</span>
+                        <span class="user-unit">Unit 1205</span>
+                    </div>
+                    <button class="notification-btn" onclick="toggleNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">5</span>
+                    </button>
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <button class="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <!-- Notification Modal -->
+                    <div class="notification-modal" id="notificationModal">
+                        <div class="notification-overlay" onclick="closeNotifications()"></div>
+                        <div class="notification-panel">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                <button class="close-btn" onclick="closeNotifications()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="notification-tabs">
+                                <button class="tab-btn active" onclick="switchTab('all')">View all</button>
+                                <button class="tab-btn" onclick="switchTab('mentions')">Mentions</button>
+                            </div>
+                            
+                            <div class="notification-content">
+                                <div class="notification-item unread" data-type="unit">
+                                    <div class="notification-avatar">
+                                        <div class="system-avatar" style="background: var(--primary);">
+                                            <i class="fas fa-home"></i>
+                                        </div>
+                                    </div>
+                                    <div class="notification-body">
+                                        <div class="notification-text">
+                                            <strong>Unit Maintenance</strong> completed
+                                        </div>
+                                        <div class="notification-preview">
+                                            Air conditioning repair in Unit 1205 has been completed
+                                        </div>
+                                        <div class="notification-time">2 hours ago</div>
+                                    </div>
+                                    <div class="notification-date">Today</div>
+                                    <div class="unread-indicator"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-footer">
+                                <button class="mark-read-btn" onclick="markAllAsRead()">
+                                    <i class="fas fa-check-double"></i>
+                                    Mark all as read
+                                </button>
+                                <button class="view-all-btn" onclick="viewAllNotifications()">
+                                    View all notifications
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Desktop Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="profile.html" class="nav-link">
+                        <i class="fas fa-user"></i>
+                        <span>My Information</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="billing.html" class="nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Bills & Payments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="announcements.html" class="nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        <span>Community News</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="services.html" class="nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        <span>Book Services/Facilities</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="facilities.html" class="nav-link">
+                        <i class="fas fa-building"></i>
+                        <span>Book Facilities</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="properties.html" class="nav-link">
+                        <i class="fas fa-key"></i>
+                        <span>My Properties</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="complaints.html" class="nav-link">
+                        <i class="fas fa-tools"></i>
+                        <span>Request Service</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a href="properties.html">My Properties</a>
+                <span>/</span>
+                <span>Units</span>
+            </div>
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <h2>My Units</h2>
+                <p>Detailed information about your residential units including lease terms, specifications, and maintenance history.</p>
+            </div>
+
+            <!-- Unit Card 1 - Sample Data -->
+            <div class="unit-card">
+                <div class="unit-header">
+                    <div class="unit-title">Unit 802</div>
+                    <div class="unit-address">SMDC Grace Residences, Tower 2, Floor 8</div>
+                    <div class="unit-status">
+                        <i class="fas fa-check-circle"></i>
+                        Owned & Occupied
+                    </div>
+                </div>
+
+                <div class="unit-content">
+                    <!-- Unit Details Grid -->
+                    <div class="unit-details-grid">
+                        <!-- Unit Specifications -->
+                        <div class="detail-section">
+                            <h3>
+                                <i class="fas fa-home"></i>
+                                Unit Information
+                            </h3>
+                            <div class="detail-item">
+                                <span class="detail-label">Unit Name</span>
+                                <span class="detail-value">Unit 802</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Unit Size</span>
+                                <span class="detail-value">60 sqm</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Floor</span>
+                                <span class="detail-value">8</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Building</span>
+                                <span class="detail-value">Tower 2</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Project Name</span>
+                                <span class="detail-value">SMDC Grace Residences</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Unit Owner</span>
+                                <span class="detail-value">Heriberto Nathan</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Status Reason</span>
+                                <span class="detail-value">None</span>
+                            </div>
+                        </div>
+
+                        <!-- Additional Specifications -->
+                        <div class="detail-section">
+                            <h3>
+                                <i class="fas fa-ruler-combined"></i>
+                                Unit Specifications
+                            </h3>
+                            <div class="detail-item">
+                                <span class="detail-label">Unit Type</span>
+                                <span class="detail-value">Studio</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Bedrooms</span>
+                                <span class="detail-value">1</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Bathrooms</span>
+                                <span class="detail-value">1</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Balcony</span>
+                                <span class="detail-value">Yes</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Parking Slot</span>
+                                <span class="detail-value">P-802</span>
+                            </div>
+                        </div>
+
+                        <!-- Ownership Details -->
+                        <div class="detail-section">
+                            <h3>
+                                <i class="fas fa-certificate"></i>
+                                Ownership Details
+                            </h3>
+                            <div class="detail-item">
+                                <span class="detail-label">Ownership Type</span>
+                                <span class="detail-value">Condominium</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Purchase Date</span>
+                                <span class="detail-value">Jun 10, 2021</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Title Number</span>
+                                <span class="detail-value">CCT-80245</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Property Value</span>
+                                <span class="detail-value">$320,000</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Insurance Policy</span>
+                                <span class="detail-value">Active</span>
+                            </div>
+                        </div>
+
+                        <!-- Monthly Fees -->
+                        <div class="detail-section">
+                            <h3>
+                                <i class="fas fa-dollar-sign"></i>
+                                Monthly Fees
+                            </h3>
+                            <div class="detail-item">
+                                <span class="detail-label">Association Dues</span>
+                                <span class="detail-value">$145</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Maintenance Fee</span>
+                                <span class="detail-value">$55</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Parking Fee</span>
+                                <span class="detail-value">$35</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Utilities</span>
+                                <span class="detail-value">$65</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Total Monthly</span>
+                                <span class="detail-value">$300</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Unit Actions -->
+                    <div class="unit-actions">
+                        <a href="complaints.html" class="action-btn action-btn-primary">
+                            <i class="fas fa-tools"></i>
+                            Request Maintenance
+                        </a>
+                        <a href="billing.html" class="action-btn action-btn-secondary">
+                            <i class="fas fa-receipt"></i>
+                            View Bills
+                        </a>
+                        <button class="action-btn action-btn-secondary" onclick="generateReport()">
+                            <i class="fas fa-file-pdf"></i>
+                            Unit Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unit Card 2 - Additional Sample -->
+            <div class="unit-card">
+                <div class="unit-header" style="background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);">
+                    <div class="unit-title">Unit 1205</div>
+                    <div class="unit-address">SMDC Grace Residences, Tower 1, Floor 12</div>
+                    <div class="unit-status">
+                        <i class="fas fa-home"></i>
+                        Rented
+                    </div>
+                </div>
+
+                <div class="unit-content">
+                    <!-- Unit Details Grid -->
+                    <div class="unit-details-grid">
+                        <!-- Unit Information -->
+                        <div class="detail-section">
+                            <h3>
+                                <i class="fas fa-home"></i>
+                                Unit Information
+                            </h3>
+                            <div class="detail-item">
+                                <span class="detail-label">Unit Name</span>
+                                <span class="detail-value">Unit 1205</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Unit Size</span>
+                                <span class="detail-value">85 sqm</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Floor</span>
+                                <span class="detail-value">12</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Building</span>
+                                <span class="detail-value">Tower 1</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Project Name</span>
+                                <span class="detail-value">SMDC Grace Residences</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Unit Owner</span>
+                                <span class="detail-value">John Doe</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Status Reason</span>
+                                <span class="detail-value">Rental Property</span>
+                            </div>
+                        </div>
+
+                        <!-- Additional Specifications -->
+                        <div class="detail-section">
+                            <h3>
+                                <i class="fas fa-ruler-combined"></i>
+                                Unit Specifications
+                            </h3>
+                            <div class="detail-item">
+                                <span class="detail-label">Unit Type</span>
+                                <span class="detail-value">2-Bedroom Condo</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Bedrooms</span>
+                                <span class="detail-value">2</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Bathrooms</span>
+                                <span class="detail-value">2</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Balcony</span>
+                                <span class="detail-value">Yes</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Parking Slot</span>
+                                <span class="detail-value">P-1205A</span>
+                            </div>
+                        </div>
+
+                        <!-- Tenant Information -->
+                        <div class="detail-section">
+                            <h3>
+                                <i class="fas fa-users"></i>
+                                Tenant Information
+                            </h3>
+                            <div class="detail-item">
+                                <span class="detail-label">Current Tenant</span>
+                                <span class="detail-value">Sarah Wilson</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Lease Start</span>
+                                <span class="detail-value">Jan 15, 2024</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Lease End</span>
+                                <span class="detail-value">Jan 14, 2025</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Monthly Rent</span>
+                                <span class="detail-value">$1,200</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Security Deposit</span>
+                                <span class="detail-value">$2,400</span>
+                            </div>
+                        </div>
+
+                        <!-- Monthly Fees -->
+                        <div class="detail-section">
+                            <h3>
+                                <i class="fas fa-dollar-sign"></i>
+                                Monthly Fees
+                            </h3>
+                            <div class="detail-item">
+                                <span class="detail-label">Association Dues</span>
+                                <span class="detail-value">$185</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Maintenance Fee</span>
+                                <span class="detail-value">$75</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Parking Fee</span>
+                                <span class="detail-value">$45</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Property Tax</span>
+                                <span class="detail-value">$95</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Total Monthly</span>
+                                <span class="detail-value">$400</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Unit Actions -->
+                    <div class="unit-actions">
+                        <a href="complaints.html" class="action-btn action-btn-primary">
+                            <i class="fas fa-tools"></i>
+                            Request Maintenance
+                        </a>
+                        <a href="billing.html" class="action-btn action-btn-secondary">
+                            <i class="fas fa-receipt"></i>
+                            View Bills
+                        </a>
+                        <button class="action-btn action-btn-secondary" onclick="generateReport()">
+                            <i class="fas fa-file-pdf"></i>
+                            Unit Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Maintenance History -->
+            <div class="maintenance-history">
+                <div class="maintenance-header">
+                    <div class="maintenance-title">
+                        <i class="fas fa-history"></i>
+                        Maintenance History
+                    </div>
+                </div>
+
+                <div class="maintenance-item">
+                    <div class="maintenance-icon" style="background: var(--secondary);">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="maintenance-content">
+                        <div class="maintenance-type">Air Conditioning Repair</div>
+                        <div class="maintenance-description">Replaced AC compressor and cleaned filters. Unit cooling efficiently.</div>
+                        <div class="maintenance-meta">
+                            <span>Completed: March 20, 2024</span>
+                            <span>Technician: Mike Rodriguez</span>
+                            <span>Cost: $285</span>
+                        </div>
+                    </div>
+                    <div class="maintenance-status status-completed">Completed</div>
+                </div>
+
+                <div class="maintenance-item">
+                    <div class="maintenance-icon" style="background: var(--info);">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="maintenance-content">
+                        <div class="maintenance-type">Plumbing Inspection</div>
+                        <div class="maintenance-description">Annual plumbing system inspection and leak detection.</div>
+                        <div class="maintenance-meta">
+                            <span>Scheduled: March 25, 2024</span>
+                            <span>Technician: Lisa Chen</span>
+                            <span>Estimated Cost: $150</span>
+                        </div>
+                    </div>
+                    <div class="maintenance-status status-pending">Pending</div>
+                </div>
+
+                <div class="maintenance-item">
+                    <div class="maintenance-icon" style="background: var(--warning);">
+                        <i class="fas fa-wrench"></i>
+                    </div>
+                    <div class="maintenance-content">
+                        <div class="maintenance-type">Balcony Door Repair</div>
+                        <div class="maintenance-description">Adjusting sliding door mechanism and replacing weather stripping.</div>
+                        <div class="maintenance-meta">
+                            <span>Started: March 22, 2024</span>
+                            <span>Technician: David Kim</span>
+                            <span>Cost: $195</span>
+                        </div>
+                    </div>
+                    <div class="maintenance-status status-in-progress">In Progress</div>
+                </div>
+
+                <div class="maintenance-item">
+                    <div class="maintenance-icon" style="background: var(--secondary);">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="maintenance-content">
+                        <div class="maintenance-type">Electrical Outlet Installation</div>
+                        <div class="maintenance-description">Added USB charging outlet in bedroom wall near bed.</div>
+                        <div class="maintenance-meta">
+                            <span>Completed: February 15, 2024</span>
+                            <span>Technician: Alex Thompson</span>
+                            <span>Cost: $125</span>
+                        </div>
+                    </div>
+                    <div class="maintenance-status status-completed">Completed</div>
+                </div>
+            </div>
+
+            <!-- Unit Documents -->
+            <div class="documents-section">
+                <div class="documents-header">
+                    <div class="maintenance-title">
+                        <i class="fas fa-folder"></i>
+                        Unit Documents
+                    </div>
+                </div>
+
+                <div class="document-item">
+                    <div class="document-info">
+                        <div class="document-icon" style="background: var(--danger);">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="document-details">
+                            <div class="document-name">Title Deed - Unit 1205</div>
+                            <div class="document-meta">PDF • 2.4 MB • Updated Jan 15, 2024</div>
+                        </div>
+                    </div>
+                    <button class="download-btn">Download</button>
+                </div>
+
+                <div class="document-item">
+                    <div class="document-info">
+                        <div class="document-icon" style="background: var(--secondary);">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="document-details">
+                            <div class="document-name">Insurance Policy 2024</div>
+                            <div class="document-meta">PDF • 1.8 MB • Updated Dec 1, 2023</div>
+                        </div>
+                    </div>
+                    <button class="download-btn">Download</button>
+                </div>
+
+                <div class="document-item">
+                    <div class="document-info">
+                        <div class="document-icon" style="background: var(--info);">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="document-details">
+                            <div class="document-name">Property Assessment 2024</div>
+                            <div class="document-meta">PDF • 956 KB • Updated Jan 1, 2024</div>
+                        </div>
+                    </div>
+                    <button class="download-btn">Download</button>
+                </div>
+
+                <div class="document-item">
+                    <div class="document-info">
+                        <div class="document-icon" style="background: var(--warning);">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <div class="document-details">
+                            <div class="document-name">Unit Floor Plan</div>
+                            <div class="document-meta">PDF • 1.2 MB • Original from 2020</div>
+                        </div>
+                    </div>
+                    <button class="download-btn">Download</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav">
+            <ul class="mobile-nav-menu">
+                <li class="mobile-nav-item">
+                    <a href="index.html" class="mobile-nav-link">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="profile.html" class="mobile-nav-link">
+                        <i class="fas fa-user"></i>
+                        Profile
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="announcements.html" class="mobile-nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        News
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="billing.html" class="mobile-nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        Billing
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="services.html" class="mobile-nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        Services
+                    </a>
+                </li>
+                <li class="mobile-nav-item mobile-nav-more">
+                    <button class="mobile-nav-link" onclick="toggleMobileMore()">
+                        <i class="fas fa-ellipsis-h"></i>
+                        More
+                    </button>
+                    <div class="mobile-nav-dropdown" id="mobileMoreDropdown">
+                        <a href="properties.html" class="mobile-nav-dropdown-item active">
+                            <i class="fas fa-key"></i>
+                            Properties
+                        </a>
+                        <a href="complaints.html" class="mobile-nav-dropdown-item">
+                            <i class="fas fa-tools"></i>
+                            Request Service
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <script>
+        // Notification functions
+        function toggleNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.toggle('active');
+        }
+
+        function closeNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.remove('active');
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function markAllAsRead() {
+            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+            });
+        }
+
+        function viewAllNotifications() {
+            // Navigate to notifications page
+        }
+
+        function generateReport() {
+            // Generate and download unit report
+            alert('Generating unit report... This will be downloaded shortly.');
+        }
+
+        // Close notification modal when clicking outside
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('notificationModal');
+            const notificationBtn = document.querySelector('.notification-btn');
+            
+            if (modal && modal.classList.contains('active') && 
+                !modal.contains(event.target) &&
+                !notificationBtn.contains(event.target)) {
+                closeNotifications();
+            }
+        });
+
+        // Mobile More Dropdown Functions
+        function toggleMobileMore() {
+            const dropdown = document.getElementById('mobileMoreDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close mobile more dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('mobileMoreDropdown');
+            const moreButton = document.querySelector('.mobile-nav-more .mobile-nav-link');
+            
+            if (dropdown && dropdown.classList.contains('active') && 
+                !dropdown.contains(event.target) &&
+                !moreButton.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Close mobile more dropdown with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const dropdown = document.getElementById('mobileMoreDropdown');
+                if (dropdown) {
+                    dropdown.classList.remove('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

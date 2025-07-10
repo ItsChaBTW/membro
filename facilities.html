@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facility Booking - MEMBRO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Facility Page Specific Styles */
+        .facilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .facility-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .facility-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+
+        .facility-image {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 3rem;
+            position: relative;
+        }
+
+        .facility-content {
+            padding: 1.5rem;
+        }
+
+        .facility-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .facility-description {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .facility-rate {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .facility-capacity {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray-500);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .book-facility-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .book-facility-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(30, 64, 175, 0.3);
+        }
+
+        .availability-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .available {
+            background: var(--secondary);
+            color: var(--white);
+        }
+
+        .busy {
+            background: var(--warning);
+            color: var(--white);
+        }
+
+        .maintenance {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        /* Modal and booking styles - simplified for space */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        /* Booking form styles */
+        .booking-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .booking-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .booking-form input,
+        .booking-form select,
+        .booking-form textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .booking-form input:focus,
+        .booking-form select:focus,
+        .booking-form textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .time-picker {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .date-time-section {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .booking-summary {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .summary-item.total {
+            font-weight: 700;
+            font-size: 1rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--gray-300);
+            margin-top: 0.5rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-back {
+            flex: 1;
+            background: var(--white);
+            color: var(--gray-700);
+            border: 2px solid var(--gray-300);
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+
+        .btn-next {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(30, 64, 175, 0.3);
+        }
+
+        .success-content {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: var(--white);
+            font-size: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .facilities-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 1rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .time-picker {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Professional Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"><img src="logo.png" alt="MEMBRO Logo"></div>
+                    <div class="logo-text">
+                        <h1>MEMBRO</h1>
+                        <span>Your Home Portal</span>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="user-details">
+                        <span class="user-name">John Doe</span>
+                        <span class="user-unit">Unit 1205</span>
+                    </div>
+                    <button class="notification-btn" onclick="toggleNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">5</span>
+                    </button>
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <button class="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <!-- Notification Modal -->
+                    <div class="notification-modal" id="notificationModal">
+                        <div class="notification-overlay" onclick="closeNotifications()"></div>
+                        <div class="notification-panel">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                <button class="close-btn" onclick="closeNotifications()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="notification-tabs">
+                                <button class="tab-btn active" onclick="switchTab('all')">View all</button>
+                                <button class="tab-btn" onclick="switchTab('mentions')">Mentions</button>
+                            </div>
+                            
+                            <div class="notification-content">
+                                <div class="notification-item unread" data-type="facility">
+                                    <div class="notification-avatar">
+                                        <div class="system-avatar" style="background: var(--secondary);">
+                                            <i class="fas fa-basketball-ball"></i>
+                                        </div>
+                                    </div>
+                                    <div class="notification-body">
+                                        <div class="notification-text">
+                                            <strong>Basketball Court</strong> booking confirmed
+                                        </div>
+                                        <div class="notification-preview">
+                                            Your booking for March 25, 2024 at 3:00 PM has been approved
+                                        </div>
+                                        <div class="notification-time">1 hour ago</div>
+                                    </div>
+                                    <div class="notification-date">Today</div>
+                                    <div class="unread-indicator"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-footer">
+                                <button class="mark-read-btn" onclick="markAllAsRead()">
+                                    <i class="fas fa-check-double"></i>
+                                    Mark all as read
+                                </button>
+                                <button class="view-all-btn" onclick="viewAllNotifications()">
+                                    View all notifications
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Desktop Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="profile.html" class="nav-link">
+                        <i class="fas fa-user"></i>
+                        <span>My Information</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="billing.html" class="nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Bills & Payments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="announcements.html" class="nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        <span>Community News</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="services.html" class="nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        <span>Book Services/Facilities</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="properties.html" class="nav-link">
+                        <i class="fas fa-key"></i>
+                        <span>My Properties</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="complaints.html" class="nav-link">
+                        <i class="fas fa-tools"></i>
+                        <span>Request Service</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h2>Community Facilities</h2>
+                <p>Book community facilities for events, sports, and recreational activities. Easy scheduling with instant confirmation.</p>
+            </div>
+
+            <!-- Facilities Grid -->
+            <div class="facilities-grid">
+                <!-- Basketball Court -->
+                <div class="facility-card" onclick="openFacilityModal('basketball')">
+                    <div class="facility-image">
+                        <i class="fas fa-basketball-ball"></i>
+                        <div class="availability-status available">Available</div>
+                    </div>
+                    <div class="facility-content">
+                        <div class="facility-title">Basketball Court</div>
+                        <div class="facility-description">Full-size outdoor basketball court with professional hoops and lighting for evening games.</div>
+                        <div class="facility-rate">$25/hour</div>
+                        <div class="facility-capacity">
+                            <i class="fas fa-users"></i>
+                            <span>Up to 10 players</span>
+                        </div>
+                        <button class="book-facility-btn">Book Court</button>
+                    </div>
+                </div>
+
+                <!-- Event Hall -->
+                <div class="facility-card" onclick="openFacilityModal('event-hall')">
+                    <div class="facility-image" style="background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);">
+                        <i class="fas fa-calendar-alt"></i>
+                        <div class="availability-status available">Available</div>
+                    </div>
+                    <div class="facility-content">
+                        <div class="facility-title">Community Event Hall</div>
+                        <div class="facility-description">Spacious air-conditioned hall perfect for parties, meetings, and community events.</div>
+                        <div class="facility-rate">$150/day</div>
+                        <div class="facility-capacity">
+                            <i class="fas fa-users"></i>
+                            <span>Up to 100 guests</span>
+                        </div>
+                        <button class="book-facility-btn">Book Hall</button>
+                    </div>
+                </div>
+
+                <!-- Swimming Pool -->
+                <div class="facility-card" onclick="openFacilityModal('pool')">
+                    <div class="facility-image" style="background: linear-gradient(135deg, var(--info) 0%, #0891b2 100%);">
+                        <i class="fas fa-swimming-pool"></i>
+                        <div class="availability-status available">Available</div>
+                    </div>
+                    <div class="facility-content">
+                        <div class="facility-title">Swimming Pool</div>
+                        <div class="facility-description">Olympic-size swimming pool with lifeguard on duty and pool equipment available.</div>
+                        <div class="facility-rate">$20/hour</div>
+                        <div class="facility-capacity">
+                            <i class="fas fa-users"></i>
+                            <span>Up to 20 swimmers</span>
+                        </div>
+                        <button class="book-facility-btn">Book Pool</button>
+                    </div>
+                </div>
+
+                <!-- Gym/Fitness Center -->
+                <div class="facility-card" onclick="openFacilityModal('gym')">
+                    <div class="facility-image" style="background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);">
+                        <i class="fas fa-dumbbell"></i>
+                        <div class="availability-status busy">Busy</div>
+                    </div>
+                    <div class="facility-content">
+                        <div class="facility-title">Fitness Center</div>
+                        <div class="facility-description">Fully equipped gym with cardio machines, weights, and exercise equipment.</div>
+                        <div class="facility-rate">$15/hour</div>
+                        <div class="facility-capacity">
+                            <i class="fas fa-users"></i>
+                            <span>Up to 15 members</span>
+                        </div>
+                        <button class="book-facility-btn">Book Gym</button>
+                    </div>
+                </div>
+
+                <!-- Tennis Court -->
+                <div class="facility-card" onclick="openFacilityModal('tennis')">
+                    <div class="facility-image" style="background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);">
+                        <i class="fas fa-table-tennis"></i>
+                        <div class="availability-status available">Available</div>
+                    </div>
+                    <div class="facility-content">
+                        <div class="facility-title">Tennis Court</div>
+                        <div class="facility-description">Professional tennis court with high-quality surface and net. Rackets available for rent.</div>
+                        <div class="facility-rate">$30/hour</div>
+                        <div class="facility-capacity">
+                            <i class="fas fa-users"></i>
+                            <span>2-4 players</span>
+                        </div>
+                        <button class="book-facility-btn">Book Court</button>
+                    </div>
+                </div>
+
+                <!-- Function Room -->
+                <div class="facility-card" onclick="openFacilityModal('function-room')">
+                    <div class="facility-image" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                        <i class="fas fa-handshake"></i>
+                        <div class="availability-status maintenance">Maintenance</div>
+                    </div>
+                    <div class="facility-content">
+                        <div class="facility-title">Function Room</div>
+                        <div class="facility-description">Elegant meeting room with projector, sound system, and catering kitchen access.</div>
+                        <div class="facility-rate">$100/day</div>
+                        <div class="facility-capacity">
+                            <i class="fas fa-users"></i>
+                            <span>Up to 50 guests</span>
+                        </div>
+                        <button class="book-facility-btn" disabled>Under Maintenance</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav">
+            <ul class="mobile-nav-menu">
+                <li class="mobile-nav-item">
+                    <a href="index.html" class="mobile-nav-link">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="profile.html" class="mobile-nav-link">
+                        <i class="fas fa-user"></i>
+                        Profile
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="announcements.html" class="mobile-nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        News
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="billing.html" class="mobile-nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        Billing
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="services.html" class="mobile-nav-link active">
+                        <i class="fas fa-concierge-bell"></i>
+                        Services
+                    </a>
+                </li>
+                <li class="mobile-nav-item mobile-nav-more">
+                    <button class="mobile-nav-link" onclick="toggleMobileMore()">
+                        <i class="fas fa-ellipsis-h"></i>
+                        More
+                    </button>
+                    <div class="mobile-nav-dropdown" id="mobileMoreDropdown">
+                        <a href="properties.html" class="mobile-nav-dropdown-item">
+                            <i class="fas fa-key"></i>
+                            Properties
+                        </a>
+                        <a href="complaints.html" class="mobile-nav-dropdown-item">
+                            <i class="fas fa-tools"></i>
+                            Request Service
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Facility Modal -->
+    <div class="modal" id="facilityModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Facility Details</div>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Facility details will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="modal" id="bookingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Book Facility</div>
+                <button class="close-btn" onclick="closeBookingModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="booking-form" id="facilityBookingForm">
+                    <div class="date-time-section">
+                        <h3>Date & Time</h3>
+                        <div class="form-group">
+                            <label for="bookingDate">Date</label>
+                            <input type="date" id="bookingDate" name="bookingDate" required>
+                        </div>
+                        <div class="time-picker">
+                            <div class="form-group">
+                                <label for="startTime">Start Time</label>
+                                <input type="time" id="startTime" name="startTime" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="endTime">End Time</label>
+                                <input type="time" id="endTime" name="endTime" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="purpose">Purpose/Event Type</label>
+                        <select id="purpose" name="purpose" required>
+                            <option value="">Select purpose</option>
+                            <option value="personal">Personal Use</option>
+                            <option value="birthday">Birthday Party</option>
+                            <option value="meeting">Business Meeting</option>
+                            <option value="sports">Sports Activity</option>
+                            <option value="wedding">Wedding Reception</option>
+                            <option value="community">Community Event</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guests">Expected Number of Guests</label>
+                        <input type="number" id="guests" name="guests" min="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="specialRequests">Special Requests/Notes</label>
+                        <textarea id="specialRequests" name="specialRequests" rows="3" placeholder="Any special arrangements or equipment needed..."></textarea>
+                    </div>
+
+                    <div class="booking-summary">
+                        <h3>Booking Summary</h3>
+                        <div class="summary-item">
+                            <span>Facility:</span>
+                            <span id="summaryFacility">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Date:</span>
+                            <span id="summaryDate">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Time:</span>
+                            <span id="summaryTime">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Duration:</span>
+                            <span id="summaryDuration">-</span>
+                        </div>
+                        <div class="summary-item total">
+                            <span>Total Cost:</span>
+                            <span id="summaryTotal">-</span>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button type="button" class="btn-back" onclick="closeBookingModal()">Cancel</button>
+                        <button type="submit" class="btn-next">Submit Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="success-content">
+                <div class="success-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h2>Booking Request Submitted!</h2>
+                <p>Your facility booking request has been submitted for approval. You will receive a confirmation email shortly.</p>
+                <div style="margin: 2rem 0;">
+                    <strong>Booking Reference: #FAC-2024-001</strong>
+                </div>
+                <button class="btn-next" onclick="closeSuccessModal()">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Facility data
+        const facilities = {
+            basketball: {
+                title: "Basketball Court",
+                icon: "fas fa-basketball-ball",
+                description: "Full-size outdoor basketball court with professional hoops and lighting for evening games.",
+                features: [
+                    "Professional basketball hoops",
+                    "LED lighting for night games",
+                    "Synthetic court surface",
+                    "Scoreboard available",
+                    "Ball storage included",
+                    "First aid kit on site"
+                ],
+                rate: 25,
+                capacity: "Up to 10 players",
+                details: "Our basketball court features a professional-grade playing surface and adjustable lighting for both day and evening use. Perfect for pickup games, tournaments, or training sessions."
+            },
+            "event-hall": {
+                title: "Community Event Hall",
+                icon: "fas fa-calendar-alt",
+                description: "Spacious air-conditioned hall perfect for parties, meetings, and community events.",
+                features: [
+                    "Air conditioning system",
+                    "Sound system with microphones",
+                    "Tables and chairs included",
+                    "Kitchen access available",
+                    "Stage area",
+                    "Parking spaces allocated"
+                ],
+                rate: 150,
+                capacity: "Up to 100 guests",
+                details: "Our event hall is the perfect venue for celebrations, meetings, and community gatherings. The space includes full amenities and can be configured to suit your event needs."
+            },
+            pool: {
+                title: "Swimming Pool",
+                icon: "fas fa-swimming-pool",
+                description: "Olympic-size swimming pool with lifeguard on duty and pool equipment available.",
+                features: [
+                    "Olympic-size pool",
+                    "Lifeguard on duty",
+                    "Pool equipment rental",
+                    "Changing rooms",
+                    "Shower facilities",
+                    "Pool chemicals maintained"
+                ],
+                rate: 20,
+                capacity: "Up to 20 swimmers",
+                details: "Enjoy our pristine swimming pool with professional maintenance and safety supervision. Perfect for lap swimming, aqua fitness, or recreational swimming."
+            },
+            gym: {
+                title: "Fitness Center",
+                icon: "fas fa-dumbbell",
+                description: "Fully equipped gym with cardio machines, weights, and exercise equipment.",
+                features: [
+                    "Cardio machines",
+                    "Free weights",
+                    "Exercise machines",
+                    "Yoga mats available",
+                    "Air conditioning",
+                    "Towel service"
+                ],
+                rate: 15,
+                capacity: "Up to 15 members",
+                details: "Stay fit with our comprehensive fitness center featuring modern equipment and a comfortable workout environment."
+            },
+            tennis: {
+                title: "Tennis Court",
+                icon: "fas fa-table-tennis",
+                description: "Professional tennis court with high-quality surface and net. Rackets available for rent.",
+                features: [
+                    "Professional court surface",
+                    "High-quality net",
+                    "Racket rental available",
+                    "Ball machine access",
+                    "Court lighting",
+                    "Bench seating"
+                ],
+                rate: 30,
+                capacity: "2-4 players",
+                details: "Play tennis on our professional-grade court with all the amenities you need for a great game."
+            },
+            "function-room": {
+                title: "Function Room",
+                icon: "fas fa-handshake",
+                description: "Elegant meeting room with projector, sound system, and catering kitchen access.",
+                features: [
+                    "HD projector system",
+                    "Conference table",
+                    "Sound system",
+                    "Catering kitchen access",
+                    "Wi-Fi included",
+                    "Whiteboard available"
+                ],
+                rate: 100,
+                capacity: "Up to 50 guests",
+                details: "Host professional meetings and small events in our well-equipped function room with all necessary business amenities."
+            }
+        };
+
+        let currentFacility = null;
+
+        function openFacilityModal(facilityKey) {
+            const facility = facilities[facilityKey];
+            currentFacility = facilityKey;
+
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+
+            modalTitle.textContent = facility.title;
+
+            modalBody.innerHTML = `
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                            <i class="${facility.icon}"></i>
+                        </div>
+                        <div>
+                            <h3 style="margin: 0; color: var(--gray-900);">${facility.title}</h3>
+                            <p style="margin: 0; color: var(--gray-600);">${facility.capacity} • $${facility.rate}/hour</p>
+                        </div>
+                    </div>
+                    <p style="color: var(--gray-600); line-height: 1.6; margin-bottom: 1.5rem;">${facility.details}</p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--gray-900); margin-bottom: 1rem;">Facility Features:</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        ${facility.features.map(feature => `
+                            <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--gray-600);">
+                                <i class="fas fa-check" style="color: var(--secondary); font-size: 0.875rem;"></i>
+                                ${feature}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+
+                <div style="background: var(--gray-50); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 600; color: var(--gray-900);">Hourly Rate:</span>
+                        <span style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">$${facility.rate}/hour</span>
+                    </div>
+                </div>
+
+                <button class="btn-next" onclick="startBooking()" style="width: 100%;">
+                    <i class="fas fa-calendar-plus"></i>
+                    Book This Facility
+                </button>
+            `;
+
+            document.getElementById('facilityModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('facilityModal').classList.remove('active');
+        }
+
+        function startBooking() {
+            closeModal();
+            updateBookingSummary();
+            document.getElementById('bookingModal').classList.add('active');
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.remove('active');
+        }
+
+        function updateBookingSummary() {
+            const facility = facilities[currentFacility];
+            document.getElementById('summaryFacility').textContent = facility.title;
+            
+            // Update summary when form changes
+            const form = document.getElementById('facilityBookingForm');
+            form.addEventListener('input', function() {
+                const date = document.getElementById('bookingDate').value;
+                const startTime = document.getElementById('startTime').value;
+                const endTime = document.getElementById('endTime').value;
+
+                if (date) {
+                    document.getElementById('summaryDate').textContent = new Date(date).toLocaleDateString();
+                }
+
+                if (startTime && endTime) {
+                    document.getElementById('summaryTime').textContent = `${startTime} - ${endTime}`;
+                    
+                    // Calculate duration and cost
+                    const start = new Date(`2024-01-01T${startTime}`);
+                    const end = new Date(`2024-01-01T${endTime}`);
+                    const durationMs = end - start;
+                    const durationHours = durationMs / (1000 * 60 * 60);
+                    
+                    document.getElementById('summaryDuration').textContent = `${durationHours} hour(s)`;
+                    document.getElementById('summaryTotal').textContent = `$${facility.rate * durationHours}`;
+                }
+            });
+        }
+
+        function confirmBooking() {
+            closeBookingModal();
+            document.getElementById('successModal').classList.add('active');
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('active');
+        }
+
+        // Handle form submission
+        document.getElementById('facilityBookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            confirmBooking();
+        });
+
+        // Notification functions
+        function toggleNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.toggle('active');
+        }
+
+        function closeNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.remove('active');
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function markAllAsRead() {
+            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+            });
+        }
+
+        function viewAllNotifications() {
+            // Navigate to notifications page
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // Mobile More Dropdown Functions
+        function toggleMobileMore() {
+            const dropdown = document.getElementById('mobileMoreDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close mobile more dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('mobileMoreDropdown');
+            const moreButton = document.querySelector('.mobile-nav-more .mobile-nav-link');
+            
+            if (dropdown && dropdown.classList.contains('active') && 
+                !dropdown.contains(event.target) &&
+                !moreButton.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Close mobile more dropdown with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const dropdown = document.getElementById('mobileMoreDropdown');
+                if (dropdown) {
+                    dropdown.classList.remove('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

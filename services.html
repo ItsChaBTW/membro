@@ -1,0 +1,3471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services - MEMBRO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Services Page Specific Styles */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .service-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+
+        .service-image {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 3rem;
+            position: relative;
+        }
+
+        .service-content {
+            padding: 1.5rem;
+        }
+
+        .service-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .service-description {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .service-price {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .service-duration {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray-500);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .book-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .book-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(30, 64, 175, 0.3);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        /* Calendar and booking styles truncated for brevity - they remain the same */
+        .calendar-container { margin: 1.5rem 0; }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .calendar-title { font-size: 1.125rem; font-weight: 600; color: var(--gray-900); }
+        .calendar-nav { display: flex; gap: 0.5rem; }
+        .calendar-nav button { background: var(--gray-100); border: none; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; }
+        .calendar-nav button:hover { background: var(--gray-200); }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
+        .calendar-day-header { text-align: center; font-size: 0.75rem; font-weight: 600; color: var(--gray-500); padding: 0.5rem; text-transform: uppercase; }
+        .calendar-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 0.875rem; font-weight: 500; position: relative; }
+        .calendar-day:hover { background: var(--gray-100); }
+        .calendar-day.available { background: var(--gray-50); color: var(--gray-900); }
+        .calendar-day.available:hover { background: var(--primary-light); color: var(--white); }
+        .calendar-day.selected { background: var(--primary); color: var(--white); }
+        .calendar-day.unavailable { color: var(--gray-300); cursor: not-allowed; }
+        .calendar-day.past { color: var(--gray-300); cursor: not-allowed; }
+        
+        /* Time Slots, Payment Options, Booking Summary styles - all remain the same */
+        .time-slots { margin: 1.5rem 0; }
+        .time-slots h3 { font-size: 1rem; font-weight: 600; color: var(--gray-900); margin-bottom: 1rem; }
+        .time-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.5rem; }
+        .time-slot { padding: 0.75rem; border: 2px solid var(--gray-200); border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.2s ease; font-size: 0.875rem; font-weight: 500; }
+        .time-slot:hover { border-color: var(--primary-light); background: var(--primary-light); color: var(--white); }
+        .time-slot.selected { border-color: var(--primary); background: var(--primary); color: var(--white); }
+        .time-slot.unavailable { color: var(--gray-400); border-color: var(--gray-200); cursor: not-allowed; opacity: 0.5; }
+        
+        .payment-section { margin: 1.5rem 0; }
+        .payment-section h3 { font-size: 1rem; font-weight: 600; color: var(--gray-900); margin-bottom: 1rem; }
+        .payment-options { display: grid; gap: 1rem; }
+        .payment-option { display: flex; align-items: center; padding: 1rem; border: 2px solid var(--gray-200); border-radius: 12px; cursor: pointer; transition: all 0.2s ease; }
+        .payment-option:hover { border-color: var(--primary-light); background: var(--gray-50); }
+        .payment-option.selected { border-color: var(--primary); background: var(--primary); color: var(--white); }
+        .payment-option input[type="radio"] { margin-right: 1rem; transform: scale(1.2); }
+        .payment-icon { font-size: 1.5rem; margin-right: 1rem; width: 40px; text-align: center; }
+        .payment-info h4 { font-weight: 600; margin-bottom: 0.25rem; }
+        .payment-info p { font-size: 0.875rem; opacity: 0.8; }
+        
+        .booking-summary { background: var(--gray-50); padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0; }
+        .booking-summary h3 { font-size: 1rem; font-weight: 600; color: var(--gray-900); margin-bottom: 1rem; }
+        .summary-item { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.875rem; }
+        .summary-item.total { font-weight: 700; font-size: 1rem; padding-top: 0.5rem; border-top: 1px solid var(--gray-300); margin-top: 0.5rem; }
+        
+        .action-buttons { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .btn-back { flex: 1; background: var(--white); color: var(--gray-700); border: 2px solid var(--gray-300); padding: 0.75rem 1rem; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+        .btn-back:hover { background: var(--gray-50); border-color: var(--gray-400); }
+        .btn-next { flex: 1; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: var(--white); border: none; padding: 0.75rem 1rem; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+        .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(30, 64, 175, 0.3); }
+        .btn-next:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        .success-content { text-align: center; padding: 2rem; }
+        .success-icon { width: 80px; height: 80px; background: var(--secondary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--white); font-size: 2rem; }
+        
+        /* Tab Button Styles */
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--gray-300);
+            background: var(--white);
+            color: var(--gray-700);
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--primary-light);
+            background: var(--gray-50);
+        }
+
+        .tab-btn.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        /* Facility Modal Styles */
+        .facility-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 1.5rem;
+            border-radius: 16px 16px 0 0;
+            margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+        }
+
+        .facility-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .facility-rate {
+            font-size: 1.125rem;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .booking-type-selection {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .booking-type-title {
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .booking-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .booking-option {
+            padding: 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .booking-option:hover {
+            border-color: var(--primary-light);
+            background: var(--white);
+        }
+
+        .booking-option.selected {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .booking-option-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .booking-option-desc {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        /* Facility Form Styles */
+        .booking-form {
+            padding: 0;
+        }
+
+        .booking-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .booking-form label {
+            display: block;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .booking-form label i {
+            color: var(--primary);
+            width: 16px;
+        }
+
+        .booking-form input[type="date"],
+        .booking-form input[type="time"],
+        .booking-form input[type="number"],
+        .booking-form select,
+        .booking-form textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            background: var(--white);
+            color: var(--gray-900);
+            font-family: inherit;
+        }
+
+        .booking-form input[type="date"]:focus,
+        .booking-form input[type="time"]:focus,
+        .booking-form input[type="number"]:focus,
+        .booking-form select:focus,
+        .booking-form textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+
+        .booking-form textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .booking-form select {
+            cursor: pointer;
+        }
+
+        .booking-form input[type="date"]::-webkit-calendar-picker-indicator,
+        .booking-form input[type="time"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            filter: invert(0.5);
+        }
+
+        /* Time inputs container */
+        .time-inputs-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-section {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .services-grid { grid-template-columns: 1fr; }
+            .modal-content { width: 95%; margin: 1rem; }
+            .action-buttons { flex-direction: column; }
+            .time-grid { grid-template-columns: repeat(2, 1fr); }
+            .booking-options { grid-template-columns: 1fr; }
+            .time-inputs-container { grid-template-columns: 1fr; }
+        }
+
+        /* Service booking form styles */
+        .service-booking-form .form-section {
+            margin-bottom: 2rem;
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--gray-200);
+        }
+
+        .service-booking-form .form-section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 1.5rem;
+            font-size: 1.125rem;
+        }
+
+        .service-booking-form .form-section-title i {
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+
+        .service-booking-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .service-booking-form .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .service-booking-form label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .service-booking-form label i {
+            color: var(--gray-500);
+            font-size: 0.875rem;
+        }
+
+        .service-booking-form input,
+        .service-booking-form select,
+        .service-booking-form textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .service-booking-form input:focus,
+        .service-booking-form select:focus,
+        .service-booking-form textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .service-booking-form .time-inputs-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Payment Requirements Styles */
+        .payment-requirement-selection {
+            margin-bottom: 1.5rem;
+        }
+
+        .payment-req-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .payment-req-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .payment-req-option:hover {
+            border-color: var(--primary-light);
+            background: var(--primary-bg);
+        }
+
+        .payment-req-option.selected {
+            border-color: var(--primary);
+            background: var(--primary-bg);
+        }
+
+        .payment-req-option.selected .payment-req-radio i {
+            color: var(--primary);
+        }
+
+        .payment-req-radio {
+            margin-top: 0.25rem;
+        }
+
+        .payment-req-radio i {
+            color: var(--gray-300);
+            transition: color 0.2s ease;
+        }
+
+        .payment-req-content {
+            flex: 1;
+        }
+
+        .payment-req-title {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .payment-req-desc {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 0.5rem;
+        }
+
+        .payment-req-amount {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.125rem;
+        }
+
+        .payment-info-box {
+            background: linear-gradient(135deg, var(--primary-bg) 0%, #f8fafc 100%);
+            border: 1px solid var(--primary-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .payment-info-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .payment-info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .payment-info-list li {
+            margin-bottom: 0.75rem;
+            color: var(--gray-700);
+            line-height: 1.5;
+        }
+
+        .payment-info-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Payment Gateway Modal Styles */
+        .payment-gateway-summary {
+            margin-bottom: 2rem;
+        }
+
+        .payment-summary-card {
+            background: var(--gray-50);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--gray-200);
+        }
+
+        .payment-summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .payment-summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .payment-summary-item.total {
+            font-weight: 700;
+            font-size: 1.125rem;
+            color: var(--primary);
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--gray-300);
+        }
+
+        .payment-method-section {
+            margin-bottom: 2rem;
+        }
+
+        .payment-method-section h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .payment-method:hover {
+            border-color: var(--primary-light);
+            background: var(--primary-bg);
+        }
+
+        .payment-method.selected {
+            border-color: var(--primary);
+            background: var(--primary-bg);
+        }
+
+        .payment-method.selected .payment-method-radio i {
+            color: var(--primary);
+        }
+
+        .payment-method-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-600);
+            font-size: 1.25rem;
+        }
+
+        .payment-method.selected .payment-method-icon {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+        }
+
+        .payment-method-info {
+            flex: 1;
+        }
+
+        .payment-method-name {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .payment-method-desc {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .payment-method-radio i {
+            color: var(--gray-300);
+            transition: color 0.2s ease;
+        }
+
+        /* Payment Gateway Forms */
+        .payment-gateway-forms {
+            margin-bottom: 2rem;
+        }
+
+        .payment-form {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .payment-form h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--gray-900);
+        }
+
+        .payment-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            margin-bottom: 1rem;
+        }
+
+        .payment-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* GCash Payment Styles */
+        .gcash-payment-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .qr-code-section {
+            text-align: center;
+        }
+
+        .qr-code-placeholder {
+            width: 200px;
+            height: 200px;
+            background: var(--gray-100);
+            border: 2px dashed var(--gray-300);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem auto;
+            color: var(--gray-500);
+        }
+
+        .qr-code-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .payment-details {
+            text-align: left;
+        }
+
+        .payment-details p {
+            margin-bottom: 0.5rem;
+            color: var(--gray-700);
+        }
+
+        .manual-input-section p {
+            margin-bottom: 1rem;
+            color: var(--gray-700);
+        }
+
+        /* Card Payment Styles */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Bank Transfer Styles */
+        .bank-details-card {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .bank-details-card h5 {
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+
+        .bank-info p {
+            margin-bottom: 0.5rem;
+            color: var(--gray-700);
+        }
+
+        .bank-instruction ol {
+            padding-left: 1.5rem;
+            color: var(--gray-700);
+        }
+
+        .bank-instruction li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Cash Payment Styles */
+        .cash-instructions {
+            margin-bottom: 1.5rem;
+        }
+
+        .instruction-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: 12px;
+        }
+
+        .instruction-item i {
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin-top: 0.25rem;
+        }
+
+        .instruction-item strong {
+            display: block;
+            margin-bottom: 0.25rem;
+            color: var(--gray-900);
+        }
+
+        .instruction-item p {
+            margin: 0;
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+
+        .cash-note {
+            background: linear-gradient(135deg, #fef3cd 0%, #fff 100%);
+            border: 1px solid #f59e0b;
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .cash-note p {
+            margin: 0;
+            color: #92400e;
+            font-size: 0.875rem;
+        }
+
+        /* Payment Actions */
+        .payment-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+        }
+
+        .payment-actions .btn-back,
+        .payment-actions .btn-next {
+            flex: 1;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .payment-req-options {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+
+            .gcash-payment-container {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+   
+</head>
+<body>
+    <div class="container">
+        <!-- Professional Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"><img src="logo.png" alt="MEMBRO Logo"></div>
+                    <div class="logo-text">
+                        <h1>MEMBRO</h1>
+                        <span>Your Home Portal</span>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="user-details">
+                        <span class="user-name">John Doe</span>
+                        <span class="user-unit">Unit 1205</span>
+                    </div>
+                    <button class="notification-btn" onclick="toggleNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">5</span>
+                    </button>
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <button class="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <!-- Notification Modal -->
+                    <div class="notification-modal" id="notificationModal">
+            <div class="notification-overlay" onclick="closeNotifications()"></div>
+            <div class="notification-panel">
+                <div class="notification-header">
+                    <h3>Notifications</h3>
+                    <button class="close-btn" onclick="closeNotifications()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="notification-tabs">
+                    <button class="tab-btn active" onclick="switchTab('all')">View all</button>
+                    <button class="tab-btn" onclick="switchTab('mentions')">Mentions</button>
+                </div>
+                
+                <div class="notification-content">
+                    <div class="notification-item unread" data-type="comment">
+                        <div class="notification-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Frankie+Sullivan&background=3b82f6&color=ffffff&size=40" alt="Frankie Sullivan">
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Frankie Sullivan</strong> commented on your post
+                            </div>
+                            <div class="notification-preview">
+                                This is looking great! Let's get started on it.
+                            </div>
+                            <div class="notification-time">Friday 2:20pm</div>
+                        </div>
+                        <div class="notification-date">Sep 20, 2024</div>
+                        <div class="unread-indicator"></div>
+                    </div>
+                    
+                    <div class="notification-item unread" data-type="follow">
+                        <div class="notification-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Amelie+Laurent&background=10b981&color=ffffff&size=40" alt="Amelie Laurent">
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Amelie Laurent</strong> followed you
+                            </div>
+                            <div class="notification-time">Friday 10:04am</div>
+                        </div>
+                        <div class="notification-date">Sep 20, 2024</div>
+                        <div class="unread-indicator"></div>
+                    </div>
+                    
+                    <div class="notification-item unread" data-type="upload">
+                        <div class="notification-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Mikah+DiStefano&background=f59e0b&color=ffffff&size=40" alt="Mikah DiStefano">
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Mikah DiStefano</strong> uploaded 2 attachments
+                            </div>
+                            <div class="notification-attachments">
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-video"></i>
+                                    <div class="attachment-info">
+                                        <span class="attachment-name">Prototype recording 02.mp4</span>
+                                        <span class="attachment-size">16 MB</span>
+                                    </div>
+                                    <i class="fas fa-download attachment-action"></i>
+                                </div>
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-video"></i>
+                                    <div class="attachment-info">
+                                        <span class="attachment-name">Prototype recording 01.mp4</span>
+                                        <span class="attachment-size">14 MB</span>
+                                    </div>
+                                    <i class="fas fa-download attachment-action"></i>
+                                </div>
+                            </div>
+                            <div class="notification-time">Thursday 2:20pm</div>
+                        </div>
+                        <div class="notification-date">Sep 20, 2024</div>
+                        <div class="unread-indicator"></div>
+                    </div>
+                    
+                    <div class="notification-item" data-type="billing">
+                        <div class="notification-avatar">
+                            <div class="system-avatar">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Payment Reminder</strong>
+                            </div>
+                            <div class="notification-preview">
+                                Your monthly payment of $1,250 is due on March 15th
+                            </div>
+                            <div class="notification-time">2 hours ago</div>
+                        </div>
+                        <div class="notification-date">Today</div>
+                    </div>
+                    
+                    <div class="notification-item" data-type="maintenance">
+                        <div class="notification-avatar">
+                            <div class="system-avatar" style="background: var(--warning);">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Maintenance Update</strong>
+                            </div>
+                            <div class="notification-preview">
+                                Your service request #2024-156 has been completed
+                            </div>
+                            <div class="notification-time">Yesterday</div>
+                        </div>
+                        <div class="notification-date">Sep 19, 2024</div>
+                    </div>
+                </div>
+                
+                <div class="notification-footer">
+                    <button class="mark-read-btn" onclick="markAllAsRead()">
+                        <i class="fas fa-check-double"></i>
+                        Mark all as read
+                    </button>
+                    <button class="view-all-btn" onclick="viewAllNotifications()">
+                        View all notifications
+                    </button>
+                    <a href="notification-settings.html" class="unsubscribe-link">
+                        <i class="fas fa-cog"></i>
+                        Notification Settings
+                    </a>
+                </div>
+            </div>
+        </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Desktop Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="profile.html" class="nav-link">
+                        <i class="fas fa-user"></i>
+                        <span>My Information</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="billing.html" class="nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Bills & Payments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="announcements.html" class="nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        <span>Community News</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="services.html" class="nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        <span>Book Services/Facilities</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="properties.html" class="nav-link">
+                        <i class="fas fa-key"></i>
+                        <span>My Properties</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="complaints.html" class="nav-link">
+                        <i class="fas fa-tools"></i>
+                        <span>Request Service</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h2>Services & Facilities</h2>
+                <p>Book professional services to keep your home in perfect condition or reserve community facilities for events and activities.</p>
+            </div>
+
+            <!-- Service Type Toggle -->
+            <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                <button id="servicesTab" class="tab-btn active" onclick="showServices()">
+                    <i class="fas fa-concierge-bell"></i>
+                    Professional Services
+                </button>
+                <button id="facilitiesTab" class="tab-btn" onclick="showFacilities()">
+                    <i class="fas fa-building"></i>
+                    Community Facilities
+                </button>
+            </div>
+
+            <!-- Services Section -->
+            <div id="servicesSection">
+                <h3 style="margin-bottom: 2rem; color: var(--gray-900); font-weight: 700;">Professional Services</h3>
+                <!-- Services Grid -->
+            <div class="services-grid">
+            <!-- Cleaning Services -->
+            <div class="service-card" onclick="openServiceModal('cleaning')">
+                <div class="service-image">
+                    <i class="fas fa-broom"></i>
+                </div>
+                <div class="service-content">
+                    <div class="service-title">Deep Cleaning Service</div>
+                    <div class="service-description">Professional deep cleaning for your entire unit including kitchen, bathrooms, living areas, and bedrooms.</div>
+                    <div class="service-price">$150 - $250</div>
+                    <div class="service-duration">
+                        <i class="fas fa-clock"></i>
+                        <span>3-5 hours</span>
+                    </div>
+                    <button class="book-btn">Book Now</button>
+                </div>
+            </div>
+
+            <!-- Plumbing Services -->
+            <div class="service-card" onclick="openServiceModal('plumbing')">
+                <div class="service-image" style="background: linear-gradient(135deg, var(--info) 0%, #0891b2 100%);">
+                    <i class="fas fa-wrench"></i>
+                </div>
+                <div class="service-content">
+                    <div class="service-title">Plumbing Services</div>
+                    <div class="service-description">Fix leaks, unclog drains, repair faucets, and handle all your plumbing needs with certified professionals.</div>
+                    <div class="service-price">$80 - $300</div>
+                    <div class="service-duration">
+                        <i class="fas fa-clock"></i>
+                        <span>1-3 hours</span>
+                    </div>
+                    <button class="book-btn">Book Now</button>
+                </div>
+            </div>
+
+            <!-- Electrical Services -->
+            <div class="service-card" onclick="openServiceModal('electrical')">
+                <div class="service-image" style="background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="service-content">
+                    <div class="service-title">Electrical Services</div>
+                    <div class="service-description">Licensed electricians for outlet installation, lighting repairs, circuit breaker fixes, and electrical inspections.</div>
+                    <div class="service-price">$100 - $400</div>
+                    <div class="service-duration">
+                        <i class="fas fa-clock"></i>
+                        <span>1-4 hours</span>
+                    </div>
+                    <button class="book-btn">Book Now</button>
+                </div>
+            </div>
+
+            <!-- HVAC Services -->
+            <div class="service-card" onclick="openServiceModal('hvac')">
+                <div class="service-image" style="background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);">
+                    <i class="fas fa-fan"></i>
+                </div>
+                <div class="service-content">
+                    <div class="service-title">HVAC Maintenance</div>
+                    <div class="service-description">Air conditioning and heating system maintenance, filter replacement, and climate control optimization.</div>
+                    <div class="service-price">$120 - $350</div>
+                    <div class="service-duration">
+                        <i class="fas fa-clock"></i>
+                        <span>2-4 hours</span>
+                    </div>
+                    <button class="book-btn">Book Now</button>
+                </div>
+            </div>
+
+            <!-- Appliance Repair -->
+            <div class="service-card" onclick="openServiceModal('appliance')">
+                <div class="service-image" style="background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <div class="service-content">
+                    <div class="service-title">Appliance Repair</div>
+                    <div class="service-description">Repair and maintenance for refrigerators, washers, dryers, ovens, and other household appliances.</div>
+                    <div class="service-price">$90 - $280</div>
+                    <div class="service-duration">
+                        <i class="fas fa-clock"></i>
+                        <span>1-3 hours</span>
+                    </div>
+                    <button class="book-btn">Book Now</button>
+                </div>
+            </div>
+
+            <!-- Pest Control -->
+            <div class="service-card" onclick="openServiceModal('pest')">
+                <div class="service-image" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                    <i class="fas fa-bug"></i>
+                </div>
+                <div class="service-content">
+                    <div class="service-title">Pest Control</div>
+                    <div class="service-description">Safe and effective pest control solutions for ants, roaches, termites, and other common household pests.</div>
+                    <div class="service-price">$75 - $200</div>
+                    <div class="service-duration">
+                        <i class="fas fa-clock"></i>
+                        <span>1-2 hours</span>
+                    </div>
+                    <button class="book-btn">Book Now</button>
+                </div>
+                            </div>
+            </div>
+            </div>
+
+            <!-- Facilities Section -->
+            <div id="facilitiesSection" style="display: none;">
+                <h3 style="margin-bottom: 2rem; color: var(--gray-900); font-weight: 700;">Community Facilities</h3>
+                
+                <!-- Facilities Grid -->
+                <div class="services-grid">
+                    <!-- Basketball Court -->
+                    <div class="service-card" onclick="openFacilityModal('basketball')">
+                        <div class="service-image" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);">
+                            <i class="fas fa-basketball-ball"></i>
+                        </div>
+                        <div class="service-content">
+                            <div class="service-title">Basketball Court</div>
+                            <div class="service-description">Full-size outdoor basketball court with professional hoops and lighting for evening games.</div>
+                            <div class="service-price">$25/hour</div>
+                            <div class="service-duration">
+                                <i class="fas fa-users"></i>
+                                <span>Up to 10 players</span>
+                            </div>
+                            <button class="book-btn">Book Court</button>
+                        </div>
+                    </div>
+
+                    <!-- Event Hall -->
+                    <div class="service-card" onclick="openFacilityModal('event-hall')">
+                        <div class="service-image" style="background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="service-content">
+                            <div class="service-title">Community Event Hall</div>
+                            <div class="service-description">Spacious air-conditioned hall perfect for parties, meetings, and community events.</div>
+                            <div class="service-price">$150/day</div>
+                            <div class="service-duration">
+                                <i class="fas fa-users"></i>
+                                <span>Up to 100 guests</span>
+                            </div>
+                            <button class="book-btn">Book Hall</button>
+                        </div>
+                    </div>
+
+                    <!-- Swimming Pool -->
+                    <div class="service-card" onclick="openFacilityModal('pool')">
+                        <div class="service-image" style="background: linear-gradient(135deg, var(--info) 0%, #0891b2 100%);">
+                            <i class="fas fa-swimming-pool"></i>
+                        </div>
+                        <div class="service-content">
+                            <div class="service-title">Swimming Pool</div>
+                            <div class="service-description">Olympic-size swimming pool with lifeguard on duty and pool equipment available.</div>
+                            <div class="service-price">$20/hour</div>
+                            <div class="service-duration">
+                                <i class="fas fa-users"></i>
+                                <span>Up to 20 swimmers</span>
+                            </div>
+                            <button class="book-btn">Book Pool</button>
+                        </div>
+                    </div>
+
+                    <!-- Gym/Fitness Center -->
+                    <div class="service-card" onclick="openFacilityModal('gym')">
+                        <div class="service-image" style="background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <div class="service-content">
+                            <div class="service-title">Fitness Center</div>
+                            <div class="service-description">Fully equipped gym with cardio machines, weights, and exercise equipment.</div>
+                            <div class="service-price">$15/hour</div>
+                            <div class="service-duration">
+                                <i class="fas fa-users"></i>
+                                <span>Up to 15 members</span>
+                            </div>
+                            <button class="book-btn">Book Gym</button>
+                        </div>
+                    </div>
+
+                    <!-- Tennis Court -->
+                    <div class="service-card" onclick="openFacilityModal('tennis')">
+                        <div class="service-image" style="background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);">
+                            <i class="fas fa-table-tennis"></i>
+                        </div>
+                        <div class="service-content">
+                            <div class="service-title">Tennis Court</div>
+                            <div class="service-description">Professional tennis court with high-quality surface and net. Rackets available for rent.</div>
+                            <div class="service-price">$30/hour</div>
+                            <div class="service-duration">
+                                <i class="fas fa-users"></i>
+                                <span>2-4 players</span>
+                            </div>
+                            <button class="book-btn">Book Court</button>
+                        </div>
+                    </div>
+
+                    <!-- Function Room -->
+                    <div class="service-card" onclick="openFacilityModal('function-room')">
+                        <div class="service-image" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div class="service-content">
+                            <div class="service-title">Function Room</div>
+                            <div class="service-description">Elegant meeting room with projector, sound system, and catering kitchen access.</div>
+                            <div class="service-price">$100/day</div>
+                            <div class="service-duration">
+                                <i class="fas fa-users"></i>
+                                <span>Up to 50 guests</span>
+                            </div>
+                            <button class="book-btn">Book Room</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    <!-- Service Modal -->
+    <div class="modal" id="serviceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Service Details</div>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Service details will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="modal" id="bookingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Book Service</div>
+                <button class="close-btn" onclick="closeBookingModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Step 1: Calendar -->
+                <div id="step1" class="booking-step">
+                    <h3>Select Date</h3>
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <div class="calendar-title" id="calendarTitle">March 2024</div>
+                            <div class="calendar-nav">
+                                <button onclick="previousMonth()">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button onclick="nextMonth()">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="calendar-grid" id="calendarGrid">
+                            <!-- Calendar will be generated here -->
+                        </div>
+                    </div>
+                    <div class="time-slots" id="timeSlots" style="display: none;">
+                        <h3>Select Time</h3>
+                        <div class="time-grid" id="timeGrid">
+                            <!-- Time slots will be generated here -->
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-next" id="nextToPayment" onclick="nextStep()" disabled>
+                            Continue to Payment
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Payment -->
+                <div id="step2" class="booking-step" style="display: none;">
+                    <h3>Payment Method</h3>
+                    <div class="booking-summary">
+                        <h3>Booking Summary</h3>
+                        <div class="summary-item">
+                            <span>Service:</span>
+                            <span id="summaryService">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Date:</span>
+                            <span id="summaryDate">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Time:</span>
+                            <span id="summaryTime">-</span>
+                        </div>
+                        <div class="summary-item total">
+                            <span>Total:</span>
+                            <span id="summaryTotal">-</span>
+                        </div>
+                    </div>
+
+                    <div class="payment-section">
+                        <h3>Choose Payment Method</h3>
+                        <div class="payment-options">
+                            <div class="payment-option" onclick="selectPayment('card')">
+                                <input type="radio" name="payment" value="card">
+                                <div class="payment-icon">
+                                    <i class="fas fa-credit-card"></i>
+                                </div>
+                                <div class="payment-info">
+                                    <h4>Credit/Debit Card</h4>
+                                    <p>Pay securely with your card</p>
+                                </div>
+                            </div>
+                            <div class="payment-option" onclick="selectPayment('ewallet')">
+                                <input type="radio" name="payment" value="ewallet">
+                                <div class="payment-icon">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <div class="payment-info">
+                                    <h4>E-Wallet</h4>
+                                    <p>PayPal, GCash, PayMaya</p>
+                                </div>
+                            </div>
+                            <div class="payment-option" onclick="selectPayment('cash')">
+                                <input type="radio" name="payment" value="cash">
+                                <div class="payment-icon">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                                <div class="payment-info">
+                                    <h4>Cash Payment</h4>
+                                    <p>Pay when service is completed</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn-back" onclick="previousStep()">Back</button>
+                        <button class="btn-next" id="confirmBooking" onclick="confirmBooking()" disabled>
+                            Confirm Booking
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="success-content">
+                <div class="success-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h2>Booking Confirmed!</h2>
+                <p>Your service has been successfully booked. You will receive a confirmation email shortly.</p>
+                <div style="margin: 2rem 0;">
+                    <strong>Booking Reference: #SRV-2024-001</strong>
+                </div>
+                <button class="btn-next" onclick="closeSuccessModal()">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Facility Modal -->
+    <div class="modal" id="facilityModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Facility Details</div>
+                <button class="close-btn" onclick="closeFacilityModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="facilityModalBody">
+                <!-- Facility details will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Facility Booking Modal -->
+    <div class="modal" id="facilityBookingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Book Facility</div>
+                <button class="close-btn" onclick="closeFacilityBookingModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="facility-header" id="facilityBookingHeader">
+                    <!-- Facility name and rate will be inserted here -->
+                </div>
+
+                <div class="booking-type-selection">
+                    <div class="booking-type-title">Choose Booking Type</div>
+                    <div class="booking-options">
+                        <div class="booking-option" id="bookOption" onclick="selectBookingType('book')">
+                            <div class="booking-option-title">
+                                <i class="fas fa-calendar-check"></i>
+                                Book Now
+                            </div>
+                            <div class="booking-option-desc">Immediate booking with payment</div>
+                        </div>
+                        <div class="booking-option" id="reserveOption" onclick="selectBookingType('reserve')">
+                            <div class="booking-option-title">
+                                <i class="fas fa-bookmark"></i>
+                                Reserve First
+                            </div>
+                            <div class="booking-option-desc">Hold the slot, pay later</div>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="booking-form" id="facilityBookingForm">
+                    <!-- Date and Time Section -->
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="fas fa-calendar-alt"></i>
+                            Date & Time
+                        </div>
+                        <div class="form-group">
+                            <label for="facilityDate">
+                                <i class="fas fa-calendar"></i>
+                                Select Date
+                            </label>
+                            <input type="date" id="facilityDate" name="facilityDate" required>
+                        </div>
+                        <div class="time-inputs-container">
+                            <div class="form-group">
+                                <label for="facilityStartTime">
+                                    <i class="fas fa-clock"></i>
+                                    Start Time
+                                </label>
+                                <input type="time" id="facilityStartTime" name="facilityStartTime" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="facilityEndTime">
+                                    <i class="fas fa-clock"></i>
+                                    End Time
+                                </label>
+                                <input type="time" id="facilityEndTime" name="facilityEndTime" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Event Details Section -->
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="fas fa-info-circle"></i>
+                            Event Details
+                        </div>
+                        <div class="form-group">
+                            <label for="facilityPurpose">
+                                <i class="fas fa-tag"></i>
+                                Purpose/Event Type
+                            </label>
+                            <select id="facilityPurpose" name="facilityPurpose" required>
+                                <option value="">Select purpose</option>
+                                <option value="personal">Personal Use</option>
+                                <option value="birthday">Birthday Party</option>
+                                <option value="meeting">Business Meeting</option>
+                                <option value="sports">Sports Activity</option>
+                                <option value="wedding">Wedding Reception</option>
+                                <option value="community">Community Event</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="facilityGuests">
+                                <i class="fas fa-users"></i>
+                                Expected Number of Guests
+                            </label>
+                            <input type="number" id="facilityGuests" name="facilityGuests" min="1" required placeholder="Enter number of guests">
+                        </div>
+                        <div class="form-group">
+                            <label for="facilityNotes">
+                                <i class="fas fa-sticky-note"></i>
+                                Special Requests/Notes
+                            </label>
+                            <textarea id="facilityNotes" name="facilityNotes" rows="3" placeholder="Any special arrangements or equipment needed..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="booking-summary">
+                        <h3>
+                            <i class="fas fa-receipt"></i>
+                            Booking Summary
+                        </h3>
+                        <div class="summary-item">
+                            <span>Facility:</span>
+                            <span id="facilitySummaryName">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Date:</span>
+                            <span id="facilitySummaryDate">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Time:</span>
+                            <span id="facilitySummaryTime">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Duration:</span>
+                            <span id="facilitySummaryDuration">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Booking Type:</span>
+                            <span id="facilitySummaryType">-</span>
+                        </div>
+                        <div class="summary-item total">
+                            <span>Total Cost:</span>
+                            <span id="facilitySummaryTotal">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Requirements Section -->
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="fas fa-credit-card"></i>
+                            Payment Requirements
+                        </div>
+                        <div class="payment-requirement-selection">
+                            <div class="payment-req-options">
+                                <div class="payment-req-option" id="fullPaymentOption" onclick="selectPaymentRequirement('full')">
+                                    <div class="payment-req-radio">
+                                        <i class="fas fa-circle"></i>
+                                    </div>
+                                    <div class="payment-req-content">
+                                        <div class="payment-req-title">Pay in Full</div>
+                                        <div class="payment-req-desc">100% payment required upon booking</div>
+                                        <div class="payment-req-amount" id="fullPaymentAmount">₱0</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="payment-req-option" id="partialPaymentOption" onclick="selectPaymentRequirement('partial')">
+                                    <div class="payment-req-radio">
+                                        <i class="fas fa-circle"></i>
+                                    </div>
+                                    <div class="payment-req-content">
+                                        <div class="payment-req-title">Partial Payment (50%)</div>
+                                        <div class="payment-req-desc">Pay 50% now, remaining balance before event</div>
+                                        <div class="payment-req-amount" id="partialPaymentAmount">₱0</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="payment-req-option" id="downPaymentOption" onclick="selectPaymentRequirement('down')">
+                                    <div class="payment-req-radio">
+                                        <i class="fas fa-circle"></i>
+                                    </div>
+                                    <div class="payment-req-content">
+                                        <div class="payment-req-title">Down Payment (₱500)</div>
+                                        <div class="payment-req-desc">Fixed ₱500 deposit, pay balance on service day</div>
+                                        <div class="payment-req-amount">₱500</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="payment-req-option" id="afterServiceOption" onclick="selectPaymentRequirement('after')">
+                                    <div class="payment-req-radio">
+                                        <i class="fas fa-circle"></i>
+                                    </div>
+                                    <div class="payment-req-content">
+                                        <div class="payment-req-title">Pay After Service</div>
+                                        <div class="payment-req-desc">Payment due upon service completion</div>
+                                        <div class="payment-req-amount" id="afterServiceAmount">₱0</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Requirements Info -->
+                        
+                    </div>
+
+                    <div class="action-buttons">
+                        <button type="button" class="btn-back" onclick="closeFacilityBookingModal()">
+                            <i class="fas fa-times"></i>
+                            Cancel
+                        </button>
+                        <button type="button" class="btn-next" id="facilitySubmitBtn" onclick="proceedToPayment()">
+                            <i class="fas fa-credit-card"></i>
+                            Proceed to Payment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Gateway Modal -->
+    <div class="modal" id="paymentGatewayModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Payment Gateway</div>
+                <button class="close-btn" onclick="closePaymentModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Payment Summary -->
+                <div class="payment-gateway-summary">
+                    <h3>
+                        <i class="fas fa-receipt"></i>
+                        Payment Summary
+                    </h3>
+                    <div class="payment-summary-card">
+                        <div class="payment-summary-item">
+                            <span>Service:</span>
+                            <span id="paymentSummaryService">-</span>
+                        </div>
+                        <div class="payment-summary-item">
+                            <span>Date:</span>
+                            <span id="paymentSummaryDate">-</span>
+                        </div>
+                        <div class="payment-summary-item">
+                            <span>Time:</span>
+                            <span id="paymentSummaryTime">-</span>
+                        </div>
+                        <div class="payment-summary-item">
+                            <span>Payment Type:</span>
+                            <span id="paymentSummaryType">-</span>
+                        </div>
+                        <div class="payment-summary-item total">
+                            <span>Amount to Pay:</span>
+                            <span id="paymentSummaryAmount">₱0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Method Selection -->
+                <div class="payment-method-section">
+                    <h4>
+                        <i class="fas fa-wallet"></i>
+                        Choose Payment Method
+                    </h4>
+                    <div class="payment-methods">
+                        <div class="payment-method" id="gcashMethod" onclick="selectPaymentMethod('gcash')">
+                            <div class="payment-method-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div class="payment-method-info">
+                                <div class="payment-method-name">GCash</div>
+                                <div class="payment-method-desc">Pay with your GCash account</div>
+                            </div>
+                            <div class="payment-method-radio">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-method" id="cardMethod" onclick="selectPaymentMethod('card')">
+                            <div class="payment-method-icon">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="payment-method-info">
+                                <div class="payment-method-name">Credit/Debit Card</div>
+                                <div class="payment-method-desc">Pay securely with your card</div>
+                            </div>
+                            <div class="payment-method-radio">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-method" id="bankMethod" onclick="selectPaymentMethod('bank')">
+                            <div class="payment-method-icon">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <div class="payment-method-info">
+                                <div class="payment-method-name">Bank Transfer</div>
+                                <div class="payment-method-desc">Direct bank transfer</div>
+                            </div>
+                            <div class="payment-method-radio">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-method" id="cashMethod" onclick="selectPaymentMethod('cash')">
+                            <div class="payment-method-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="payment-method-info">
+                                <div class="payment-method-name">Cash Payment</div>
+                                <div class="payment-method-desc">Pay at management office</div>
+                            </div>
+                            <div class="payment-method-radio">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Gateway Forms -->
+                <div class="payment-gateway-forms">
+                    <!-- GCash Payment Form -->
+                    <div class="payment-form" id="gcashForm" style="display: none;">
+                        <h4>
+                            <i class="fas fa-mobile-alt"></i>
+                            GCash Payment
+                        </h4>
+                        <div class="gcash-payment-container">
+                            <div class="qr-code-section">
+                                <div class="qr-code-placeholder">
+                                    <i class="fas fa-qrcode"></i>
+                                    <p>Scan QR Code with GCash App</p>
+                                </div>
+                                <div class="payment-details">
+                                    <p><strong>Merchant:</strong> MEMBRO HOA Management</p>
+                                    <p><strong>Amount:</strong> <span id="gcashAmount">₱0</span></p>
+                                    <p><strong>Reference:</strong> <span id="gcashReference">REF-2024-001</span></p>
+                                </div>
+                            </div>
+                            <div class="manual-input-section">
+                                <p>Or enter your GCash mobile number:</p>
+                                <input type="tel" placeholder="09XXXXXXXXX" class="payment-input" id="gcashNumber">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Credit Card Payment Form -->
+                    <div class="payment-form" id="cardForm" style="display: none;">
+                        <h4>
+                            <i class="fas fa-credit-card"></i>
+                            Credit/Debit Card Payment
+                        </h4>
+                        <div class="card-payment-container">
+                            <div class="form-group">
+                                <label>Card Number</label>
+                                <input type="text" placeholder="1234 5678 9012 3456" class="payment-input" id="cardNumber" maxlength="19">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Expiry Date</label>
+                                    <input type="text" placeholder="MM/YY" class="payment-input" id="cardExpiry" maxlength="5">
+                                </div>
+                                <div class="form-group">
+                                    <label>CVV</label>
+                                    <input type="text" placeholder="123" class="payment-input" id="cardCvv" maxlength="4">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Cardholder Name</label>
+                                <input type="text" placeholder="John Doe" class="payment-input" id="cardName">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bank Transfer Payment Form -->
+                    <div class="payment-form" id="bankForm" style="display: none;">
+                        <h4>
+                            <i class="fas fa-university"></i>
+                            Bank Transfer Details
+                        </h4>
+                        <div class="bank-payment-container">
+                            <div class="bank-details-card">
+                                <h5>Transfer to:</h5>
+                                <div class="bank-info">
+                                    <p><strong>Bank:</strong> BPI (Bank of the Philippine Islands)</p>
+                                    <p><strong>Account Name:</strong> MEMBRO HOA Management Corp.</p>
+                                    <p><strong>Account Number:</strong> 1234-5678-90</p>
+                                    <p><strong>Amount:</strong> <span id="bankAmount">₱0</span></p>
+                                    <p><strong>Reference:</strong> <span id="bankReference">BANK-2024-001</span></p>
+                                </div>
+                            </div>
+                            <div class="bank-instruction">
+                                <p><strong>Instructions:</strong></p>
+                                <ol>
+                                    <li>Transfer the exact amount to the account above</li>
+                                    <li>Use the reference number in your transfer description</li>
+                                    <li>Take a screenshot of your transfer confirmation</li>
+                                    <li>Upload the proof of payment below</li>
+                                </ol>
+                                <input type="file" accept="image/*" class="payment-input" id="bankProof">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cash Payment Form -->
+                    <div class="payment-form" id="cashForm" style="display: none;">
+                        <h4>
+                            <i class="fas fa-money-bill-wave"></i>
+                            Cash Payment Instructions
+                        </h4>
+                        <div class="cash-payment-container">
+                            <div class="cash-instructions">
+                                <div class="instruction-item">
+                                    <i class="fas fa-building"></i>
+                                    <div>
+                                        <strong>Visit Management Office</strong>
+                                        <p>Ground Floor, Building A Lobby</p>
+                                    </div>
+                                </div>
+                                <div class="instruction-item">
+                                    <i class="fas fa-clock"></i>
+                                    <div>
+                                        <strong>Office Hours</strong>
+                                        <p>Monday - Friday: 8:00 AM - 6:00 PM<br>Saturday: 9:00 AM - 2:00 PM</p>
+                                    </div>
+                                </div>
+                                <div class="instruction-item">
+                                    <i class="fas fa-receipt"></i>
+                                    <div>
+                                        <strong>Payment Details</strong>
+                                        <p>Amount: <span id="cashAmount">₱0</span><br>Reference: <span id="cashReference">CASH-2024-001</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cash-note">
+                                <p><strong>Note:</strong> Your booking will be held for 24 hours pending cash payment. Please bring exact change to avoid delays.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Actions -->
+                <div class="payment-actions">
+                    <button type="button" class="btn-back" onclick="backToBooking()">
+                        <i class="fas fa-arrow-left"></i>
+                        Back
+                    </button>
+                    <button type="button" class="btn-next" id="processPaymentBtn" onclick="processPayment()" disabled>
+                        <i class="fas fa-lock"></i>
+                        Process Payment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+        </main>
+
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav">
+            <ul class="mobile-nav-menu">
+                <li class="mobile-nav-item">
+                    <a href="index.html" class="mobile-nav-link">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="profile.html" class="mobile-nav-link">
+                        <i class="fas fa-user"></i>
+                        Profile
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="announcements.html" class="mobile-nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        News
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="billing.html" class="mobile-nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        Billing
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="services.html" class="mobile-nav-link active">
+                        <i class="fas fa-concierge-bell"></i>
+                        Services
+                    </a>
+                </li>
+                <li class="mobile-nav-item mobile-nav-more">
+                    <button class="mobile-nav-link" onclick="toggleMobileMore()">
+                        <i class="fas fa-ellipsis-h"></i>
+                        More
+                    </button>
+                    <div class="mobile-nav-dropdown" id="mobileMoreDropdown">
+                        <a href="properties.html" class="mobile-nav-dropdown-item">
+                            <i class="fas fa-key"></i>
+                            Properties
+                        </a>
+                        <a href="complaints.html" class="mobile-nav-dropdown-item">
+                            <i class="fas fa-tools"></i>
+                            Request Service
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <script>
+        // Service data
+        const services = {
+            cleaning: {
+                title: "Deep Cleaning Service",
+                icon: "fas fa-broom",
+                description: "Professional deep cleaning for your entire unit including kitchen, bathrooms, living areas, and bedrooms.",
+                features: [
+                    "Complete unit cleaning",
+                    "Kitchen deep clean",
+                    "Bathroom sanitization", 
+                    "Vacuum and mop all floors",
+                    "Dust all surfaces",
+                    "Window cleaning (interior)"
+                ],
+                price: 200,
+                duration: "3-5 hours",
+                details: "Our experienced cleaning team uses professional-grade equipment and eco-friendly products to ensure your home is spotless and safe for your family."
+            },
+            plumbing: {
+                title: "Plumbing Services",
+                icon: "fas fa-wrench",
+                description: "Fix leaks, unclog drains, repair faucets, and handle all your plumbing needs with certified professionals.",
+                features: [
+                    "Leak detection and repair",
+                    "Drain cleaning and unclogging",
+                    "Faucet and fixture repair",
+                    "Toilet repairs",
+                    "Pipe installation",
+                    "Emergency plumbing"
+                ],
+                price: 150,
+                duration: "1-3 hours",
+                details: "Certified plumbers with years of experience in residential plumbing. We provide same-day service for emergencies and use quality parts for all repairs."
+            },
+            electrical: {
+                title: "Electrical Services",
+                icon: "fas fa-bolt",
+                description: "Licensed electricians for outlet installation, lighting repairs, circuit breaker fixes, and electrical inspections.",
+                features: [
+                    "Outlet installation and repair",
+                    "Light fixture installation",
+                    "Circuit breaker repair",
+                    "Electrical safety inspections",
+                    "Wiring repairs",
+                    "Fan installation"
+                ],
+                price: 180,
+                duration: "1-4 hours",
+                details: "Licensed and insured electricians who prioritize safety. All work meets local electrical codes and comes with a warranty."
+            },
+            hvac: {
+                title: "HVAC Maintenance",
+                icon: "fas fa-fan",
+                description: "Air conditioning and heating system maintenance, filter replacement, and climate control optimization.",
+                features: [
+                    "AC system maintenance",
+                    "Filter replacement",
+                    "Duct cleaning",
+                    "Thermostat calibration",
+                    "System diagnostics",
+                    "Energy efficiency optimization"
+                ],
+                price: 220,
+                duration: "2-4 hours",
+                details: "Keep your home comfortable year-round with professional HVAC maintenance. Regular service extends equipment life and improves efficiency."
+            },
+            appliance: {
+                title: "Appliance Repair",
+                icon: "fas fa-tools",
+                description: "Repair and maintenance for refrigerators, washers, dryers, ovens, and other household appliances.",
+                features: [
+                    "Refrigerator repair",
+                    "Washing machine service",
+                    "Dryer maintenance",
+                    "Oven and stove repair",
+                    "Dishwasher service",
+                    "Microwave repair"
+                ],
+                price: 160,
+                duration: "1-3 hours",
+                details: "Expert technicians trained on all major appliance brands. We carry common parts and provide upfront pricing with no hidden fees."
+            },
+            pest: {
+                title: "Pest Control",
+                icon: "fas fa-bug",
+                description: "Safe and effective pest control solutions for ants, roaches, termites, and other common household pests.",
+                features: [
+                    "Comprehensive inspection",
+                    "Safe treatment methods",
+                    "Ant and roach control",
+                    "Termite treatment",
+                    "Prevention planning",
+                    "Follow-up service"
+                ],
+                price: 120,
+                duration: "1-2 hours",
+                details: "Eco-friendly pest control solutions that are safe for your family and pets. We focus on prevention and long-term solutions."
+            }
+        };
+
+        let currentService = null;
+        let selectedDate = null;
+        let selectedTime = null;
+        let selectedPayment = null;
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+
+        // Available time slots
+        const timeSlots = [
+            "9:00 AM", "10:00 AM", "11:00 AM",
+            "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"
+        ];
+
+        function openServiceModal(serviceKey) {
+            const service = services[serviceKey];
+            currentService = serviceKey;
+
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+
+            modalTitle.textContent = service.title;
+
+            modalBody.innerHTML = `
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                            <i class="${service.icon}"></i>
+                        </div>
+                        <div>
+                            <h3 style="margin: 0; color: var(--gray-900);">${service.title}</h3>
+                            <p style="margin: 0; color: var(--gray-600);">${service.duration} • $${service.price}</p>
+                        </div>
+                    </div>
+                    <p style="color: var(--gray-600); line-height: 1.6; margin-bottom: 1.5rem;">${service.details}</p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--gray-900); margin-bottom: 1rem;">What's Included:</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        ${service.features.map(feature => `
+                            <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--gray-600);">
+                                <i class="fas fa-check" style="color: var(--secondary); font-size: 0.875rem;"></i>
+                                ${feature}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+
+                <div style="background: var(--gray-50); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 600; color: var(--gray-900);">Service Price:</span>
+                        <span style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">$${service.price}</span>
+                    </div>
+                </div>
+
+                <button class="btn-next" onclick="startBooking()" style="width: 100%;">
+                    <i class="fas fa-calendar-plus"></i>
+                    Book This Service
+                </button>
+            `;
+
+            document.getElementById('serviceModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('serviceModal').classList.remove('active');
+        }
+
+        function startBooking() {
+            closeModal();
+            generateCalendar();
+            document.getElementById('bookingModal').classList.add('active');
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.remove('active');
+            resetBooking();
+        }
+
+        function resetBooking() {
+            selectedDate = null;
+            selectedTime = null;
+            selectedPayment = null;
+            document.getElementById('step1').style.display = 'block';
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('timeSlots').style.display = 'none';
+            document.getElementById('nextToPayment').disabled = true;
+        }
+
+        function generateCalendar() {
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"];
+            
+            document.getElementById('calendarTitle').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const today = new Date();
+
+            let calendarHTML = '';
+            
+            // Day headers
+            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayHeaders.forEach(day => {
+                calendarHTML += `<div class="calendar-day-header">${day}</div>`;
+            });
+
+            // Empty cells for days before month starts
+            for (let i = 0; i < firstDay; i++) {
+                calendarHTML += '<div class="calendar-day"></div>';
+            }
+
+            // Days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(currentYear, currentMonth, day);
+                const isPast = date < today;
+                const isToday = date.toDateString() === today.toDateString();
+                
+                let classes = 'calendar-day';
+                if (isPast) {
+                    classes += ' past';
+                } else {
+                    classes += ' available';
+                }
+
+                calendarHTML += `
+                    <div class="${classes}" onclick="selectDate(${day})" data-date="${day}">
+                        ${day}
+                    </div>
+                `;
+            }
+
+            document.getElementById('calendarGrid').innerHTML = calendarHTML;
+        }
+
+        function previousMonth() {
+            if (currentMonth === 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else {
+                currentMonth--;
+            }
+            generateCalendar();
+        }
+
+        function nextMonth() {
+            if (currentMonth === 11) {
+                currentMonth = 0;
+                currentYear++;
+            } else {
+                currentMonth++;
+            }
+            generateCalendar();
+        }
+
+        function selectDate(day) {
+            // Remove previous selection
+            document.querySelectorAll('.calendar-day.selected').forEach(el => {
+                el.classList.remove('selected');
+            });
+
+            // Select new date
+            const selectedEl = document.querySelector(`[data-date="${day}"]`);
+            if (selectedEl && selectedEl.classList.contains('available')) {
+                selectedEl.classList.add('selected');
+                selectedDate = new Date(currentYear, currentMonth, day);
+                showTimeSlots();
+            }
+        }
+
+        function showTimeSlots() {
+            const timeSlotsDiv = document.getElementById('timeSlots');
+            const timeGrid = document.getElementById('timeGrid');
+            
+            let timeSlotsHTML = '';
+            timeSlots.forEach(time => {
+                timeSlotsHTML += `
+                    <div class="time-slot" onclick="selectTime('${time}')" data-time="${time}">
+                        ${time}
+                    </div>
+                `;
+            });
+
+            timeGrid.innerHTML = timeSlotsHTML;
+            timeSlotsDiv.style.display = 'block';
+        }
+
+        function selectTime(time) {
+            // Remove previous selection
+            document.querySelectorAll('.time-slot.selected').forEach(el => {
+                el.classList.remove('selected');
+            });
+
+            // Select new time
+            const selectedEl = document.querySelector(`[data-time="${time}"]`);
+            selectedEl.classList.add('selected');
+            selectedTime = time;
+
+            // Enable next button
+            document.getElementById('nextToPayment').disabled = false;
+        }
+
+        function nextStep() {
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').style.display = 'block';
+            updateBookingSummary();
+        }
+
+        function previousStep() {
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('step1').style.display = 'block';
+        }
+
+        function updateBookingSummary() {
+            const service = services[currentService];
+            document.getElementById('summaryService').textContent = service.title;
+            document.getElementById('summaryDate').textContent = selectedDate.toLocaleDateString();
+            document.getElementById('summaryTime').textContent = selectedTime;
+            document.getElementById('summaryTotal').textContent = `$${service.price}`;
+        }
+
+        function selectPayment(method) {
+            // Remove previous selection
+            document.querySelectorAll('.payment-option.selected').forEach(el => {
+                el.classList.remove('selected');
+            });
+
+            // Select new payment method
+            const selectedEl = event.currentTarget;
+            selectedEl.classList.add('selected');
+            selectedEl.querySelector('input').checked = true;
+            selectedPayment = method;
+
+            // Enable confirm button
+            document.getElementById('confirmBooking').disabled = false;
+        }
+
+        function confirmBooking() {
+            // Close booking modal
+            closeBookingModal();
+            
+            // Show success modal
+            document.getElementById('successModal').classList.add('active');
+
+            // Here you would typically send the booking data to your server
+            console.log('Booking confirmed:', {
+                service: currentService,
+                date: selectedDate,
+                time: selectedTime,
+                payment: selectedPayment
+            });
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('active');
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // Initialize calendar
+        document.addEventListener('DOMContentLoaded', () => {
+            generateCalendar();
+        });
+
+        // Notification Modal Functions (from index.html)
+        function toggleNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.toggle('active');
+        }
+
+        function closeNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.remove('active');
+        }
+
+        function switchTab(tab) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Filter notifications based on tab
+            const notifications = document.querySelectorAll('.notification-item');
+            notifications.forEach(item => {
+                if (tab === 'all') {
+                    item.style.display = 'flex';
+                } else if (tab === 'mentions') {
+                    // Show only comment/mention type notifications
+                    if (item.dataset.type === 'comment' || item.dataset.type === 'follow') {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        function markAllAsRead() {
+            // Remove unread class from all notifications
+            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+            });
+            
+            // Update notification badge
+            const badge = document.querySelector('.notification-badge');
+            badge.textContent = '0';
+            badge.style.display = 'none';
+            
+            // Show success message
+            showToast('All notifications marked as read');
+        }
+
+        function viewAllNotifications() {
+            // This would typically navigate to a dedicated notifications page
+            showToast('Opening full notifications page...');
+        }
+
+        function showToast(message) {
+            // Create and show a toast notification
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--primary);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 8px;
+                z-index: 10000;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Fade in
+            setTimeout(() => {
+                toast.style.opacity = '1';
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // Close notification modal when clicking outside
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('notificationModal');
+            const notificationBtn = document.querySelector('.notification-btn');
+            
+            if (modal && modal.classList.contains('active') && 
+                !modal.contains(event.target) &&
+                !notificationBtn.contains(event.target)) {
+                closeNotifications();
+            }
+        });
+
+        // Tab switching functionality
+        function showServices() {
+            document.getElementById('servicesTab').classList.add('active');
+            document.getElementById('facilitiesTab').classList.remove('active');
+            document.getElementById('servicesSection').style.display = 'block';
+            document.getElementById('facilitiesSection').style.display = 'none';
+        }
+
+        function showFacilities() {
+            document.getElementById('facilitiesTab').classList.add('active');
+            document.getElementById('servicesTab').classList.remove('active');
+            document.getElementById('facilitiesSection').style.display = 'block';
+            document.getElementById('servicesSection').style.display = 'none';
+        }
+
+        // Facility data
+        const facilities = {
+            basketball: {
+                title: "Basketball Court",
+                icon: "fas fa-basketball-ball",
+                description: "Full-size outdoor basketball court with professional hoops and lighting for evening games.",
+                features: [
+                    "Professional basketball hoops",
+                    "LED lighting for night games",
+                    "Synthetic court surface",
+                    "Scoreboard available",
+                    "Ball storage included",
+                    "First aid kit on site"
+                ],
+                rate: 25,
+                capacity: "Up to 10 players",
+                details: "Our basketball court features a professional-grade playing surface and adjustable lighting for both day and evening use. Perfect for pickup games, tournaments, or training sessions."
+            },
+            "event-hall": {
+                title: "Community Event Hall",
+                icon: "fas fa-calendar-alt",
+                description: "Spacious air-conditioned hall perfect for parties, meetings, and community events.",
+                features: [
+                    "Air conditioning system",
+                    "Sound system with microphones",
+                    "Tables and chairs included",
+                    "Kitchen access available",
+                    "Stage area",
+                    "Parking spaces allocated"
+                ],
+                rate: 150,
+                capacity: "Up to 100 guests",
+                details: "Our event hall is the perfect venue for celebrations, meetings, and community gatherings. The space includes full amenities and can be configured to suit your event needs."
+            },
+            pool: {
+                title: "Swimming Pool",
+                icon: "fas fa-swimming-pool",
+                description: "Olympic-size swimming pool with lifeguard on duty and pool equipment available.",
+                features: [
+                    "Olympic-size pool",
+                    "Lifeguard on duty",
+                    "Pool equipment rental",
+                    "Changing rooms",
+                    "Shower facilities",
+                    "Pool chemicals maintained"
+                ],
+                rate: 20,
+                capacity: "Up to 20 swimmers",
+                details: "Enjoy our pristine swimming pool with professional maintenance and safety supervision. Perfect for lap swimming, aqua fitness, or recreational swimming."
+            },
+            gym: {
+                title: "Fitness Center",
+                icon: "fas fa-dumbbell",
+                description: "Fully equipped gym with cardio machines, weights, and exercise equipment.",
+                features: [
+                    "Cardio machines",
+                    "Free weights",
+                    "Exercise machines",
+                    "Yoga mats available",
+                    "Air conditioning",
+                    "Towel service"
+                ],
+                rate: 15,
+                capacity: "Up to 15 members",
+                details: "Stay fit with our comprehensive fitness center featuring modern equipment and a comfortable workout environment."
+            },
+            tennis: {
+                title: "Tennis Court",
+                icon: "fas fa-table-tennis",
+                description: "Professional tennis court with high-quality surface and net. Rackets available for rent.",
+                features: [
+                    "Professional court surface",
+                    "High-quality net",
+                    "Racket rental available",
+                    "Ball machine access",
+                    "Court lighting",
+                    "Bench seating"
+                ],
+                rate: 30,
+                capacity: "2-4 players",
+                details: "Play tennis on our professional-grade court with all the amenities you need for a great game."
+            },
+            "function-room": {
+                title: "Function Room",
+                icon: "fas fa-handshake",
+                description: "Elegant meeting room with projector, sound system, and catering kitchen access.",
+                features: [
+                    "HD projector system",
+                    "Conference table",
+                    "Sound system",
+                    "Catering kitchen access",
+                    "Wi-Fi included",
+                    "Whiteboard available"
+                ],
+                rate: 100,
+                capacity: "Up to 50 guests",
+                details: "Host professional meetings and small events in our well-equipped function room with all necessary business amenities."
+            }
+        };
+
+        let currentFacility = null;
+        let selectedBookingType = null;
+
+        function openFacilityModal(facilityKey) {
+            const facility = facilities[facilityKey];
+            currentFacility = facilityKey;
+
+            const modalBody = document.getElementById('facilityModalBody');
+
+            modalBody.innerHTML = `
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                            <i class="${facility.icon}"></i>
+                        </div>
+                        <div>
+                            <h3 style="margin: 0; color: var(--gray-900);">${facility.title}</h3>
+                            <p style="margin: 0; color: var(--gray-600);">${facility.capacity} • $${facility.rate}/hour</p>
+                        </div>
+                    </div>
+                    <p style="color: var(--gray-600); line-height: 1.6; margin-bottom: 1.5rem;">${facility.details}</p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--gray-900); margin-bottom: 1rem;">Facility Features:</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        ${facility.features.map(feature => `
+                            <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--gray-600);">
+                                <i class="fas fa-check" style="color: var(--secondary); font-size: 0.875rem;"></i>
+                                ${feature}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+
+                <div style="background: var(--gray-50); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 600; color: var(--gray-900);">Hourly Rate:</span>
+                        <span style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">$${facility.rate}/hour</span>
+                    </div>
+                </div>
+
+                <button class="btn-next" onclick="startFacilityBooking()" style="width: 100%;">
+                    <i class="fas fa-calendar-plus"></i>
+                    Book This Facility
+                </button>
+            `;
+
+            document.getElementById('facilityModal').classList.add('active');
+        }
+
+        function closeFacilityModal() {
+            document.getElementById('facilityModal').classList.remove('active');
+        }
+
+        function startFacilityBooking() {
+            closeFacilityModal();
+            const facility = facilities[currentFacility];
+            
+            // Update facility header
+            document.getElementById('facilityBookingHeader').innerHTML = `
+                <div class="facility-name">
+                    <i class="${facility.icon}"></i>
+                    ${facility.title}
+                </div>
+                <div class="facility-rate">$${facility.rate}/hour</div>
+            `;
+
+            // Reset form and summary
+            document.getElementById('facilityBookingForm').reset();
+            document.getElementById('facilitySummaryName').textContent = facility.title;
+            document.getElementById('facilitySummaryDate').textContent = '-';
+            document.getElementById('facilitySummaryTime').textContent = '-';
+            document.getElementById('facilitySummaryDuration').textContent = '-';
+            document.getElementById('facilitySummaryType').textContent = '-';
+            document.getElementById('facilitySummaryTotal').textContent = '-';
+
+            // Reset booking type selection
+            document.getElementById('bookOption').classList.remove('selected');
+            document.getElementById('reserveOption').classList.remove('selected');
+            selectedBookingType = null;
+
+            document.getElementById('facilityBookingModal').classList.add('active');
+        }
+
+        function closeFacilityBookingModal() {
+            document.getElementById('facilityBookingModal').classList.remove('active');
+        }
+
+        function selectBookingType(type) {
+            // Remove previous selection
+            document.getElementById('bookOption').classList.remove('selected');
+            document.getElementById('reserveOption').classList.remove('selected');
+
+            // Select new type
+            document.getElementById(type + 'Option').classList.add('selected');
+            selectedBookingType = type;
+
+            // Update summary
+            document.getElementById('facilitySummaryType').textContent = 
+                type === 'book' ? 'Book Now' : 'Reserve First';
+
+            // Update submit button text
+            document.getElementById('facilitySubmitBtn').textContent = 
+                type === 'book' ? 'Proceed to Payment' : 'Submit Reservation';
+
+            // Show/hide payment requirements based on booking type
+            const paymentSection = document.querySelector('.form-section:has(.payment-requirement-selection)');
+            const paymentReqSelection = document.querySelector('.payment-requirement-selection');
+            
+            if (type === 'book') {
+                // Show full payment requirements for "Book Now"
+                paymentSection.style.display = 'block';
+                paymentReqSelection.innerHTML = `
+                    <div class="payment-req-options">
+                        <div class="payment-req-option" id="fullPaymentOption" onclick="selectPaymentRequirement('full')">
+                            <div class="payment-req-radio">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                            <div class="payment-req-content">
+                                <div class="payment-req-title">Pay in Full</div>
+                                <div class="payment-req-desc">100% payment required upon booking</div>
+                                <div class="payment-req-amount" id="fullPaymentAmount">₱0</div>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-req-option" id="partialPaymentOption" onclick="selectPaymentRequirement('partial')">
+                            <div class="payment-req-radio">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                            <div class="payment-req-content">
+                                <div class="payment-req-title">Partial Payment (50%)</div>
+                                <div class="payment-req-desc">Pay 50% now, remaining balance before event</div>
+                                <div class="payment-req-amount" id="partialPaymentAmount">₱0</div>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-req-option" id="downPaymentOption" onclick="selectPaymentRequirement('down')">
+                            <div class="payment-req-radio">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                            <div class="payment-req-content">
+                                <div class="payment-req-title">Down Payment (₱500)</div>
+                                <div class="payment-req-desc">Fixed ₱500 deposit, pay balance on service day</div>
+                                <div class="payment-req-amount">₱500</div>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-req-option" id="afterServiceOption" onclick="selectPaymentRequirement('after')">
+                            <div class="payment-req-radio">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                            <div class="payment-req-content">
+                                <div class="payment-req-title">Pay After Service</div>
+                                <div class="payment-req-desc">Payment due upon service completion</div>
+                                <div class="payment-req-amount" id="afterServiceAmount">₱0</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                `;
+            } else {
+                // Show different options for "Reserve First"
+                paymentSection.style.display = 'block';
+                paymentReqSelection.innerHTML = `
+                    <div class="payment-req-options">
+                        <div class="payment-req-option" id="reserveFreeOption" onclick="selectPaymentRequirement('reserve_free')">
+                            <div class="payment-req-radio">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                            <div class="payment-req-content">
+                                <div class="payment-req-title">Free Reservation</div>
+                                <div class="payment-req-desc">Hold the slot for 24 hours without payment</div>
+                                <div class="payment-req-amount">₱0</div>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-req-option" id="reserveDepositOption" onclick="selectPaymentRequirement('reserve_deposit')">
+                            <div class="payment-req-radio">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                            <div class="payment-req-content">
+                                <div class="payment-req-title">Reservation Fee (₱200)</div>
+                                <div class="payment-req-desc">Secure reservation with small fee, deducted from total</div>
+                                <div class="payment-req-amount">₱200</div>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-req-option" id="reserveDownOption" onclick="selectPaymentRequirement('reserve_down')">
+                            <div class="payment-req-radio">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                            <div class="payment-req-content">
+                                <div class="payment-req-title">Reservation Down Payment (₱500)</div>
+                                <div class="payment-req-desc">Higher deposit for priority reservation status</div>
+                                <div class="payment-req-amount">₱500</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                   
+                `;
+            }
+
+            // Reset payment requirement selection
+            selectedPaymentRequirement = null;
+            
+            // Update facility summary
+            updateFacilitySummary();
+        }
+
+        function updateFacilitySummary() {
+            const facility = facilities[currentFacility];
+            const date = document.getElementById('facilityDate').value;
+            const startTime = document.getElementById('facilityStartTime').value;
+            const endTime = document.getElementById('facilityEndTime').value;
+
+            if (date) {
+                document.getElementById('facilitySummaryDate').textContent = new Date(date).toLocaleDateString();
+            }
+
+            if (startTime && endTime) {
+                document.getElementById('facilitySummaryTime').textContent = `${startTime} - ${endTime}`;
+                
+                // Calculate duration and cost
+                const start = new Date(`2024-01-01T${startTime}`);
+                const end = new Date(`2024-01-01T${endTime}`);
+                const durationMs = end - start;
+                const durationHours = durationMs / (1000 * 60 * 60);
+                
+                document.getElementById('facilitySummaryDuration').textContent = `${durationHours} hour(s)`;
+                document.getElementById('facilitySummaryTotal').textContent = `$${facility.rate * durationHours}`;
+            }
+        }
+
+        // Handle facility booking form submission
+        document.getElementById('facilityBookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!selectedBookingType) {
+                alert('Please select a booking type (Book Now or Reserve First)');
+                return;
+            }
+
+            closeFacilityBookingModal();
+            
+            // Show success modal with appropriate message
+            const successModal = document.getElementById('successModal');
+            const successContent = successModal.querySelector('.success-content');
+            
+            if (selectedBookingType === 'book') {
+                successContent.innerHTML = `
+                    <div class="success-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h2>Booking Confirmed!</h2>
+                    <p>Your facility booking has been confirmed. You will receive a confirmation email shortly.</p>
+                    <div style="margin: 2rem 0;">
+                        <strong>Booking Reference: #FAC-2024-001</strong>
+                    </div>
+                    <button class="btn-next" onclick="closeSuccessModal()">Done</button>
+                `;
+            } else {
+                successContent.innerHTML = `
+                    <div class="success-icon">
+                        <i class="fas fa-bookmark"></i>
+                    </div>
+                    <h2>Reservation Submitted!</h2>
+                    <p>Your facility reservation request has been submitted for approval. You will receive a confirmation email shortly.</p>
+                    <div style="margin: 2rem 0;">
+                        <strong>Reservation Reference: #RES-2024-001</strong>
+                    </div>
+                    <button class="btn-next" onclick="closeSuccessModal()">Done</button>
+                `;
+            }
+            
+            successModal.classList.add('active');
+        });
+
+        // Add event listeners to facility form inputs for real-time summary updates
+        document.getElementById('facilityDate').addEventListener('change', updateFacilitySummary);
+        document.getElementById('facilityStartTime').addEventListener('change', updateFacilitySummary);
+        document.getElementById('facilityEndTime').addEventListener('change', updateFacilitySummary);
+
+        // Mobile More Dropdown Functions
+        function toggleMobileMore() {
+            const dropdown = document.getElementById('mobileMoreDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close mobile more dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('mobileMoreDropdown');
+            const moreButton = document.querySelector('.mobile-nav-more .mobile-nav-link');
+            
+            if (dropdown.classList.contains('active') && 
+                !dropdown.contains(event.target) &&
+                !moreButton.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Close mobile more dropdown with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const dropdown = document.getElementById('mobileMoreDropdown');
+                dropdown.classList.remove('active');
+            }
+        });
+
+        let currentServiceData = null;
+
+        // Payment requirement variables
+        let selectedPaymentRequirement = null;
+        let paymentAmount = 0;
+        let selectedPaymentMethod = null;
+
+        // Payment requirement selection
+        function selectPaymentRequirement(type) {
+            // Remove previous selection
+            document.querySelectorAll('.payment-req-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            // Select new type
+            if (type.startsWith('reserve_')) {
+                // Map reserve_ types to their actual IDs
+                const reserveIdMap = {
+                    'reserve_free': 'reserveFreeOption',
+                    'reserve_deposit': 'reserveDepositOption', 
+                    'reserve_down': 'reserveDownOption'
+                };
+                document.getElementById(reserveIdMap[type]).classList.add('selected');
+            } else {
+                document.getElementById(type + 'PaymentOption').classList.add('selected');
+            }
+            selectedPaymentRequirement = type;
+
+            // Calculate payment amount based on requirement type
+            const totalCost = getCurrentBookingCost();
+            
+            switch(type) {
+                case 'full':
+                    paymentAmount = totalCost;
+                    break;
+                case 'partial':
+                    paymentAmount = totalCost * 0.5;
+                    break;
+                case 'down':
+                    paymentAmount = 500;
+                    break;
+                case 'after':
+                    paymentAmount = 0; // No payment now
+                    break;
+                case 'reserve_free':
+                    paymentAmount = 0; // Free reservation
+                    break;
+                case 'reserve_deposit':
+                    paymentAmount = 200; // ₱200 reservation fee
+                    break;
+                case 'reserve_down':
+                    paymentAmount = 500; // ₱500 reservation down payment
+                    break;
+            }
+
+            // Update payment requirement amounts display (only for "Book Now" options)
+            if (!type.startsWith('reserve_')) {
+                updatePaymentRequirementAmounts(totalCost);
+            }
+            
+            // Update submit button based on selection
+            updateSubmitButton();
+        }
+
+        function updatePaymentRequirementAmounts(totalCost) {
+            document.getElementById('fullPaymentAmount').textContent = `₱${totalCost.toLocaleString()}`;
+            document.getElementById('partialPaymentAmount').textContent = `₱${(totalCost * 0.5).toLocaleString()}`;
+            document.getElementById('afterServiceAmount').textContent = `₱${totalCost.toLocaleString()}`;
+        }
+
+        function getCurrentBookingCost() {
+            if (currentServiceData && currentServiceData.type === 'service') {
+                return currentServiceData.price;
+            } else if (currentServiceData && currentServiceData.type === 'facility') {
+                const startTime = document.getElementById('facilityStartTime').value;
+                const endTime = document.getElementById('facilityEndTime').value;
+                
+                if (startTime && endTime) {
+                    const start = new Date(`2024-01-01T${startTime}`);
+                    const end = new Date(`2024-01-01T${endTime}`);
+                    const durationMs = end - start;
+                    const durationHours = durationMs / (1000 * 60 * 60);
+                    return currentServiceData.rate * durationHours;
+                }
+            }
+            return 0;
+        }
+
+        function updateSubmitButton() {
+            const submitBtn = document.getElementById('facilitySubmitBtn');
+            if (selectedPaymentRequirement) {
+                if (selectedBookingType === 'reserve') {
+                    if (selectedPaymentRequirement === 'reserve_free') {
+                        submitBtn.innerHTML = '<i class="fas fa-bookmark"></i> Submit Free Reservation';
+                    } else {
+                        submitBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pay & Reserve';
+                    }
+                } else {
+                    if (selectedPaymentRequirement === 'after') {
+                        submitBtn.innerHTML = '<i class="fas fa-check"></i> Confirm Booking';
+                    } else {
+                        submitBtn.innerHTML = '<i class="fas fa-credit-card"></i> Proceed to Payment';
+                    }
+                }
+            }
+        }
+
+        function proceedToPayment() {
+            if (!selectedBookingType) {
+                alert('Please select a booking type (Book Now or Reserve First)');
+                return;
+            }
+
+            if (!selectedPaymentRequirement) {
+                alert('Please select a payment requirement option');
+                return;
+            }
+
+            // Handle "Reserve First" logic
+            if (selectedBookingType === 'reserve') {
+                if (selectedPaymentRequirement === 'reserve_free') {
+                    // Free reservation - no payment needed
+                    processReservationWithoutPayment();
+                    return;
+                } else {
+                    // Paid reservation - go to payment gateway
+                    prepareReservationPayment();
+                }
+            } else {
+                // Handle "Book Now" logic
+                if (selectedPaymentRequirement === 'after') {
+                    processBookingWithoutPayment();
+                    return;
+                } else {
+                    preparePaymentGateway();
+                }
+            }
+            
+            // Close booking modal and open payment gateway
+            closeFacilityBookingModal();
+            document.getElementById('paymentGatewayModal').classList.add('active');
+        }
+
+        function prepareReservationPayment() {
+            // Get booking data
+            const serviceName = document.getElementById('facilitySummaryName').textContent;
+            const date = document.getElementById('facilitySummaryDate').textContent;
+            const time = document.getElementById('facilitySummaryTime').textContent;
+            
+            // Update payment summary
+            document.getElementById('paymentSummaryService').textContent = serviceName + ' (Reservation)';
+            document.getElementById('paymentSummaryDate').textContent = date;
+            document.getElementById('paymentSummaryTime').textContent = time;
+            document.getElementById('paymentSummaryType').textContent = getReservationTypeText();
+            document.getElementById('paymentSummaryAmount').textContent = `₱${paymentAmount.toLocaleString()}`;
+
+            // Generate reference numbers
+            const timestamp = Date.now().toString().slice(-6);
+            document.getElementById('gcashReference').textContent = `RES-GCH-${timestamp}`;
+            document.getElementById('bankReference').textContent = `RES-BNK-${timestamp}`;
+            document.getElementById('cashReference').textContent = `RES-CSH-${timestamp}`;
+
+            // Update amounts in payment forms
+            document.getElementById('gcashAmount').textContent = `₱${paymentAmount.toLocaleString()}`;
+            document.getElementById('bankAmount').textContent = `₱${paymentAmount.toLocaleString()}`;
+            document.getElementById('cashAmount').textContent = `₱${paymentAmount.toLocaleString()}`;
+
+            // Reset payment method selection
+            document.querySelectorAll('.payment-method').forEach(method => {
+                method.classList.remove('selected');
+            });
+            document.querySelectorAll('.payment-form').forEach(form => {
+                form.style.display = 'none';
+            });
+            selectedPaymentMethod = null;
+            document.getElementById('processPaymentBtn').disabled = true;
+        }
+
+        function getReservationTypeText() {
+            switch(selectedPaymentRequirement) {
+                case 'reserve_deposit': return 'Reservation Fee (₱200)';
+                case 'reserve_down': return 'Reservation Down Payment (₱500)';
+                default: return 'Reservation';
+            }
+        }
+
+        function processReservationWithoutPayment() {
+            // Show success modal for free reservations
+            const successModal = document.getElementById('successModal');
+            const successContent = successModal.querySelector('.success-content');
+            
+            const referenceNumber = generateReservationReference();
+            const totalCost = getCurrentBookingCost();
+            
+            successContent.innerHTML = `
+                <div class="success-icon">
+                    <i class="fas fa-bookmark"></i>
+                </div>
+                <h2>Reservation Submitted!</h2>
+                <p>Your <strong>FREE reservation</strong> has been submitted and will be held for 24 hours.</p>
+                <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0;">
+                    <div style="margin-bottom: 0.5rem;"><strong>Reservation Reference:</strong> ${referenceNumber}</div>
+                    <div style="margin-bottom: 0.5rem;"><strong>Valid Until:</strong> ${getExpiryDate()}</div>
+                    <div style="margin-bottom: 0.5rem;"><strong>Total Amount:</strong> ₱${totalCost.toLocaleString()}</div>
+                    <div><strong>Payment Due:</strong> Before event date</div>
+                </div>
+                <div style="background: #fef3cd; border: 1px solid #f59e0b; border-radius: 8px; padding: 1rem; margin: 1rem 0;">
+                    <p style="margin: 0; color: #92400e; font-size: 0.875rem;">
+                        <strong>Important:</strong> Please confirm your booking with payment within 24 hours to secure your slot.
+                    </p>
+                </div>
+                <button class="btn-next" onclick="closeSuccessModal()">Done</button>
+            `;
+            
+            successModal.classList.add('active');
+            closeFacilityBookingModal();
+        }
+
+        function generateReservationReference() {
+            const prefix = 'RES';
+            const timestamp = Date.now().toString().slice(-6);
+            return `${prefix}-2024-${timestamp}`;
+        }
+
+        function getExpiryDate() {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            return tomorrow.toLocaleDateString() + ' at ' + tomorrow.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        function preparePaymentGateway() {
+            // Get booking data
+            const serviceName = document.getElementById('facilitySummaryName').textContent;
+            const date = document.getElementById('facilitySummaryDate').textContent;
+            const time = document.getElementById('facilitySummaryTime').textContent;
+            
+            // Update payment summary
+            document.getElementById('paymentSummaryService').textContent = serviceName;
+            document.getElementById('paymentSummaryDate').textContent = date;
+            document.getElementById('paymentSummaryTime').textContent = time;
+            document.getElementById('paymentSummaryType').textContent = getPaymentTypeText();
+            document.getElementById('paymentSummaryAmount').textContent = `₱${paymentAmount.toLocaleString()}`;
+
+            // Generate reference numbers
+            const timestamp = Date.now().toString().slice(-6);
+            document.getElementById('gcashReference').textContent = `GCH-${timestamp}`;
+            document.getElementById('bankReference').textContent = `BNK-${timestamp}`;
+            document.getElementById('cashReference').textContent = `CSH-${timestamp}`;
+
+            // Update amounts in payment forms
+            document.getElementById('gcashAmount').textContent = `₱${paymentAmount.toLocaleString()}`;
+            document.getElementById('bankAmount').textContent = `₱${paymentAmount.toLocaleString()}`;
+            document.getElementById('cashAmount').textContent = `₱${paymentAmount.toLocaleString()}`;
+
+            // Reset payment method selection
+            document.querySelectorAll('.payment-method').forEach(method => {
+                method.classList.remove('selected');
+            });
+            document.querySelectorAll('.payment-form').forEach(form => {
+                form.style.display = 'none';
+            });
+            selectedPaymentMethod = null;
+            document.getElementById('processPaymentBtn').disabled = true;
+        }
+
+        function getPaymentTypeText() {
+            switch(selectedPaymentRequirement) {
+                case 'full': return 'Full Payment';
+                case 'partial': return 'Partial Payment (50%)';
+                case 'down': return 'Down Payment';
+                case 'after': return 'Pay After Service';
+                case 'reserve_free': return 'Free Reservation';
+                case 'reserve_deposit': return 'Reservation Fee (₱200)';
+                case 'reserve_down': return 'Reservation Down Payment (₱500)';
+                default: return '-';
+            }
+        }
+
+        function selectPaymentMethod(method) {
+            // Remove previous selection
+            document.querySelectorAll('.payment-method').forEach(methodEl => {
+                methodEl.classList.remove('selected');
+            });
+
+            // Hide all payment forms
+            document.querySelectorAll('.payment-form').forEach(form => {
+                form.style.display = 'none';
+            });
+
+            // Select new method
+            document.getElementById(method + 'Method').classList.add('selected');
+            document.getElementById(method + 'Form').style.display = 'block';
+            selectedPaymentMethod = method;
+
+            // Enable process payment button
+            document.getElementById('processPaymentBtn').disabled = false;
+            document.getElementById('processPaymentBtn').innerHTML = '<i class="fas fa-credit-card"></i> Process Payment';
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentGatewayModal').classList.remove('active');
+        }
+
+        function backToBooking() {
+            closePaymentModal();
+            document.getElementById('facilityBookingModal').classList.add('active');
+        }
+
+        function processPayment() {
+            if (!selectedPaymentMethod) {
+                alert('Please select a payment method');
+                return;
+            }
+
+            // Validate payment form based on method
+            if (!validatePaymentForm()) {
+                return;
+            }
+
+            // Simulate payment processing
+            document.getElementById('processPaymentBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            document.getElementById('processPaymentBtn').disabled = true;
+
+            setTimeout(() => {
+                processPaymentSuccess();
+            }, 2000);
+        }
+
+        function validatePaymentForm() {
+            switch(selectedPaymentMethod) {
+                case 'card':
+                    const cardNumber = document.getElementById('cardNumber').value;
+                    const cardExpiry = document.getElementById('cardExpiry').value;
+                    const cardCvv = document.getElementById('cardCvv').value;
+                    const cardName = document.getElementById('cardName').value;
+
+                    if (!cardNumber || !cardExpiry || !cardCvv || !cardName) {
+                        alert('Please fill in all card details');
+                        return false;
+                    }
+                    break;
+                case 'gcash':
+                    const gcashNumber = document.getElementById('gcashNumber').value;
+                    if (gcashNumber && gcashNumber.length < 11) {
+                        alert('Please enter a valid GCash number');
+                        return false;
+                    }
+                    break;
+                case 'bank':
+                    const bankProof = document.getElementById('bankProof').files[0];
+                    if (!bankProof) {
+                        alert('Please upload proof of bank transfer');
+                        return false;
+                    }
+                    break;
+            }
+            return true;
+        }
+
+        function processPaymentSuccess() {
+            closePaymentModal();
+            
+            // Show success modal
+            const successModal = document.getElementById('successModal');
+            const successContent = successModal.querySelector('.success-content');
+            
+            const paymentMethodText = getPaymentMethodText();
+            const referenceNumber = selectedBookingType === 'reserve' ? generateReservationReference() : generateBookingReference();
+            const isReservation = selectedBookingType === 'reserve';
+            
+            if (isReservation) {
+                const totalCost = getCurrentBookingCost();
+                const remainingBalance = totalCost - paymentAmount;
+                
+                successContent.innerHTML = `
+                    <div class="success-icon">
+                        <i class="fas fa-bookmark"></i>
+                    </div>
+                    <h2>Reservation Confirmed!</h2>
+                    <p>Your reservation has been confirmed and payment of <strong>₱${paymentAmount.toLocaleString()}</strong> has been processed via <strong>${paymentMethodText}</strong>.</p>
+                    <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0;">
+                        <div style="margin-bottom: 0.5rem;"><strong>Reservation Reference:</strong> ${referenceNumber}</div>
+                        <div style="margin-bottom: 0.5rem;"><strong>Payment Method:</strong> ${paymentMethodText}</div>
+                        <div style="margin-bottom: 0.5rem;"><strong>Amount Paid:</strong> ₱${paymentAmount.toLocaleString()}</div>
+                        <div style="margin-bottom: 0.5rem;"><strong>Remaining Balance:</strong> ₱${remainingBalance.toLocaleString()}</div>
+                        <div><strong>Payment Type:</strong> ${getPaymentTypeText()}</div>
+                    </div>
+                    <div style="background: #dbeafe; border: 1px solid #3b82f6; border-radius: 8px; padding: 1rem; margin: 1rem 0;">
+                        <p style="margin: 0; color: #1e40af; font-size: 0.875rem;">
+                            <strong>Next Step:</strong> Pay the remaining balance of ₱${remainingBalance.toLocaleString()} before your event date to confirm your booking.
+                        </p>
+                    </div>
+                    <button class="btn-next" onclick="closeSuccessModal()">Done</button>
+                `;
+            } else {
+                successContent.innerHTML = `
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2>Payment Successful!</h2>
+                    <p>Your booking has been confirmed and payment of <strong>₱${paymentAmount.toLocaleString()}</strong> has been processed via <strong>${paymentMethodText}</strong>.</p>
+                    <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0;">
+                        <div style="margin-bottom: 0.5rem;"><strong>Booking Reference:</strong> ${referenceNumber}</div>
+                        <div style="margin-bottom: 0.5rem;"><strong>Payment Method:</strong> ${paymentMethodText}</div>
+                        <div style="margin-bottom: 0.5rem;"><strong>Amount Paid:</strong> ₱${paymentAmount.toLocaleString()}</div>
+                        <div><strong>Payment Type:</strong> ${getPaymentTypeText()}</div>
+                    </div>
+                    <p style="font-size: 0.875rem; color: var(--gray-600);">You will receive a confirmation email and SMS shortly. For cash payments, please visit our office within 24 hours.</p>
+                    <button class="btn-next" onclick="closeSuccessModal()">Done</button>
+                `;
+            }
+            
+            successModal.classList.add('active');
+
+            // Add to billing system if available
+            if (typeof window.MEMBRO_Billing !== 'undefined') {
+                addPaymentToBilling(referenceNumber);
+            }
+        }
+
+        function processBookingWithoutPayment() {
+            // Show success modal for "pay after service" bookings
+            const successModal = document.getElementById('successModal');
+            const successContent = successModal.querySelector('.success-content');
+            
+            const referenceNumber = generateBookingReference();
+            
+            successContent.innerHTML = `
+                <div class="success-icon">
+                    <i class="fas fa-bookmark"></i>
+                </div>
+                <h2>Booking Confirmed!</h2>
+                <p>Your booking has been confirmed with <strong>Pay After Service</strong> option.</p>
+                <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0;">
+                    <div style="margin-bottom: 0.5rem;"><strong>Booking Reference:</strong> ${referenceNumber}</div>
+                    <div style="margin-bottom: 0.5rem;"><strong>Payment Due:</strong> Upon service completion</div>
+                    <div><strong>Total Amount:</strong> ₱${getCurrentBookingCost().toLocaleString()}</div>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--gray-600);">Payment will be collected upon service completion. You will receive a confirmation email shortly.</p>
+                <button class="btn-next" onclick="closeSuccessModal()">Done</button>
+            `;
+            
+            successModal.classList.add('active');
+            closeFacilityBookingModal();
+        }
+
+        function getPaymentMethodText() {
+            switch(selectedPaymentMethod) {
+                case 'gcash': return 'GCash';
+                case 'card': return 'Credit/Debit Card';
+                case 'bank': return 'Bank Transfer';
+                case 'cash': return 'Cash Payment';
+                default: return 'Unknown';
+            }
+        }
+
+        function generateBookingReference() {
+            const prefix = currentServiceData?.type === 'service' ? 'SVC' : 'FAC';
+            const timestamp = Date.now().toString().slice(-6);
+            return `${prefix}-2024-${timestamp}`;
+        }
+
+        function addPaymentToBilling(reference) {
+            const serviceName = document.getElementById('facilitySummaryName').textContent;
+            const paymentType = currentServiceData?.type === 'service' ? 'services' : 'bookings';
+            
+            window.MEMBRO_Billing.addPayment({
+                date: new Date().toLocaleDateString(),
+                description: serviceName,
+                amount: paymentAmount,
+                type: paymentType,
+                reference: reference,
+                method: getPaymentMethodText()
+            });
+        }
+
+        // Update existing facility booking functions
+        function startFacilityBooking() {
+            closeFacilityModal();
+            const facility = facilities[currentFacility];
+            
+            // Set current service data
+            currentServiceData = {
+                type: 'facility',
+                ...facility
+            };
+            
+            // Update facility header
+            document.getElementById('facilityBookingHeader').innerHTML = `
+                <div class="facility-name">
+                    <i class="${facility.icon}"></i>
+                    ${facility.title}
+                </div>
+                <div class="facility-rate">₱${facility.rate}/hour</div>
+            `;
+
+            // Reset form and summary
+            document.getElementById('facilityBookingForm').reset();
+            document.getElementById('facilitySummaryName').textContent = facility.title;
+            document.getElementById('facilitySummaryDate').textContent = '-';
+            document.getElementById('facilitySummaryTime').textContent = '-';
+            document.getElementById('facilitySummaryDuration').textContent = '-';
+            document.getElementById('facilitySummaryType').textContent = '-';
+            document.getElementById('facilitySummaryTotal').textContent = '-';
+
+            // Reset booking type and payment requirement selection
+            document.getElementById('bookOption').classList.remove('selected');
+            document.getElementById('reserveOption').classList.remove('selected');
+            document.querySelectorAll('.payment-req-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            selectedBookingType = null;
+            selectedPaymentRequirement = null;
+
+            document.getElementById('facilityBookingModal').classList.add('active');
+        }
+
+        function updateFacilitySummary() {
+            const facility = facilities[currentFacility];
+            const date = document.getElementById('facilityDate').value;
+            const startTime = document.getElementById('facilityStartTime').value;
+            const endTime = document.getElementById('facilityEndTime').value;
+
+            if (date) {
+                document.getElementById('facilitySummaryDate').textContent = new Date(date).toLocaleDateString();
+            }
+
+            if (startTime && endTime) {
+                document.getElementById('facilitySummaryTime').textContent = `${startTime} - ${endTime}`;
+                
+                // Calculate duration and cost
+                const start = new Date(`2024-01-01T${startTime}`);
+                const end = new Date(`2024-01-01T${endTime}`);
+                const durationMs = end - start;
+                const durationHours = durationMs / (1000 * 60 * 60);
+                
+                document.getElementById('facilitySummaryDuration').textContent = `${durationHours} hour(s)`;
+                document.getElementById('facilitySummaryTotal').textContent = `₱${(facility.rate * durationHours).toLocaleString()}`;
+                
+                // Update payment requirement amounts if facility booking
+                if (durationHours > 0) {
+                    updatePaymentRequirementAmounts(facility.rate * durationHours);
+                }
+            }
+        }
+
+        // Input formatting for payment forms
+        document.addEventListener('DOMContentLoaded', function() {
+            // Format card number input
+            const cardNumberInput = document.getElementById('cardNumber');
+            if (cardNumberInput) {
+                cardNumberInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
+                    let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+                    e.target.value = formattedValue;
+                });
+            }
+
+            // Format card expiry input
+            const cardExpiryInput = document.getElementById('cardExpiry');
+            if (cardExpiryInput) {
+                cardExpiryInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length >= 2) {
+                        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                    }
+                    e.target.value = value;
+                });
+            }
+
+            // Format GCash number input
+            const gcashNumberInput = document.getElementById('gcashNumber');
+            if (gcashNumberInput) {
+                gcashNumberInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    e.target.value = value;
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

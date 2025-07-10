@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bills & Payments - MEMBRO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Professional Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"><img src="logo.png" alt="MEMBRO Logo"></div>
+                    <div class="logo-text">
+                        <h1>MEMBRO</h1>
+                        <span>Your Home Portal</span>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="user-details">
+                        <span class="user-name">Heriberto Nathan</span>
+                        <span class="user-unit">Unit 802</span>
+                    </div>
+                    <button class="notification-btn" onclick="toggleNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">5</span>
+                    </button>
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <button class="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Notification Modal -->
+        <div class="notification-modal" id="notificationModal">
+            <div class="notification-overlay" onclick="closeNotifications()"></div>
+            <div class="notification-panel">
+                <div class="notification-header">
+                    <h3>Notifications</h3>
+                    <button class="close-btn" onclick="closeNotifications()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="notification-tabs">
+                    <button class="tab-btn active" onclick="switchTab('all')">View all</button>
+                    <button class="tab-btn" onclick="switchTab('mentions')">Mentions</button>
+                </div>
+                
+                <div class="notification-content">
+                    <div class="notification-item unread" data-type="comment">
+                        <div class="notification-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Frankie+Sullivan&background=3b82f6&color=ffffff&size=40" alt="Frankie Sullivan">
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Frankie Sullivan</strong> commented on your post
+                            </div>
+                            <div class="notification-preview">
+                                This is looking great! Let's get started on it.
+                            </div>
+                            <div class="notification-time">Friday 2:20pm</div>
+                        </div>
+                        <div class="notification-date">Sep 20, 2024</div>
+                        <div class="unread-indicator"></div>
+                    </div>
+                    
+                    <div class="notification-item unread" data-type="follow">
+                        <div class="notification-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Amelie+Laurent&background=10b981&color=ffffff&size=40" alt="Amelie Laurent">
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Amelie Laurent</strong> followed you
+                            </div>
+                            <div class="notification-time">Friday 10:04am</div>
+                        </div>
+                        <div class="notification-date">Sep 20, 2024</div>
+                        <div class="unread-indicator"></div>
+                    </div>
+                    
+                    <div class="notification-item unread" data-type="upload">
+                        <div class="notification-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Mikah+DiStefano&background=f59e0b&color=ffffff&size=40" alt="Mikah DiStefano">
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Mikah DiStefano</strong> uploaded 2 attachments
+                            </div>
+                            <div class="notification-attachments">
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-video"></i>
+                                    <div class="attachment-info">
+                                        <span class="attachment-name">Prototype recording 02.mp4</span>
+                                        <span class="attachment-size">16 MB</span>
+                                    </div>
+                                    <i class="fas fa-download attachment-action"></i>
+                                </div>
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-video"></i>
+                                    <div class="attachment-info">
+                                        <span class="attachment-name">Prototype recording 01.mp4</span>
+                                        <span class="attachment-size">14 MB</span>
+                                    </div>
+                                    <i class="fas fa-download attachment-action"></i>
+                                </div>
+                            </div>
+                            <div class="notification-time">Thursday 2:20pm</div>
+                        </div>
+                        <div class="notification-date">Sep 20, 2024</div>
+                        <div class="unread-indicator"></div>
+                    </div>
+                    
+                    <div class="notification-item" data-type="billing">
+                        <div class="notification-avatar">
+                            <div class="system-avatar">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Payment Reminder</strong>
+                            </div>
+                            <div class="notification-preview">
+                                Your monthly payment of $1,250 is due on March 15th
+                            </div>
+                            <div class="notification-time">2 hours ago</div>
+                        </div>
+                        <div class="notification-date">Today</div>
+                    </div>
+                    
+                    <div class="notification-item" data-type="maintenance">
+                        <div class="notification-avatar">
+                            <div class="system-avatar" style="background: var(--warning);">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Maintenance Update</strong>
+                            </div>
+                            <div class="notification-preview">
+                                Your service request #2024-156 has been completed
+                            </div>
+                            <div class="notification-time">Yesterday</div>
+                        </div>
+                        <div class="notification-date">Sep 19, 2024</div>
+                    </div>
+                </div>
+                
+                <div class="notification-footer">
+                    <button class="mark-read-btn" onclick="markAllAsRead()">
+                        <i class="fas fa-check-double"></i>
+                        Mark all as read
+                    </button>
+                    <button class="view-all-btn" onclick="viewAllNotifications()">
+                        View all notifications
+                    </button>
+                </div>
+            </div>
+        </div>
+
+         <!-- Desktop Sidebar -->
+         <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="profile.html" class="nav-link">
+                        <i class="fas fa-user"></i>
+                        <span>My Information</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="billing.html" class="nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Bills & Payments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="announcements.html" class="nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        <span>Community News</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="services.html" class="nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        <span>Book Services/Facilities</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="complaints.html" class="nav-link">
+                        <i class="fas fa-tools"></i>
+                        <span>Request Service</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h2>Bills & Payments</h2>
+                <p>Simple payment management for your home</p>
+            </div>
+
+            <!-- Current Balance - Updated with sample data -->
+            <div class="card" style="text-align: center; padding: 2rem;">
+                <div style="margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--gray-600); font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">Current Balance</h3>
+                    <div style="font-size: 3rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">₱15,000</div>
+                    <p style="color: var(--warning); font-weight: 600; margin-bottom: 2rem;">Due: July 30, 2025</p>
+                </div>
+                
+                <!-- Payment Options -->
+                <div style="max-width: 500px; margin: 0 auto;">
+                    <h4 style="color: var(--gray-700); font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">Choose Payment Method</h4>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem;">
+                        <button class="payment-option" onclick="selectPaymentOption(this)" data-method="gcash">
+                            <i class="fas fa-mobile-alt" style="color: #007CFF; font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                            <span>GCash</span>
+                        </button>
+                        <button class="payment-option" onclick="selectPaymentOption(this)" data-method="credit-card">
+                            <i class="fas fa-credit-card" style="color: #1F2937; font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                            <span>Credit Card</span>
+                        </button>
+                        <button class="payment-option" onclick="selectPaymentOption(this)" data-method="cash">
+                            <i class="fas fa-money-bill-wave" style="color: #059669; font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                            <span>Cash</span>
+                        </button>
+                        <button class="payment-option" onclick="selectPaymentOption(this)" data-method="bank">
+                            <i class="fas fa-university" style="color: #7C3AED; font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                            <span>Bank Transfer</span>
+                        </button>
+                    </div>
+                    
+                    <button class="btn btn-primary btn-large btn-block" style="margin-bottom: 1rem;" onclick="processPayment()">
+                        <i class="fas fa-lock"></i>
+                        Pay Now - ₱15,000
+                    </button>
+                    <button class="btn btn-secondary btn-block">
+                        <i class="fas fa-calendar-alt"></i>
+                        Set Up Auto-Pay
+                    </button>
+                </div>
+            </div>
+
+            <!-- Current Bills Breakdown -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-receipt"></i>
+                    Current Bills Breakdown
+                </div>
+                <div class="card-body">
+                    <div style="display: grid; gap: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); border-left: 4px solid var(--primary);">
+                            <div>
+                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">HOA Dues</div>
+                                <div style="color: var(--gray-600); font-size: 0.875rem;">Recurring Monthly</div>
+                                <div style="color: var(--gray-600); font-size: 0.875rem;">June 24 - June 30, 2025</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 600; color: var(--gray-900); font-size: 1.25rem;">₱12,500</div>
+                                <span class="status active">Active</span>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); border-left: 4px solid var(--secondary);">
+                            <div>
+                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">Maintenance Fee</div>
+                                <div style="color: var(--gray-600); font-size: 0.875rem;">Recurring Monthly</div>
+                                <div style="color: var(--gray-600); font-size: 0.875rem;">July 1 - July 30, 2025</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 600; color: var(--gray-900); font-size: 1.25rem;">₱2,500</div>
+                                <span class="status active">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--gray-200);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="font-size: 1.25rem; font-weight: 700; color: var(--gray-900);">Total Amount Due</div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">₱15,000</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+
+            <!-- Recent Payments - Updated -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-clock"></i>
+                    Recent Payments
+                    <button class="btn btn-secondary" style="margin-left: auto; font-size: 0.75rem; padding: 0.5rem 1rem;" onclick="togglePaymentFilter()">
+                        <i class="fas fa-filter"></i>
+                        Filter
+                    </button>
+                </div>
+                <div class="card-body">
+                    <!-- Payment Filter Options -->
+                    <div id="paymentFilterOptions" style="display: none; margin-bottom: 1.5rem; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md);">
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <button class="filter-btn active" onclick="filterPayments('all')" data-filter="all">All Payments</button>
+                            <button class="filter-btn" onclick="filterPayments('bills')" data-filter="bills">Bills Only</button>
+                            <button class="filter-btn" onclick="filterPayments('bookings')" data-filter="bookings">Bookings Only</button>
+                            <button class="filter-btn" onclick="filterPayments('services')" data-filter="services">Services Only</button>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; gap: 1rem;" id="paymentHistory">
+                        <!-- Current Month Bills Payment -->
+                        <div class="payment-item" data-type="bills" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md);">
+                            <div>
+                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">May 2025 - HOA Dues & Maintenance</div>
+                                <div style="color: var(--gray-600); font-size: 0.875rem;">Paid on May 30, 2025</div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                                    <span class="payment-type-badge bills">Monthly Bills</span>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 600; color: var(--gray-900);">₱15,000</div>
+                                <span class="status paid">Paid</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Event Hall Booking -->
+                        <div class="payment-item" data-type="bookings" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); border-left: 4px solid var(--secondary);">
+                            <div>
+                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">Event Hall Booking</div>
+                                <div style="color: var(--gray-600); font-size: 0.875rem;">Birthday Party - May 25, 2025 (6 hours)</div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                                    <span class="payment-type-badge booking">Facility Booking</span>
+                                    <span style="color: var(--gray-500); font-size: 0.75rem;">₱750/hr × 6hrs</span>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 600; color: var(--gray-900);">₱4,500</div>
+                                <span class="status paid">Paid</span>
+                            </div>
+                        </div>
+
+                        <!-- Pool Booking -->
+                        <div class="payment-item" data-type="bookings" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); border-left: 4px solid var(--info);">
+                            <div>
+                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">Swimming Pool Booking</div>
+                                <div style="color: var(--gray-600); font-size: 0.875rem;">Pool Party - May 20, 2025 (4 hours)</div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                                    <span class="payment-type-badge booking">Facility Booking</span>
+                                    <span style="color: var(--gray-500); font-size: 0.75rem;">₱100/hr × 4hrs</span>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 600; color: var(--gray-900);">₱400</div>
+                                <span class="status paid">Paid</span>
+                            </div>
+                        </div>
+
+                        <!-- Cleaning Service -->
+                        <div class="payment-item" data-type="services" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); border-left: 4px solid var(--warning);">
+                            <div>
+                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">Professional Cleaning Service</div>
+                                <div style="color: var(--gray-600); font-size: 0.875rem;">Unit 802 Deep Cleaning - May 15, 2025</div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                                    <span class="payment-type-badge service">Home Service</span>
+                                    <span style="color: var(--gray-500); font-size: 0.75rem;">Standard Rate</span>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 600; color: var(--gray-900);">₱600</div>
+                                <span class="status paid">Paid</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Previous Month Bills -->
+                        <div class="payment-item" data-type="bills" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md);">
+                            <div>
+                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">April 2025 - HOA Dues & Maintenance</div>
+                                <div style="color: var(--gray-600); font-size: 0.875rem;">Paid on Apr 30, 2025</div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                                    <span class="payment-type-badge bills">Monthly Bills</span>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 600; color: var(--gray-900);">₱15,000</div>
+                                <span class="status paid">Paid</span>
+                            </div>
+                        </div>
+
+                        <!-- Gym Membership -->
+                        <div class="payment-item" data-type="bookings" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); border-left: 4px solid #10b981;">
+                            <div>
+                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">Fitness Center Session</div>
+                                <div style="color: var(--gray-600); font-size: 0.875rem;">Personal Training - Apr 28, 2025 (2 hours)</div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                                    <span class="payment-type-badge booking">Facility Booking</span>
+                                    <span style="color: var(--gray-500); font-size: 0.75rem;">₱75/hr × 2hrs</span>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 600; color: var(--gray-900);">₱150</div>
+                                <span class="status paid">Paid</span>
+                            </div>
+                        </div>
+
+                        <!-- Tennis Court Booking -->
+                        <div class="payment-item" data-type="bookings" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); border-left: 4px solid #f59e0b;">
+                            <div>
+                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">Tennis Court Booking</div>
+                                <div style="color: var(--gray-600); font-size: 0.875rem;">Weekend Match - Apr 20, 2025 (2 hours)</div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                                    <span class="payment-type-badge booking">Facility Booking</span>
+                                    <span style="color: var(--gray-500); font-size: 0.75rem;">₱150/hr × 2hrs</span>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 600; color: var(--gray-900);">₱300</div>
+                                <span class="status paid">Paid</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Previous Month Bills -->
+                        <div class="payment-item" data-type="bills" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md);">
+                            <div>
+                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">March 2025 - HOA Dues & Maintenance</div>
+                                <div style="color: var(--gray-600); font-size: 0.875rem;">Paid on Mar 30, 2025</div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                                    <span class="payment-type-badge bills">Monthly Bills</span>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 600; color: var(--gray-900);">₱15,000</div>
+                                <span class="status paid">Paid</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 1.5rem;">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-list"></i>
+                            View All History
+                        </button>
+                        <button class="btn btn-secondary" style="margin-left: 1rem;" onclick="exportPayments()">
+                            <i class="fas fa-download"></i>
+                            Export to CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Summary by Category -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-chart-pie"></i>
+                    Payment Summary (Last 3 Months)
+                </div>
+                <div class="card-body">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: var(--radius-lg); color: white;">
+                            <div style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">₱45,000</div>
+                            <div style="font-size: 0.875rem; opacity: 0.9;">Monthly Bills</div>
+                            <div style="font-size: 0.75rem; opacity: 0.7; margin-top: 0.25rem;">HOA + Maintenance</div>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%); border-radius: var(--radius-lg); color: white;">
+                            <div style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">₱5,350</div>
+                            <div style="font-size: 0.875rem; opacity: 0.9;">Facility Bookings</div>
+                            <div style="font-size: 0.75rem; opacity: 0.7; margin-top: 0.25rem;">Events + Recreation</div>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, var(--warning) 0%, #fbbf24 100%); border-radius: var(--radius-lg); color: white;">
+                            <div style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">₱600</div>
+                            <div style="font-size: 0.875rem; opacity: 0.9;">Home Services</div>
+                            <div style="font-size: 0.75rem; opacity: 0.7; margin-top: 0.25rem;">Cleaning + Maintenance</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid var(--gray-200);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="font-size: 1.125rem; font-weight: 600; color: var(--gray-700);">Total Payments (3 Months)</div>
+                            <div style="font-size: 1.75rem; font-weight: 700; color: var(--primary);">₱50,950</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Methods - Simplified -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-wallet"></i>
+                    Your Payment Method
+                </div>
+                <div class="card-body">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; background: var(--gray-50); border-radius: var(--radius-lg);">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 48px; height: 48px; background: var(--primary); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: white;">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div>
+                                <h4 style="color: var(--gray-900); margin-bottom: 0.25rem; font-size: 1rem; font-weight: 600;">Visa ending in 4567</h4>
+                                <p style="color: var(--gray-600); margin: 0; font-size: 0.875rem;">Default payment method</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-edit"></i>
+                            Change
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Auto-Pay Status - Simplified -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-calendar-check"></i>
+                    Auto-Pay Status
+                </div>
+                <div class="card-body">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h4 style="color: var(--secondary); margin-bottom: 0.5rem; font-size: 1rem; font-weight: 600;">Auto-Pay is ON</h4>
+                            <p style="color: var(--gray-600); margin: 0; font-size: 0.875rem;">
+                                Your bills will be automatically paid on the 1st of each month
+                            </p>
+                        </div>
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-cog"></i>
+                            Manage
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help Section -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-headset"></i>
+                    Need Help?
+                </div>
+                <div class="card-body">
+                    <p style="margin-bottom: 1.5rem; color: var(--gray-600); font-size: 0.875rem;">
+                        Questions about your bill? Our team is here to help.
+                    </p>
+                    <div style="display: grid; gap: 1rem;">
+                        <a href="tel:+63-2-8123-4567" class="btn btn-primary btn-block">
+                            <i class="fas fa-phone"></i>
+                            Call: +63-2-8123-4567
+                        </a>
+                        <a href="mailto:billing@membro.com" class="btn btn-secondary btn-block">
+                            <i class="fas fa-envelope"></i>
+                            Email Support
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking Payment Process -->
+            
+        </main>
+
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav">
+            <ul class="mobile-nav-menu">
+                <li class="mobile-nav-item">
+                    <a href="index.html" class="mobile-nav-link">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="profile.html" class="mobile-nav-link">
+                        <i class="fas fa-user"></i>
+                        Profile
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="announcements.html" class="mobile-nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        News
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="billing.html" class="mobile-nav-link active">
+                        <i class="fas fa-credit-card"></i>
+                        Billing
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="services.html" class="mobile-nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        Services
+                    </a>
+                </li>
+                <li class="mobile-nav-item mobile-nav-more">
+                    <button class="mobile-nav-link" onclick="toggleMobileMore()">
+                        <i class="fas fa-ellipsis-h"></i>
+                        More
+                    </button>
+                    <div class="mobile-nav-dropdown" id="mobileMoreDropdown">
+                        <a href="properties.html" class="mobile-nav-dropdown-item">
+                            <i class="fas fa-key"></i>
+                            Properties
+                        </a>
+                        <a href="complaints.html" class="mobile-nav-dropdown-item">
+                            <i class="fas fa-tools"></i>
+                            Request Service
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <script>
+        // Notification Modal Functions
+        function toggleNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.toggle('active');
+            
+            if (modal.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+
+        function closeNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function switchTab(tab) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Filter notifications based on tab
+            const notifications = document.querySelectorAll('.notification-item');
+            notifications.forEach(item => {
+                if (tab === 'all') {
+                    item.style.display = 'flex';
+                } else if (tab === 'mentions') {
+                    // Show only comment/mention type notifications
+                    if (item.dataset.type === 'comment' || item.dataset.type === 'follow') {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        function markAllAsRead() {
+            // Remove unread class from all notifications
+            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+            });
+            
+            // Update notification badge
+            const badge = document.querySelector('.notification-badge');
+            badge.textContent = '0';
+            badge.style.display = 'none';
+            
+            // Show success message
+            showToast('All notifications marked as read');
+        }
+
+        function viewAllNotifications() {
+            // This would typically navigate to a dedicated notifications page
+            showToast('Opening full notifications page...');
+            // window.location.href = 'notifications.html';
+        }
+
+        function showToast(message) {
+            // Create and show a toast notification
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--primary);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 8px;
+                z-index: 10000;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Fade in
+            setTimeout(() => {
+                toast.style.opacity = '1';
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // Close notification modal when clicking outside
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('notificationModal');
+            const notificationBtn = document.querySelector('.notification-btn');
+            
+            if (modal.classList.contains('active') && 
+                !modal.querySelector('.notification-panel').contains(event.target) &&
+                !notificationBtn.contains(event.target)) {
+                closeNotifications();
+            }
+        });
+
+        // Close notification modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeNotifications();
+            }
+        });
+
+        // Mark individual notifications as read when clicked
+        document.querySelectorAll('.notification-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if (this.classList.contains('unread')) {
+                    this.classList.remove('unread');
+                    updateNotificationBadge();
+                }
+            });
+        });
+
+        function updateNotificationBadge() {
+            const unreadCount = document.querySelectorAll('.notification-item.unread').length;
+            const badge = document.querySelector('.notification-badge');
+            
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount;
+                badge.style.display = 'block';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        // Payment option selection and processing
+        let selectedPaymentMethod = null;
+
+        function selectPaymentOption(element) {
+            // Remove active class from all payment options
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            
+            // Add active class to selected option
+            element.classList.add('active');
+            selectedPaymentMethod = element.dataset.method;
+        }
+
+        function processPayment() {
+            if (!selectedPaymentMethod) {
+                showToast('Please select a payment method first');
+                return;
+            }
+            
+            let message = '';
+            switch(selectedPaymentMethod) {
+                case 'gcash':
+                    message = 'Redirecting to GCash payment...';
+                    break;
+                case 'credit-card':
+                    message = 'Processing credit card payment...';
+                    break;
+                case 'cash':
+                    message = 'Please visit the office for cash payment';
+                    break;
+                case 'bank':
+                    message = 'Redirecting to bank transfer...';
+                    break;
+                default:
+                    message = 'Processing payment...';
+            }
+            
+            showToast(message);
+        }
+
+        // Payment filtering functionality
+        function togglePaymentFilter() {
+            const filterOptions = document.getElementById('paymentFilterOptions');
+            filterOptions.style.display = filterOptions.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function filterPayments(type) {
+            // Update active filter button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.filter-btn[data-filter="${type}"]`).classList.add('active');
+
+            // Filter payment items
+            const paymentItems = document.querySelectorAll('.payment-item');
+            paymentItems.forEach(item => {
+                if (type === 'all') {
+                    item.style.display = 'flex';
+                } else {
+                    const itemType = item.dataset.type;
+                    item.style.display = itemType === type ? 'flex' : 'none';
+                }
+            });
+        }
+
+        // Export payments to CSV
+        function exportPayments() {
+            const payments = [
+                { date: '2025-05-30', description: 'May 2025 - HOA Dues & Maintenance', type: 'Monthly Bills', amount: 15000 },
+                { date: '2025-05-25', description: 'Event Hall Booking - Birthday Party (6 hours)', type: 'Facility Booking', amount: 4500 },
+                { date: '2025-05-20', description: 'Swimming Pool Booking - Pool Party (4 hours)', type: 'Facility Booking', amount: 400 },
+                { date: '2025-05-15', description: 'Professional Cleaning Service - Unit 802 Deep Cleaning', type: 'Home Service', amount: 600 },
+                { date: '2025-04-30', description: 'April 2025 - HOA Dues & Maintenance', type: 'Monthly Bills', amount: 15000 },
+                { date: '2025-04-28', description: 'Fitness Center Session - Personal Training (2 hours)', type: 'Facility Booking', amount: 150 },
+                { date: '2025-04-20', description: 'Tennis Court Booking - Weekend Match (2 hours)', type: 'Facility Booking', amount: 300 },
+                { date: '2025-03-30', description: 'March 2025 - HOA Dues & Maintenance', type: 'Monthly Bills', amount: 15000 }
+            ];
+
+            let csvContent = "Date,Description,Type,Amount\n";
+            payments.forEach(payment => {
+                csvContent += `${payment.date},"${payment.description}",${payment.type},"₱${payment.amount}"\n`;
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `payment_history_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast('Payment history exported successfully!');
+        }
+
+        // Function to add new booking payment to history (to be called from booking pages)
+        function addBookingPayment(bookingData) {
+            const paymentHistory = document.getElementById('paymentHistory');
+            const newPayment = document.createElement('div');
+            
+            let typeClass = 'booking';
+            let typeBadge = 'Facility Booking';
+            let borderColor = 'var(--secondary)';
+            
+            if (bookingData.type === 'service') {
+                typeClass = 'services';
+                typeBadge = 'Home Service';
+                borderColor = 'var(--warning)';
+            }
+            
+            newPayment.className = 'payment-item';
+            newPayment.setAttribute('data-type', typeClass);
+            newPayment.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); border-left: 4px solid ${borderColor};">
+                    <div>
+                        <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">${bookingData.title}</div>
+                        <div style="color: var(--gray-600); font-size: 0.875rem;">${bookingData.description}</div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                            <span class="payment-type-badge ${typeClass}">${typeBadge}</span>
+                            <span style="color: var(--gray-500); font-size: 0.75rem;">${bookingData.rateInfo || ''}</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: 600; color: var(--gray-900);">₱${bookingData.amount}</div>
+                        <span class="status paid">Paid</span>
+                    </div>
+                </div>
+            `;
+            
+            // Insert at the beginning of payment history
+            paymentHistory.insertBefore(newPayment, paymentHistory.firstChild);
+            
+            showToast(`Payment of ₱${bookingData.amount} for ${bookingData.title} has been recorded!`);
+        }
+
+        // Sample function to simulate booking completion (would be called from services/facilities pages)
+        function completeBooking(facilityName, rate, hours, bookingType = 'facility') {
+            const bookingData = {
+                title: `${facilityName} Booking`,
+                description: `${new Date().toLocaleDateString()} (${hours} hours)`,
+                type: bookingType,
+                amount: rate * hours,
+                rateInfo: `₱${rate}/hr × ${hours}hrs`
+            };
+            
+            // Add to payment history
+            addBookingPayment(bookingData);
+            
+            // Update payment summary (this would typically update a database)
+            updatePaymentSummary(bookingData.amount, bookingType);
+        }
+
+        function updatePaymentSummary(amount, type) {
+            // This function would update the payment summary cards
+            // In a real application, this would sync with your backend
+            console.log(`Updated ${type} payments by $${amount}`);
+        }
+
+        // Make functions available globally for integration with other pages
+        window.MEMBRO_Billing = {
+            addBookingPayment,
+            completeBooking,
+            updatePaymentSummary
+        };
+    </script>
+</body>
+</html> 

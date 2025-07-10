@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Information - MEMBRO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Professional Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"><img src="logo.png" alt="MEMBRO Logo"></div>
+                    <div class="logo-text">
+                        <h1>MEMBRO</h1>
+                        <span>Your Home Portal</span>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="user-details">
+                        <span class="user-name">Heriberto Nathan</span>
+                        <span class="user-unit">Unit 802</span>
+                    </div>
+                    <button class="notification-btn" onclick="toggleNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">5</span>
+                    </button>
+                    <div class="user-avatar" onclick="toggleUserMenu()">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <button class="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <!-- User Menu Modal -->
+                    <div class="user-menu-modal" id="userMenuModal">
+                        <div class="user-menu-panel">
+                            <div class="user-menu-header">
+                                <div class="user-menu-info">
+                                    <div class="user-menu-avatar">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="user-menu-details">
+                                        <span class="user-menu-name">Heriberto Nathan</span>
+                                        <span class="user-menu-unit">Unit 802</span>
+                                        <span class="user-menu-email">heriberto@northwindtraders.com</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="user-menu-content">
+                                <div class="user-menu-section">
+                                    <a href="notification-settings.html" class="user-menu-item">
+                                        <i class="fas fa-cog"></i>
+                                        <span>Settings</span>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                    <a href="billing.html" class="user-menu-item">
+                                        <i class="fas fa-credit-card"></i>
+                                        <span>Payment Methods</span>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </div>
+                                
+                                <div class="user-menu-section">
+                                    <a href="#" class="user-menu-item">
+                                        <i class="fas fa-question-circle"></i>
+                                        <span>Help & Support</span>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                    <a href="#" class="user-menu-item">
+                                        <i class="fas fa-shield-alt"></i>
+                                        <span>Privacy Policy</span>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </div>
+                                
+                                <div class="user-menu-section">
+                                    <button class="user-menu-item logout-btn" onclick="logout()">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        <span>Logout</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Notification Modal -->
+        <div class="notification-modal" id="notificationModal">
+            <div class="notification-overlay" onclick="closeNotifications()"></div>
+            <div class="notification-panel">
+                <div class="notification-header">
+                    <h3>Notifications</h3>
+                    <button class="close-btn" onclick="closeNotifications()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="notification-tabs">
+                    <button class="tab-btn active" onclick="switchTab('all')">View all</button>
+                    <button class="tab-btn" onclick="switchTab('mentions')">Mentions</button>
+                </div>
+                
+                <div class="notification-content">
+                    <div class="notification-item unread" data-type="comment">
+                        <div class="notification-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Frankie+Sullivan&background=3b82f6&color=ffffff&size=40" alt="Frankie Sullivan">
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Frankie Sullivan</strong> commented on your post
+                            </div>
+                            <div class="notification-preview">
+                                This is looking great! Let's get started on it.
+                            </div>
+                            <div class="notification-time">Friday 2:20pm</div>
+                        </div>
+                        <div class="notification-date">Sep 20, 2024</div>
+                        <div class="unread-indicator"></div>
+                    </div>
+                    
+                    <div class="notification-item unread" data-type="follow">
+                        <div class="notification-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Amelie+Laurent&background=10b981&color=ffffff&size=40" alt="Amelie Laurent">
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Amelie Laurent</strong> followed you
+                            </div>
+                            <div class="notification-time">Friday 10:04am</div>
+                        </div>
+                        <div class="notification-date">Sep 20, 2024</div>
+                        <div class="unread-indicator"></div>
+                    </div>
+                    
+                    <div class="notification-item unread" data-type="upload">
+                        <div class="notification-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Mikah+DiStefano&background=f59e0b&color=ffffff&size=40" alt="Mikah DiStefano">
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Mikah DiStefano</strong> uploaded 2 attachments
+                            </div>
+                            <div class="notification-attachments">
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-video"></i>
+                                    <div class="attachment-info">
+                                        <span class="attachment-name">Prototype recording 02.mp4</span>
+                                        <span class="attachment-size">16 MB</span>
+                                    </div>
+                                    <i class="fas fa-download attachment-action"></i>
+                                </div>
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-video"></i>
+                                    <div class="attachment-info">
+                                        <span class="attachment-name">Prototype recording 01.mp4</span>
+                                        <span class="attachment-size">14 MB</span>
+                                    </div>
+                                    <i class="fas fa-download attachment-action"></i>
+                                </div>
+                            </div>
+                            <div class="notification-time">Thursday 2:20pm</div>
+                        </div>
+                        <div class="notification-date">Sep 20, 2024</div>
+                        <div class="unread-indicator"></div>
+                    </div>
+                    
+                    <div class="notification-item" data-type="billing">
+                        <div class="notification-avatar">
+                            <div class="system-avatar">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Payment Reminder</strong>
+                            </div>
+                            <div class="notification-preview">
+                                Your monthly payment of $1,250 is due on March 15th
+                            </div>
+                            <div class="notification-time">2 hours ago</div>
+                        </div>
+                        <div class="notification-date">Today</div>
+                    </div>
+                    
+                    <div class="notification-item" data-type="maintenance">
+                        <div class="notification-avatar">
+                            <div class="system-avatar" style="background: var(--warning);">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-text">
+                                <strong>Maintenance Update</strong>
+                            </div>
+                            <div class="notification-preview">
+                                Your service request #2024-156 has been completed
+                            </div>
+                            <div class="notification-time">Yesterday</div>
+                        </div>
+                        <div class="notification-date">Sep 19, 2024</div>
+                    </div>
+                </div>
+                
+                <div class="notification-footer">
+                    <button class="mark-read-btn" onclick="markAllAsRead()">
+                        <i class="fas fa-check-double"></i>
+                        Mark all as read
+                    </button>
+                    <button class="view-all-btn" onclick="viewAllNotifications()">
+                        View all notifications
+                    </button>
+                </div>
+            </div>
+        </div>
+
+         <!-- Desktop Sidebar -->
+         <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="profile.html" class="nav-link">
+                        <i class="fas fa-user"></i>
+                        <span>My Information</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="billing.html" class="nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Bills & Payments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="announcements.html" class="nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        <span>Community News</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="services.html" class="nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        <span>Book Services/Facilities</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="properties.html" class="nav-link">
+                        <i class="fas fa-key"></i>
+                        <span>My Properties</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="complaints.html" class="nav-link">
+                        <i class="fas fa-tools"></i>
+                        <span>Request Service</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h2>My Information</h2>
+                <p>Keep your details up to date so we can serve you better</p>
+            </div>
+
+            <!-- Profile Overview Card -->
+            <div class="profile-overview-card">
+                <div class="profile-avatar-section">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-name-section">
+                        <h3>Heriberto Nathan</h3>
+                        <p>Unit 802</p>
+                        <span class="profile-status">Active Resident</span>
+                    </div>
+                </div>
+                <div class="profile-quick-actions">
+                    <button class="quick-action-btn">
+                        <i class="fas fa-edit"></i>
+                        Edit Profile
+                    </button>
+                    <button class="quick-action-btn">
+                        <i class="fas fa-key"></i>
+                        Change Password
+                    </button>
+                </div>
+            </div>
+
+            <!-- Profile Sections Grid -->
+            <div class="profile-sections-grid">
+                <!-- Personal Information Section -->
+                <div class="profile-section">
+                    <div class="section-header">
+                        <i class="fas fa-user"></i>
+                        <h4>Personal Information</h4>
+                    </div>
+                    <div class="section-content">
+                        <div class="info-row">
+                            <label>First Name</label>
+                            <input type="text" value="Heriberto" class="form-input">
+                        </div>
+                        <div class="info-row">
+                            <label>Middle Name</label>
+                            <input type="text" value="" class="form-input">
+                        </div>
+                        <div class="info-row">
+                            <label>Last Name</label>
+                            <input type="text" value="Nathan" class="form-input">
+                        </div>
+                        <div class="info-row">
+                            <label>Emergency Contact</label>
+                            <input type="text" value="Jane Nathan - (614) 555-9876" class="form-input">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information Section -->
+                <div class="profile-section">
+                    <div class="section-header">
+                        <i class="fas fa-phone"></i>
+                        <h4>Contact Information</h4>
+                    </div>
+                    <div class="section-content">
+                        <div class="info-row">
+                            <label>Mobile Phone</label>
+                            <input type="tel" value="614-555-0124" class="form-input">
+                        </div>
+                        <div class="info-row">
+                            <label>Home Phone</label>
+                            <input type="tel" value="" class="form-input">
+                        </div>
+                        <div class="info-row">
+                            <label>Email Address</label>
+                            <div class="info-display">heriberto@northwindtraders.com</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Property Details Section -->
+                <div class="profile-section">
+                    <div class="section-header">
+                        <i class="fas fa-home"></i>
+                        <h4>Property Details</h4>
+                    </div>
+                    <div class="section-content">
+                        <div class="info-row">
+                            <label>Unit Number</label>
+                            <div class="info-display readonly">802</div>
+                        </div>
+                        <div class="info-row">
+                            <label>Move-in Date</label>
+                            <input type="date" value="2023-01-15" class="form-input">
+                        </div>
+                        <div class="info-row">
+                            <label>Parking Spaces</label>
+                            <select class="form-input">
+                                <option value="0">None</option>
+                                <option value="1">1 space</option>
+                                <option value="2" selected>2 spaces</option>
+                                <option value="3">3 spaces</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Residency Status Section -->
+                <div class="profile-section">
+                    <div class="section-header">
+                        <i class="fas fa-id-card"></i>
+                        <h4>Residency Status</h4>
+                    </div>
+                    <div class="section-content">
+                        <div class="status-grid">
+                            <div class="status-item">
+                                <label>Primary Owner</label>
+                                <div class="status-badge false">False</div>
+                            </div>
+                            <div class="status-item">
+                                <label>House Member</label>
+                                <div class="status-badge false">False</div>
+                            </div>
+                            <div class="status-item">
+                                <label>Tenant</label>
+                                <div class="status-badge false">False</div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <label>Relation</label>
+                            <select class="form-input">
+                                <option value="">Select Relation</option>
+                                <option value="owner">Owner</option>
+                                <option value="tenant">Tenant</option>
+                                <option value="family">Family Member</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tenant Information Section -->
+                <div class="profile-section">
+                    <div class="section-header">
+                        <i class="fas fa-calendar"></i>
+                        <h4>Tenant Information</h4>
+                    </div>
+                    <div class="section-content">
+                        <div class="info-row">
+                            <label>Tenant Start Date</label>
+                            <input type="date" value="" class="form-input">
+                        </div>
+                        <div class="info-row">
+                            <label>Tenant End Date</label>
+                            <input type="date" value="" class="form-input">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Settings Section -->
+                <div class="profile-section full-width">
+                    <div class="section-header">
+                        <i class="fas fa-lock"></i>
+                        <h4>Security Settings</h4>
+                    </div>
+                    <div class="section-content">
+                        <div class="security-grid">
+                            <div class="info-row">
+                                <label>Current Password</label>
+                                <input type="password" placeholder="Enter current password" class="form-input">
+                            </div>
+                            <div class="info-row">
+                                <label>New Password</label>
+                                <input type="password" placeholder="Enter new password" class="form-input">
+                            </div>
+                            <div class="info-row">
+                                <label>Confirm Password</label>
+                                <input type="password" placeholder="Confirm new password" class="form-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="profile-actions-bar">
+                <button type="button" class="btn btn-primary btn-large">
+                    <i class="fas fa-save"></i>
+                    Save All Changes
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <i class="fas fa-undo"></i>
+                    Cancel Changes
+                </button>
+            </div>
+        </main>
+
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav">
+            <ul class="mobile-nav-menu">
+                <li class="mobile-nav-item">
+                    <a href="index.html" class="mobile-nav-link">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="profile.html" class="mobile-nav-link active">
+                        <i class="fas fa-user"></i>
+                        Profile
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="announcements.html" class="mobile-nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        News
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="billing.html" class="mobile-nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        Billing
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="services.html" class="mobile-nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        Services
+                    </a>
+                </li>
+                <li class="mobile-nav-item mobile-nav-more">
+                    <button class="mobile-nav-link" onclick="toggleMobileMore()">
+                        <i class="fas fa-ellipsis-h"></i>
+                        More
+                    </button>
+                    <div class="mobile-nav-dropdown" id="mobileMoreDropdown">
+                        <a href="properties.html" class="mobile-nav-dropdown-item">
+                            <i class="fas fa-key"></i>
+                            Properties
+                        </a>
+                        <a href="complaints.html" class="mobile-nav-dropdown-item">
+                            <i class="fas fa-tools"></i>
+                            Request Service
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <script>
+        // Notification Modal Functions
+        function toggleNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.toggle('active');
+            
+            if (modal.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+
+        function closeNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function switchTab(tab) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Filter notifications based on tab
+            const notifications = document.querySelectorAll('.notification-item');
+            notifications.forEach(item => {
+                if (tab === 'all') {
+                    item.style.display = 'flex';
+                } else if (tab === 'mentions') {
+                    // Show only comment/mention type notifications
+                    if (item.dataset.type === 'comment' || item.dataset.type === 'follow') {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        function markAllAsRead() {
+            // Remove unread class from all notifications
+            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+            });
+            
+            // Update notification badge
+            const badge = document.querySelector('.notification-badge');
+            badge.textContent = '0';
+            badge.style.display = 'none';
+            
+            // Show success message
+            showToast('All notifications marked as read');
+        }
+
+        function viewAllNotifications() {
+            // This would typically navigate to a dedicated notifications page
+            showToast('Opening full notifications page...');
+            // window.location.href = 'notifications.html';
+        }
+
+        function showToast(message) {
+            // Create and show a toast notification
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--primary);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 8px;
+                z-index: 10000;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Fade in
+            setTimeout(() => {
+                toast.style.opacity = '1';
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // Close notification modal when clicking outside
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('notificationModal');
+            const notificationBtn = document.querySelector('.notification-btn');
+            
+            if (modal.classList.contains('active') && 
+                !modal.querySelector('.notification-panel').contains(event.target) &&
+                !notificationBtn.contains(event.target)) {
+                closeNotifications();
+            }
+        });
+
+        // Close notification modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeNotifications();
+            }
+        });
+
+        // Mark individual notifications as read when clicked
+        document.querySelectorAll('.notification-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if (this.classList.contains('unread')) {
+                    this.classList.remove('unread');
+                    updateNotificationBadge();
+                }
+            });
+        });
+
+        function updateNotificationBadge() {
+            const unreadCount = document.querySelectorAll('.notification-item.unread').length;
+            const badge = document.querySelector('.notification-badge');
+            
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount;
+                badge.style.display = 'block';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        // Add photo upload functionality
+        function uploadPhoto() {
+            // This would typically open a file picker
+            alert('Photo upload functionality would be implemented here');
+        }
+
+        // Mobile More Dropdown Functions
+        function toggleMobileMore() {
+            const dropdown = document.getElementById('mobileMoreDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close mobile more dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('mobileMoreDropdown');
+            const moreButton = document.querySelector('.mobile-nav-more .mobile-nav-link');
+            
+            if (dropdown && dropdown.classList.contains('active') && 
+                !dropdown.contains(event.target) &&
+                !moreButton.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Close mobile more dropdown with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const dropdown = document.getElementById('mobileMoreDropdown');
+                if (dropdown) {
+                    dropdown.classList.remove('active');
+                }
+            }
+        });
+
+        // User Menu Functions
+        function toggleUserMenu() {
+            const modal = document.getElementById('userMenuModal');
+            const notificationModal = document.getElementById('notificationModal');
+            
+            // Close notification modal if open
+            if (notificationModal && notificationModal.classList.contains('active')) {
+                closeNotifications();
+            }
+            
+            modal.classList.toggle('active');
+        }
+
+        function closeUserMenu() {
+            const modal = document.getElementById('userMenuModal');
+            modal.classList.remove('active');
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Redirect to login page
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Close user menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('userMenuModal');
+            const userAvatar = document.querySelector('.user-avatar');
+            
+            if (modal && modal.classList.contains('active') && 
+                !modal.contains(event.target) &&
+                !userAvatar.contains(event.target)) {
+                closeUserMenu();
+            }
+        });
+
+        // Close user menu with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeUserMenu();
+            }
+        });
+    </script>
+</body>
+</html> 

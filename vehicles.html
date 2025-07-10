@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Vehicles - MEMBRO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Vehicles Page Specific Styles */
+        .breadcrumb {
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-dark);
+        }
+
+        .breadcrumb span {
+            color: var(--gray-500);
+            margin: 0 0.5rem;
+        }
+
+        .add-vehicle-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-vehicle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(30, 64, 175, 0.3);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-card {
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .action-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .action-content {
+            flex: 1;
+        }
+
+        .action-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .action-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            line-height: 1.4;
+        }
+
+        .vehicles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .vehicle-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .vehicle-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -5px rgb(0 0 0 / 0.15);
+        }
+
+        .vehicle-header {
+            background: linear-gradient(135deg, var(--info) 0%, #0891b2 100%);
+            color: var(--white);
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .vehicle-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .vehicle-plate {
+            font-size: 1.125rem;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .vehicle-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+        }
+
+        .status-warning {
+            background: #f59e0b;
+        }
+
+        .status-danger {
+            background: #ef4444;
+        }
+
+        .vehicle-content {
+            padding: 1.5rem;
+        }
+
+        .vehicle-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .detail-label {
+            color: var(--gray-600);
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            color: var(--gray-900);
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .permit-info {
+            background: var(--gray-50);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .permit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .permit-title {
+            font-weight: 700;
+            color: var(--gray-900);
+            font-size: 0.875rem;
+        }
+
+        .permit-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .permit-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .permit-expiring {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .permit-expired {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .permit-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .permit-item {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .vehicle-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem 0.75rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+        }
+
+        .action-btn-primary:hover {
+            background: var(--primary-dark);
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .action-btn-secondary {
+            background: var(--white);
+            color: var(--gray-700);
+            border: 2px solid var(--gray-300);
+        }
+
+        .action-btn-secondary:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+            color: var(--gray-700);
+            text-decoration: none;
+        }
+
+        .action-btn-warning {
+            background: var(--warning);
+            color: var(--white);
+            border: none;
+        }
+
+        .action-btn-warning:hover {
+            background: #d97706;
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .permit-summary {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: 12px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .access-history {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .history-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .history-filter {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.25rem 0.75rem;
+            border-radius: 8px;
+            border: 2px solid var(--gray-300);
+            background: var(--white);
+            color: var(--gray-700);
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1rem;
+        }
+
+        .history-content {
+            flex: 1;
+        }
+
+        .history-text {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .history-meta {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .history-location {
+            padding: 0.25rem 0.75rem;
+            background: var(--gray-100);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        /* Modal styles for add vehicle */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: var(--white);
+            color: var(--gray-700);
+            border: 2px solid var(--gray-300);
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+
+        .btn-submit {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(30, 64, 175, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .vehicles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .vehicle-details {
+                grid-template-columns: 1fr;
+            }
+
+            .vehicle-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .history-filter {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Professional Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"><img src="logo.png" alt="MEMBRO Logo"></div>
+                    <div class="logo-text">
+                        <h1>MEMBRO</h1>
+                        <span>Your Home Portal</span>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="user-details">
+                        <span class="user-name">John Doe</span>
+                        <span class="user-unit">Unit 1205</span>
+                    </div>
+                    <button class="notification-btn" onclick="toggleNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">5</span>
+                    </button>
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <button class="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <!-- Notification Modal -->
+                    <div class="notification-modal" id="notificationModal">
+                        <div class="notification-overlay" onclick="closeNotifications()"></div>
+                        <div class="notification-panel">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                <button class="close-btn" onclick="closeNotifications()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="notification-tabs">
+                                <button class="tab-btn active" onclick="switchTab('all')">View all</button>
+                                <button class="tab-btn" onclick="switchTab('mentions')">Mentions</button>
+                            </div>
+                            
+                            <div class="notification-content">
+                                <div class="notification-item unread" data-type="vehicle">
+                                    <div class="notification-avatar">
+                                        <div class="system-avatar" style="background: var(--warning);">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                    </div>
+                                    <div class="notification-body">
+                                        <div class="notification-text">
+                                            <strong>Vehicle Permit</strong> expiring soon
+                                        </div>
+                                        <div class="notification-preview">
+                                            Honda Civic permit expires on March 30, 2024
+                                        </div>
+                                        <div class="notification-time">4 hours ago</div>
+                                    </div>
+                                    <div class="notification-date">Today</div>
+                                    <div class="unread-indicator"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-footer">
+                                <button class="mark-read-btn" onclick="markAllAsRead()">
+                                    <i class="fas fa-check-double"></i>
+                                    Mark all as read
+                                </button>
+                                <button class="view-all-btn" onclick="viewAllNotifications()">
+                                    View all notifications
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Desktop Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="profile.html" class="nav-link">
+                        <i class="fas fa-user"></i>
+                        <span>My Information</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="billing.html" class="nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Bills & Payments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="announcements.html" class="nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        <span>Community News</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="services.html" class="nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        <span>Book Services/Facilities</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="facilities.html" class="nav-link">
+                        <i class="fas fa-building"></i>
+                        <span>Book Facilities</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="properties.html" class="nav-link">
+                        <i class="fas fa-key"></i>
+                        <span>My Properties</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="complaints.html" class="nav-link">
+                        <i class="fas fa-tools"></i>
+                        <span>Request Service</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a href="properties.html">My Properties</a>
+                <span>/</span>
+                <span>Vehicles</span>
+            </div>
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <h2>My Vehicles</h2>
+                <p>Manage your registered vehicles, permits, and access privileges within the community.</p>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="action-card" onclick="openAddVehicleModal()">
+                    <div class="action-icon" style="background: var(--primary);">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <div class="action-content">
+                        <div class="action-title">Register New Vehicle</div>
+                        <div class="action-description">Add a new vehicle to your account</div>
+                    </div>
+                </button>
+
+                <button class="action-card" onclick="openParkingPermitModal()">
+                    <div class="action-icon" style="background: var(--secondary);">
+                        <i class="fas fa-parking"></i>
+                    </div>
+                    <div class="action-content">
+                        <div class="action-title">Apply for Parking Permit</div>
+                        <div class="action-description">Request access to parking areas</div>
+                    </div>
+                </button>
+
+                <button class="action-card" onclick="openCarStickerModal()">
+                    <div class="action-icon" style="background: var(--info);">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <div class="action-content">
+                        <div class="action-title">Apply for Car Sticker</div>
+                        <div class="action-description">Get vehicle identification stickers</div>
+                    </div>
+                </button>
+
+                <button class="action-card" onclick="openGuestPermitModal()">
+                    <div class="action-icon" style="background: var(--warning);">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <div class="action-content">
+                        <div class="action-title">Guest Vehicle Pass</div>
+                        <div class="action-description">Temporary access for visitors</div>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Permit Summary -->
+            <div class="permit-summary">
+                <div class="summary-header">
+                    <div class="summary-title">Vehicle Permit Summary</div>
+                    <button style="background: var(--secondary); color: var(--white); border: none; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.875rem; font-weight: 500; cursor: pointer;">
+                        <i class="fas fa-download"></i>
+                        Export Report
+                    </button>
+                </div>
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Total Vehicles</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">Active Permits</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">1</div>
+                        <div class="stat-label">Expiring Soon</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">$95</div>
+                        <div class="stat-label">Monthly Fees</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vehicles Grid -->
+            <div class="vehicles-grid">
+                <!-- Vehicle 1 - Honda Civic -->
+                <div class="vehicle-card">
+                    <div class="vehicle-header">
+                        <div class="vehicle-title">
+                            <i class="fas fa-car"></i>
+                            Honda Civic 2020
+                        </div>
+                        <div class="vehicle-plate">ABC-123</div>
+                        <div class="vehicle-status">
+                            <div class="status-dot status-warning"></div>
+                            Permit Expiring Soon
+                        </div>
+                    </div>
+                    <div class="vehicle-content">
+                        <div class="vehicle-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Color</span>
+                                <span class="detail-value">Silver</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Type</span>
+                                <span class="detail-value">Sedan</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Owner</span>
+                                <span class="detail-value">John Doe</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Assigned Lot</span>
+                                <span class="detail-value">P-25</span>
+                            </div>
+                        </div>
+                        <div class="permit-info">
+                            <div class="permit-header">
+                                <span class="permit-title">Access Permit</span>
+                                <span class="permit-status permit-expiring">Expiring</span>
+                            </div>
+                            <div class="permit-details">
+                                <div class="permit-item">
+                                    <span>Issued:</span>
+                                    <span>Apr 1, 2023</span>
+                                </div>
+                                <div class="permit-item">
+                                    <span>Expires:</span>
+                                    <span>Mar 30, 2024</span>
+                                </div>
+                                <div class="permit-item">
+                                    <span>Access Level:</span>
+                                    <span>Full</span>
+                                </div>
+                                <div class="permit-item">
+                                    <span>Monthly Fee:</span>
+                                    <span>$45</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vehicle-actions">
+                            <button class="action-btn action-btn-warning">
+                                <i class="fas fa-sync"></i>
+                                Renew Permit
+                            </button>
+                            <button class="action-btn action-btn-secondary">
+                                <i class="fas fa-edit"></i>
+                                Edit Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehicle 2 - BMW X5 -->
+                <div class="vehicle-card">
+                    <div class="vehicle-header" style="background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);">
+                        <div class="vehicle-title">
+                            <i class="fas fa-car-side"></i>
+                            BMW X5 2022
+                        </div>
+                        <div class="vehicle-plate">XYZ-789</div>
+                        <div class="vehicle-status">
+                            <div class="status-dot"></div>
+                            Active & Valid
+                        </div>
+                    </div>
+                    <div class="vehicle-content">
+                        <div class="vehicle-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Color</span>
+                                <span class="detail-value">Black</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Type</span>
+                                <span class="detail-value">SUV</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Owner</span>
+                                <span class="detail-value">Jane Doe</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Assigned Lot</span>
+                                <span class="detail-value">P-26</span>
+                            </div>
+                        </div>
+                        <div class="permit-info">
+                            <div class="permit-header">
+                                <span class="permit-title">Access Permit</span>
+                                <span class="permit-status permit-active">Active</span>
+                            </div>
+                            <div class="permit-details">
+                                <div class="permit-item">
+                                    <span>Issued:</span>
+                                    <span>Jun 15, 2023</span>
+                                </div>
+                                <div class="permit-item">
+                                    <span>Expires:</span>
+                                    <span>Jun 14, 2024</span>
+                                </div>
+                                <div class="permit-item">
+                                    <span>Access Level:</span>
+                                    <span>Full</span>
+                                </div>
+                                <div class="permit-item">
+                                    <span>Monthly Fee:</span>
+                                    <span>$50</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vehicle-actions">
+                            <button class="action-btn action-btn-primary">
+                                <i class="fas fa-qrcode"></i>
+                                QR Code
+                            </button>
+                            <button class="action-btn action-btn-secondary">
+                                <i class="fas fa-edit"></i>
+                                Edit Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehicle 3 - Guest Vehicle -->
+                <div class="vehicle-card">
+                    <div class="vehicle-header" style="background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);">
+                        <div class="vehicle-title">
+                            <i class="fas fa-motorcycle"></i>
+                            Yamaha MT-07 2021
+                        </div>
+                        <div class="vehicle-plate">MOT-456</div>
+                        <div class="vehicle-status">
+                            <div class="status-dot"></div>
+                            Guest Vehicle
+                        </div>
+                    </div>
+                    <div class="vehicle-content">
+                        <div class="vehicle-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Color</span>
+                                <span class="detail-value">Blue</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Type</span>
+                                <span class="detail-value">Motorcycle</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Owner</span>
+                                <span class="detail-value">Alex Smith</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Guest Parking</span>
+                                <span class="detail-value">Visitor Area</span>
+                            </div>
+                        </div>
+                        <div class="permit-info">
+                            <div class="permit-header">
+                                <span class="permit-title">Temporary Pass</span>
+                                <span class="permit-status permit-active">Active</span>
+                            </div>
+                            <div class="permit-details">
+                                <div class="permit-item">
+                                    <span>Valid From:</span>
+                                    <span>Mar 20, 2024</span>
+                                </div>
+                                <div class="permit-item">
+                                    <span>Valid Until:</span>
+                                    <span>Mar 27, 2024</span>
+                                </div>
+                                <div class="permit-item">
+                                    <span>Access Level:</span>
+                                    <span>Visitor</span>
+                                </div>
+                                <div class="permit-item">
+                                    <span>Daily Fee:</span>
+                                    <span>$5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vehicle-actions">
+                            <button class="action-btn action-btn-primary">
+                                <i class="fas fa-clock"></i>
+                                Extend Pass
+                            </button>
+                            <button class="action-btn action-btn-secondary">
+                                <i class="fas fa-times"></i>
+                                Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Access History -->
+            <div class="access-history">
+                <div class="history-header">
+                    <div class="history-title">Recent Access Activity</div>
+                    <div class="history-filter">
+                        <button class="filter-btn active" onclick="filterHistory('all')">All</button>
+                        <button class="filter-btn" onclick="filterHistory('honda')">Honda Civic</button>
+                        <button class="filter-btn" onclick="filterHistory('bmw')">BMW X5</button>
+                        <button class="filter-btn" onclick="filterHistory('yamaha')">Yamaha</button>
+                    </div>
+                </div>
+
+                <div class="history-item" data-vehicle="honda">
+                    <div class="history-icon" style="background: var(--secondary);">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </div>
+                    <div class="history-content">
+                        <div class="history-text">Honda Civic Entry</div>
+                        <div class="history-meta">March 22, 2024 at 8:30 AM • ABC-123</div>
+                    </div>
+                    <div class="history-location">Lot P-25</div>
+                </div>
+
+                <div class="history-item" data-vehicle="bmw">
+                    <div class="history-icon" style="background: var(--info);">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <div class="history-content">
+                        <div class="history-text">BMW X5 Exit</div>
+                        <div class="history-meta">March 21, 2024 at 6:45 PM • XYZ-789</div>
+                    </div>
+                    <div class="history-location">Lot P-26</div>
+                </div>
+
+                <div class="history-item" data-vehicle="yamaha">
+                    <div class="history-icon" style="background: var(--warning);">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </div>
+                    <div class="history-content">
+                        <div class="history-text">Yamaha MT-07 Entry</div>
+                        <div class="history-meta">March 21, 2024 at 3:20 PM • MOT-456</div>
+                    </div>
+                    <div class="history-location">Visitor Area</div>
+                </div>
+
+                <div class="history-item" data-vehicle="honda">
+                    <div class="history-icon" style="background: var(--info);">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <div class="history-content">
+                        <div class="history-text">Honda Civic Exit</div>
+                        <div class="history-meta">March 21, 2024 at 12:15 PM • ABC-123</div>
+                    </div>
+                    <div class="history-location">Lot P-25</div>
+                </div>
+
+                <div class="history-item" data-vehicle="bmw">
+                    <div class="history-icon" style="background: var(--secondary);">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </div>
+                    <div class="history-content">
+                        <div class="history-text">BMW X5 Entry</div>
+                        <div class="history-meta">March 20, 2024 at 7:30 PM • XYZ-789</div>
+                    </div>
+                    <div class="history-location">Lot P-26</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav">
+            <ul class="mobile-nav-menu">
+                <li class="mobile-nav-item">
+                    <a href="index.html" class="mobile-nav-link">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="profile.html" class="mobile-nav-link">
+                        <i class="fas fa-user"></i>
+                        Profile
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="announcements.html" class="mobile-nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        News
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="billing.html" class="mobile-nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        Billing
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="services.html" class="mobile-nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        Services
+                    </a>
+                </li>
+                <li class="mobile-nav-item mobile-nav-more">
+                    <button class="mobile-nav-link" onclick="toggleMobileMore()">
+                        <i class="fas fa-ellipsis-h"></i>
+                        More
+                    </button>
+                    <div class="mobile-nav-dropdown" id="mobileMoreDropdown">
+                        <a href="properties.html" class="mobile-nav-dropdown-item active">
+                            <i class="fas fa-key"></i>
+                            Properties
+                        </a>
+                        <a href="complaints.html" class="mobile-nav-dropdown-item">
+                            <i class="fas fa-tools"></i>
+                            Request Service
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Add Vehicle Modal -->
+    <div class="modal" id="addVehicleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Register New Vehicle</div>
+                <button class="close-btn" onclick="closeAddVehicleModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addVehicleForm">
+                    <div class="form-group">
+                        <label class="form-label">License Plate Number</label>
+                        <input type="text" class="form-input" placeholder="e.g., ABC-123" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Vehicle Make</label>
+                        <input type="text" class="form-input" placeholder="e.g., Honda" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Vehicle Model</label>
+                        <input type="text" class="form-input" placeholder="e.g., Civic" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Year</label>
+                        <input type="number" class="form-input" placeholder="e.g., 2020" min="1900" max="2024" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Color</label>
+                        <input type="text" class="form-input" placeholder="e.g., Silver" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Vehicle Type</label>
+                        <select class="form-input" required>
+                            <option value="">Select type</option>
+                            <option value="sedan">Sedan</option>
+                            <option value="suv">SUV</option>
+                            <option value="hatchback">Hatchback</option>
+                            <option value="coupe">Coupe</option>
+                            <option value="truck">Truck</option>
+                            <option value="van">Van</option>
+                            <option value="motorcycle">Motorcycle</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Owner Name</label>
+                        <input type="text" class="form-input" placeholder="Vehicle owner name" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-cancel" onclick="closeAddVehicleModal()">Cancel</button>
+                        <button type="submit" class="btn-submit">Register Vehicle</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Parking Permit Modal -->
+    <div class="modal" id="parkingPermitModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Apply for Parking Permit</div>
+                <button class="close-btn" onclick="closeParkingPermitModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="parkingPermitForm">
+                    <div class="form-group">
+                        <label class="form-label">Select Vehicle</label>
+                        <select class="form-input" required>
+                            <option value="">Choose a registered vehicle</option>
+                            <option value="ABC-123">Honda Civic (ABC-123)</option>
+                            <option value="XYZ-789">BMW X5 (XYZ-789)</option>
+                            <option value="DEF-456">Motorcycle (DEF-456)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Parking Area Preference</label>
+                        <select class="form-input" required>
+                            <option value="">Select parking area</option>
+                            <option value="covered">Covered Parking ($50/month)</option>
+                            <option value="open">Open Parking ($35/month)</option>
+                            <option value="visitor">Visitor Parking ($25/month)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Duration</label>
+                        <select class="form-input" required>
+                            <option value="">Select duration</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly (3 months)</option>
+                            <option value="annual">Annual (12 months)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Purpose</label>
+                        <textarea class="form-input" rows="3" placeholder="Reason for parking permit application"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-cancel" onclick="closeParkingPermitModal()">Cancel</button>
+                        <button type="submit" class="btn-submit">Submit Application</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Car Sticker Modal -->
+    <div class="modal" id="carStickerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Apply for Car Sticker</div>
+                <button class="close-btn" onclick="closeCarStickerModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="carStickerForm">
+                    <div class="form-group">
+                        <label class="form-label">Select Vehicle</label>
+                        <select class="form-input" required>
+                            <option value="">Choose a registered vehicle</option>
+                            <option value="ABC-123">Honda Civic (ABC-123)</option>
+                            <option value="XYZ-789">BMW X5 (XYZ-789)</option>
+                            <option value="DEF-456">Motorcycle (DEF-456)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Sticker Type</label>
+                        <select class="form-input" required>
+                            <option value="">Select sticker type</option>
+                            <option value="resident">Resident Sticker (Free)</option>
+                            <option value="visitor">Visitor Sticker ($5)</option>
+                            <option value="commercial">Commercial Sticker ($15)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Quantity</label>
+                        <input type="number" class="form-input" placeholder="Number of stickers needed" min="1" max="5" value="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Delivery Method</label>
+                        <select class="form-input" required>
+                            <option value="">Select delivery method</option>
+                            <option value="pickup">Pickup from office</option>
+                            <option value="mail">Mail to registered address</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Special Instructions</label>
+                        <textarea class="form-input" rows="2" placeholder="Any special requirements or notes"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-cancel" onclick="closeCarStickerModal()">Cancel</button>
+                        <button type="submit" class="btn-submit">Submit Application</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Guest Vehicle Pass Modal -->
+    <div class="modal" id="guestPermitModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Guest Vehicle Pass</div>
+                <button class="close-btn" onclick="closeGuestPermitModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="guestPermitForm">
+                    <div class="form-group">
+                        <label class="form-label">Guest Vehicle License Plate</label>
+                        <input type="text" class="form-input" placeholder="e.g., GHI-999" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Guest Name</label>
+                        <input type="text" class="form-input" placeholder="Full name of vehicle owner" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Vehicle Make & Model</label>
+                        <input type="text" class="form-input" placeholder="e.g., Toyota Camry" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Visit Date</label>
+                        <input type="date" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Duration</label>
+                        <select class="form-input" required>
+                            <option value="">Select duration</option>
+                            <option value="day">Day Pass ($5)</option>
+                            <option value="week">Week Pass ($25)</option>
+                            <option value="month">Monthly Pass ($100)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Purpose of Visit</label>
+                        <textarea class="form-input" rows="3" placeholder="Reason for guest vehicle access" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Contact Number</label>
+                        <input type="tel" class="form-input" placeholder="Guest contact number" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-cancel" onclick="closeGuestPermitModal()">Cancel</button>
+                        <button type="submit" class="btn-submit">Issue Pass</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Notification functions
+        function toggleNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.toggle('active');
+        }
+
+        function closeNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.remove('active');
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function markAllAsRead() {
+            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+            });
+        }
+
+        function viewAllNotifications() {
+            // Navigate to notifications page
+        }
+
+        // Add Vehicle Modal functions
+        function openAddVehicleModal() {
+            document.getElementById('addVehicleModal').classList.add('active');
+        }
+
+        function closeAddVehicleModal() {
+            document.getElementById('addVehicleModal').classList.remove('active');
+            document.getElementById('addVehicleForm').reset();
+        }
+
+        // Parking Permit Modal functions
+        function openParkingPermitModal() {
+            document.getElementById('parkingPermitModal').classList.add('active');
+        }
+
+        function closeParkingPermitModal() {
+            document.getElementById('parkingPermitModal').classList.remove('active');
+            document.getElementById('parkingPermitForm').reset();
+        }
+
+        // Car Sticker Modal functions
+        function openCarStickerModal() {
+            document.getElementById('carStickerModal').classList.add('active');
+        }
+
+        function closeCarStickerModal() {
+            document.getElementById('carStickerModal').classList.remove('active');
+            document.getElementById('carStickerForm').reset();
+        }
+
+        // Guest Permit Modal functions
+        function openGuestPermitModal() {
+            document.getElementById('guestPermitModal').classList.add('active');
+        }
+
+        function closeGuestPermitModal() {
+            document.getElementById('guestPermitModal').classList.remove('active');
+            document.getElementById('guestPermitForm').reset();
+        }
+
+        // Handle add vehicle form submission
+        document.getElementById('addVehicleForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Here you would normally send the data to your server
+            alert('Vehicle registration submitted for approval!');
+            closeAddVehicleModal();
+        });
+
+        // Handle parking permit form submission
+        document.getElementById('parkingPermitForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Parking permit application submitted successfully!');
+            closeParkingPermitModal();
+        });
+
+        // Handle car sticker form submission
+        document.getElementById('carStickerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Car sticker application submitted successfully!');
+            closeCarStickerModal();
+        });
+
+        // Handle guest permit form submission
+        document.getElementById('guestPermitForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Guest vehicle pass has been issued successfully!');
+            closeGuestPermitModal();
+        });
+
+        // Filter history function
+        function filterHistory(vehicle) {
+            // Remove active class from all filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+
+            // Show/hide history items based on filter
+            const historyItems = document.querySelectorAll('.history-item');
+            historyItems.forEach(item => {
+                if (vehicle === 'all' || item.dataset.vehicle === vehicle) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(event) {
+            const notificationModal = document.getElementById('notificationModal');
+            const addVehicleModal = document.getElementById('addVehicleModal');
+            const parkingPermitModal = document.getElementById('parkingPermitModal');
+            const carStickerModal = document.getElementById('carStickerModal');
+            const guestPermitModal = document.getElementById('guestPermitModal');
+            const notificationBtn = document.querySelector('.notification-btn');
+            
+            if (notificationModal && notificationModal.classList.contains('active') && 
+                !notificationModal.contains(event.target) &&
+                !notificationBtn.contains(event.target)) {
+                closeNotifications();
+            }
+
+            if (addVehicleModal && addVehicleModal.classList.contains('active') && 
+                event.target === addVehicleModal) {
+                closeAddVehicleModal();
+            }
+
+            if (parkingPermitModal && parkingPermitModal.classList.contains('active') && 
+                event.target === parkingPermitModal) {
+                closeParkingPermitModal();
+            }
+
+            if (carStickerModal && carStickerModal.classList.contains('active') && 
+                event.target === carStickerModal) {
+                closeCarStickerModal();
+            }
+
+            if (guestPermitModal && guestPermitModal.classList.contains('active') && 
+                event.target === guestPermitModal) {
+                closeGuestPermitModal();
+            }
+        });
+
+        // Mobile More Dropdown Functions
+        function toggleMobileMore() {
+            const dropdown = document.getElementById('mobileMoreDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close mobile more dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('mobileMoreDropdown');
+            const moreButton = document.querySelector('.mobile-nav-more .mobile-nav-link');
+            
+            if (dropdown && dropdown.classList.contains('active') && 
+                !dropdown.contains(event.target) &&
+                !moreButton.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Close mobile more dropdown with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const dropdown = document.getElementById('mobileMoreDropdown');
+                if (dropdown) {
+                    dropdown.classList.remove('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html> 
