@@ -3,645 +3,938 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEMBRO - Your Home Portal</title>
+    <title>MEMBRO - Your Community Portal</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        .landing-container {
+            min-height: 100vh;
+            position: relative;
+            background: linear-gradient(135deg, #fef2f2 0%, #f0fdfa 100%);
+        }
+        
+        /* Advanced Background Effects */
+        .bg-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .particle-system {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .particle {
+            position: absolute;
+            background: linear-gradient(45deg, rgba(185, 28, 28, 0.4), rgba(20, 184, 166, 0.4));
+            border-radius: 50%;
+            animation: particleFloat 20s infinite linear;
+            filter: blur(1px);
+        }
+        
+        .particle:nth-child(1) { width: 4px; height: 4px; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 6px; height: 6px; left: 20%; animation-delay: 2s; }
+        .particle:nth-child(3) { width: 3px; height: 3px; left: 30%; animation-delay: 4s; }
+        .particle:nth-child(4) { width: 5px; height: 5px; left: 40%; animation-delay: 6s; }
+        .particle:nth-child(5) { width: 4px; height: 4px; left: 50%; animation-delay: 8s; }
+        .particle:nth-child(6) { width: 7px; height: 7px; left: 60%; animation-delay: 10s; }
+        .particle:nth-child(7) { width: 3px; height: 3px; left: 70%; animation-delay: 12s; }
+        .particle:nth-child(8) { width: 5px; height: 5px; left: 80%; animation-delay: 14s; }
+        .particle:nth-child(9) { width: 4px; height: 4px; left: 90%; animation-delay: 16s; }
+        .particle:nth-child(10) { width: 6px; height: 6px; left: 95%; animation-delay: 18s; }
+        
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        .morphing-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .morph-blob {
+            position: absolute;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            background: linear-gradient(45deg, rgba(185, 28, 28, 0.08), rgba(20, 184, 166, 0.08));
+            animation: morphing 15s ease-in-out infinite;
+        }
+        
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            top: 10%;
+            left: -200px;
+            animation-delay: 0s;
+        }
+        
+        .blob-2 {
+            width: 300px;
+            height: 300px;
+            bottom: 20%;
+            right: -150px;
+            animation-delay: 5s;
+        }
+        
+        .blob-3 {
+            width: 250px;
+            height: 250px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 10s;
+        }
+        
+        @keyframes morphing {
+            0%, 100% { 
+                border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+                transform: rotate(0deg) scale(1);
+            }
+            25% { 
+                border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
+                transform: rotate(90deg) scale(1.1);
+            }
+            50% { 
+                border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+                transform: rotate(180deg) scale(0.9);
+            }
+            75% { 
+                border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
+                transform: rotate(270deg) scale(1.05);
+            }
+        }
+        
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(25px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-logo img {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(185, 28, 28, 0.3);
+        }
+        
+        .nav-btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--gray-700);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn-primary:hover {
+            box-shadow: 0 8px 25px rgba(185, 28, 28, 0.4);
+        }
+        
+        /* Hero Section with 3D Effects */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 6rem 2rem 2rem;
+            position: relative;
+            z-index: 1;
+            perspective: 1000px;
+        }
+        
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .hero-text {
+            z-index: 2;
+            animation: slideInLeft 1s ease-out;
+        }
+        
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .hero-title .title-main {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes titleGlow {
+            from { filter: brightness(1); }
+            to { filter: brightness(1.2); }
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--gray-600);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.7s forwards;
+        }
+        
+        .cta-primary {
+            padding: 1.25rem 2.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(185, 28, 28, 0.3);
+            transform-style: preserve-3d;
+        }
+        
+        .cta-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .cta-primary:hover::before {
+            left: 100%;
+        }
+        
+        .cta-primary:hover {
+            transform: translateY(-5px) rotateX(10deg);
+            box-shadow: 0 15px 40px rgba(185, 28, 28, 0.4);
+        }
+        
+        .cta-secondary {
+            padding: 1.25rem 2.5rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: var(--gray-700);
+            text-decoration: none;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        
+        .cta-secondary:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: var(--secondary);
+            color: var(--secondary);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(20, 184, 166, 0.2);
+        }
+        
+        .hero-badges {
+            display: flex;
+            gap: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.9s forwards;
+        }
+        
+        .hero-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray-600);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .hero-badge i {
+            color: var(--secondary);
+            font-size: 1rem;
+        }
+        
+        /* Beautiful Community Photo */
+        .hero-visual {
+            position: relative;
+            z-index: 2;
+            animation: slideInRight 1s ease-out 0.3s both;
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .community-photo-container {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+        }
+        
+        .community-photo-container:hover {
+            transform: translateY(-10px) rotateY(5deg) rotateX(5deg);
+        }
+        
+        .community-photo {
+            position: relative;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 
+                0 40px 80px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            animation: photoFloat 6s ease-in-out infinite;
+            transform-style: preserve-3d;
+        }
+        
+        @keyframes photoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .community-photo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 32px 32px 0 0;
+            z-index: 2;
+        }
+        
+        .community-photo img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            display: block;
+            filter: brightness(1.05) saturate(1.1);
+            transition: all 0.6s ease;
+        }
+        
+        .community-photo:hover img {
+            transform: scale(1.05);
+            filter: brightness(1.1) saturate(1.2);
+        }
+        
+        .photo-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7));
+            padding: 3rem 2.5rem 2.5rem;
+            color: white;
+            z-index: 1;
+        }
+        
+        .overlay-content {
+            text-align: center;
+            transform: translateY(10px);
+            opacity: 0.9;
+            transition: all 0.4s ease;
+        }
+        
+        .community-photo:hover .overlay-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .overlay-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.9) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .overlay-subtitle {
+            font-size: 1rem;
+            font-weight: 500;
+            opacity: 0.9;
+            letter-spacing: 0.025em;
+        }
+        
+        /* Minimalist Features Section */
+        .features-section {
+            padding: 6rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .features-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .section-title {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 4rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 2.5rem 2rem;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            text-align: center;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 28px 28px 0 0;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 
+                0 35px 70px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            box-shadow: 0 15px 30px rgba(185, 28, 28, 0.3);
+            position: relative;
+            animation: iconFloat 6s ease-in-out infinite;
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .feature-card:nth-child(even) .feature-icon {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+            box-shadow: 0 15px 30px rgba(20, 184, 166, 0.3);
+        }
+        
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.75rem;
+        }
+        
+        .feature-description {
+            color: var(--gray-600);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        
+        /* Clean CTA Section */
+        .cta-section {
+            padding: 6rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cta-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
+            border-radius: 40px;
+            padding: 4rem 3rem;
+            box-shadow: 
+                0 40px 80px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .cta-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 40px 40px 0 0;
+        }
+        
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cta-description {
+            font-size: 1.1rem;
+            color: var(--gray-600);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .nav-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                text-align: center;
+            }
+            
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cta-primary,
+            .cta-secondary {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .hero-badges {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .cta-container {
+                padding: 3rem 2rem;
+            }
+            
+            .cta-title {
+                font-size: 2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .feature-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .cta-container {
+                padding: 2.5rem 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Professional Header -->
-        <header class="header">
-            <div class="header-content">
-                <div class="logo">
-                    <div class="logo-icon"><img src="logo.png" alt="MEMBRO Logo"></div>
-                    <div class="logo-text">
-                        <h1>MEMBRO</h1>
-                        <span>Your Home Portal</span>
-                    </div>
-                </div>
-                <div class="user-info">
-                    <div class="user-details">
-                        <span class="user-name">John Doe</span>
-                        <span class="user-unit">Unit 1205</span>
-                    </div>
-                    <button class="notification-btn" onclick="toggleNotifications()">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge">5</span>
-                    </button>
-                    <div class="user-avatar" onclick="toggleUserMenu()">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <button class="menu-toggle">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    
-                    <!-- User Menu Modal -->
-                    <div class="user-menu-modal" id="userMenuModal">
-                        <div class="user-menu-panel">
-                            <div class="user-menu-header">
-                                <div class="user-menu-info">
-                                    <div class="user-menu-avatar">
-                                        <i class="fas fa-user"></i>
-                                    </div>
-                                    <div class="user-menu-details">
-                                        <span class="user-menu-name">John Doe</span>
-                                        <span class="user-menu-unit">Unit 1205</span>
-                                        <span class="user-menu-email">johndoe@email.com</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="user-menu-content">
-                                
-                                
-                                <div class="user-menu-section">
-                                    <a href="#" class="user-menu-item">
-                                        <i class="fas fa-question-circle"></i>
-                                        <span>Help & Support</span>
-                                        <i class="fas fa-chevron-right"></i>
-                                    </a>
-                                    <a href="#" class="user-menu-item">
-                                        <i class="fas fa-shield-alt"></i>
-                                        <span>Privacy Policy</span>
-                                        <i class="fas fa-chevron-right"></i>
-                                    </a>
-                                </div>
-                                
-                                <div class="user-menu-section">
-                                    <button class="user-menu-item logout-btn" onclick="logout()">
-                                        <i class="fas fa-sign-out-alt"></i>
-                                        <span>Logout</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Notification Modal -->
-                    <div class="notification-modal" id="notificationModal">
-            <div class="notification-overlay" onclick="closeNotifications()"></div>
-            <div class="notification-panel">
-                <div class="notification-header">
-                    <h3>Notifications</h3>
-                    <button class="close-btn" onclick="closeNotifications()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                
-                <div class="notification-tabs">
-                    <button class="tab-btn active" onclick="switchTab('all')">View all</button>
-                    <button class="tab-btn" onclick="switchTab('mentions')">Mentions</button>
-                </div>
-                
-                <div class="notification-content">
-                    <div class="notification-item unread" data-type="comment">
-                        <div class="notification-avatar">
-                            <img src="https://ui-avatars.com/api/?name=Frankie+Sullivan&background=3b82f6&color=ffffff&size=40" alt="Frankie Sullivan">
-                        </div>
-                        <div class="notification-body">
-                            <div class="notification-text">
-                                <strong>Frankie Sullivan</strong> commented on your post
-                            </div>
-                            <div class="notification-preview">
-                                This is looking great! Let's get started on it.
-                            </div>
-                            <div class="notification-time">Friday 2:20pm</div>
-                        </div>
-                        <div class="notification-date">Sep 20, 2024</div>
-                        <div class="unread-indicator"></div>
-                    </div>
-                    
-                    <div class="notification-item unread" data-type="follow">
-                        <div class="notification-avatar">
-                            <img src="https://ui-avatars.com/api/?name=Amelie+Laurent&background=10b981&color=ffffff&size=40" alt="Amelie Laurent">
-                        </div>
-                        <div class="notification-body">
-                            <div class="notification-text">
-                                <strong>Amelie Laurent</strong> followed you
-                            </div>
-                            <div class="notification-time">Friday 10:04am</div>
-                        </div>
-                        <div class="notification-date">Sep 20, 2024</div>
-                        <div class="unread-indicator"></div>
-                    </div>
-                    
-                    <div class="notification-item unread" data-type="upload">
-                        <div class="notification-avatar">
-                            <img src="https://ui-avatars.com/api/?name=Mikah+DiStefano&background=f59e0b&color=ffffff&size=40" alt="Mikah DiStefano">
-                        </div>
-                        <div class="notification-body">
-                            <div class="notification-text">
-                                <strong>Mikah DiStefano</strong> uploaded 2 attachments
-                            </div>
-                            <div class="notification-attachments">
-                                <div class="attachment-item">
-                                    <i class="fas fa-file-video"></i>
-                                    <div class="attachment-info">
-                                        <span class="attachment-name">Prototype recording 02.mp4</span>
-                                        <span class="attachment-size">16 MB</span>
-                                    </div>
-                                    <i class="fas fa-download attachment-action"></i>
-                                </div>
-                                <div class="attachment-item">
-                                    <i class="fas fa-file-video"></i>
-                                    <div class="attachment-info">
-                                        <span class="attachment-name">Prototype recording 01.mp4</span>
-                                        <span class="attachment-size">14 MB</span>
-                                    </div>
-                                    <i class="fas fa-download attachment-action"></i>
-                                </div>
-                            </div>
-                            <div class="notification-time">Thursday 2:20pm</div>
-                        </div>
-                        <div class="notification-date">Sep 20, 2024</div>
-                        <div class="unread-indicator"></div>
-                    </div>
-                    
-                    <div class="notification-item" data-type="billing">
-                        <div class="notification-avatar">
-                            <div class="system-avatar">
-                                <i class="fas fa-dollar-sign"></i>
-                            </div>
-                        </div>
-                        <div class="notification-body">
-                            <div class="notification-text">
-                                <strong>Payment Reminder</strong>
-                            </div>
-                            <div class="notification-preview">
-                                Your monthly payment of $1,250 is due on March 15th
-                            </div>
-                            <div class="notification-time">2 hours ago</div>
-                        </div>
-                        <div class="notification-date">Today</div>
-                    </div>
-                    
-                    <div class="notification-item" data-type="maintenance">
-                        <div class="notification-avatar">
-                            <div class="system-avatar" style="background: var(--warning);">
-                                <i class="fas fa-wrench"></i>
-                            </div>
-                        </div>
-                        <div class="notification-body">
-                            <div class="notification-text">
-                                <strong>Maintenance Update</strong>
-                            </div>
-                            <div class="notification-preview">
-                                Your service request #2024-156 has been completed
-                            </div>
-                            <div class="notification-time">Yesterday</div>
-                        </div>
-                        <div class="notification-date">Sep 19, 2024</div>
-                    </div>
-                </div>
-                
-                <div class="notification-footer">
-                    <button class="mark-read-btn" onclick="markAllAsRead()">
-                        <i class="fas fa-check-double"></i>
-                        Mark all as read
-                    </button>
-                    <button class="view-all-btn" onclick="viewAllNotifications()">
-                        View all notifications
-                    </button>
-                    <a href="notification-settings.html" class="unsubscribe-link">
-                        <i class="fas fa-cog"></i>
-                        Notification Settings
-                    </a>
-                </div>
-            </div>
+    <!-- Advanced Background Effects -->
+    <div class="bg-effects">
+        <div class="particle-system">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
         </div>
+        
+        <div class="morphing-shapes">
+            <div class="morph-blob blob-1"></div>
+            <div class="morph-blob blob-2"></div>
+            <div class="morph-blob blob-3"></div>
+        </div>
+    </div>
+
+    <div class="landing-container">
+        <!-- Revolutionary Navigation -->
+        <nav class="navbar" id="navbar">
+            <div class="nav-content">
+                <div class="nav-logo">
+                    <img src="logo.png" alt="MEMBRO">
+                    MEMBRO
+                </div>
+                <div class="nav-actions">
+                    <a href="login.html" class="nav-btn nav-btn-secondary">Sign In</a>
+                    <a href="signup.html" class="nav-btn nav-btn-primary">Get Started</a>
                 </div>
             </div>
-        </header>
-
-        <!-- Desktop Sidebar -->
-        <nav class="sidebar">
-            <ul class="nav-menu">
-                <li class="nav-item active">
-                    <a href="index.html" class="nav-link">
-                        <i class="fas fa-home"></i>
-                        <span>Home</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="profile.html" class="nav-link">
-                        <i class="fas fa-user"></i>
-                        <span>My Information</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="billing.html" class="nav-link">
-                        <i class="fas fa-credit-card"></i>
-                        <span>Bills & Payments</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="announcements.html" class="nav-link">
-                        <i class="fas fa-bullhorn"></i>
-                        <span>Community News</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="services.html" class="nav-link">
-                        <i class="fas fa-concierge-bell"></i>
-                        <span>Book Services/Facilities</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="properties.html" class="nav-link">
-                        <i class="fas fa-key"></i>
-                        <span>My Properties</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="complaints.html" class="nav-link">
-                        <i class="fas fa-tools"></i>
-                        <span>Request Service</span>
-                    </a>
-                </li>
-            </ul>
         </nav>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Welcome Header -->
-            <div class="page-header">
-                <h2>Welcome Back, John</h2>
-                <p>Everything you need for your home is right here</p>
-            </div>
-
-            <!-- Account Overview -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-dollar-sign"></i>
-                    </div>
-                    <span class="stat-value">$1,250</span>
-                    <span class="stat-label">Amount Due</span>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon" style="background: var(--warning);">
-                        <i class="fas fa-calendar"></i>
-                    </div>
-                    <span class="stat-value">Mar 15</span>
-                    <span class="stat-label">Payment Due</span>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon" style="background: var(--info);">
-                        <i class="fas fa-wrench"></i>
-                    </div>
-                    <span class="stat-value">2</span>
-                    <span class="stat-label">Open Requests</span>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon" style="background: var(--secondary);">
-                        <i class="fas fa-bell"></i>
-                    </div>
-                    <span class="stat-value">3</span>
-                    <span class="stat-label">New Updates</span>
-                </div>
-            </div>
-
-            <!-- Recent Activity -->
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-clock"></i>
-                    Recent Activity
-                </div>
-                <div class="card-body">
-                    <div class="activity-list">
-                        <div class="activity-item">
-                            <div class="activity-icon" style="background: var(--secondary);">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Payment Received</div>
-                                <div class="activity-date">March 1, 2024</div>
-                            </div>
-                            <div style="color: var(--secondary); font-weight: 600; font-size: 1rem;">
-                                $1,250
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon" style="background: var(--info);">
-                                <i class="fas fa-wrench"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Service Request Completed</div>
-                                <div class="activity-date">February 28, 2024</div>
-                            </div>
-                            <span class="status resolved">Completed</span>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon" style="background: var(--warning);">
-                                <i class="fas fa-bullhorn"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Pool Maintenance Notice</div>
-                                <div class="activity-date">February 25, 2024</div>
-                            </div>
-                            <span class="status" style="background: #fef3c7; color: #92400e;">New</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Important Notice -->
-            <div class="card" style="border-left: 4px solid var(--danger);">
-                <div class="card-header" style="background: #fef2f2; color: var(--danger);">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    Important Notice
-                </div>
-                <div class="card-body">
-                    <h3 style="color: var(--danger); margin-bottom: 1rem; font-size: 1.25rem;">
-                        Scheduled Water Service Interruption
-                    </h3>
-                    <p style="margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.6;">
-                        Water service in Building A will be temporarily interrupted on <strong>March 12th from 9:00 AM to 3:00 PM</strong> for scheduled pipe maintenance. Please plan accordingly and store water for essential needs.
+        <!-- Epic Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="title-main">Smart Living.<br>Simplified.</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Your complete community portal for modern residential living.
                     </p>
-                    <button class="btn btn-primary">
-                        <i class="fas fa-info-circle"></i>
-                        View Details
-                    </button>
-                </div>
-            </div>
-
-            <!-- Contact Support */
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-headset"></i>
-                    Need Assistance?
-                </div>
-                <div class="card-body">
-                    <p style="margin-bottom: 1.5rem; font-size: 1rem; color: var(--gray-600);">
-                        Our support team is here to help with any questions or concerns you may have.
-                    </p>
-                    <div style="display: grid; gap: 1rem;">
-                        <a href="tel:555-123-4567" class="btn btn-primary btn-block">
-                            <i class="fas fa-phone"></i>
-                            Call Support: (555) 123-4567
+                    
+                    <div class="hero-cta">
+                        <a href="signup.html" class="cta-primary">
+                            Get Started
                         </a>
-                        <a href="complaints.html" class="btn btn-secondary btn-block">
-                            <i class="fas fa-envelope"></i>
-                            Submit a Request
+                        <a href="login.html" class="cta-secondary">
+                            Sign In
                         </a>
+                    </div>
+                    
+                    <div class="hero-badges">
+                        <div class="hero-badge">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Secure</span>
+                        </div>
+                        <div class="hero-badge">
+                            <i class="fas fa-bolt"></i>
+                            <span>Fast</span>
+                        </div>
+                        <div class="hero-badge">
+                            <i class="fas fa-heart"></i>
+                            <span>Loved</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hero-visual">
+                    <div class="community-photo-container">
+                        <div class="community-photo">
+                            <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Modern Community Living" />
+                            <div class="photo-overlay">
+                                <div class="overlay-content">
+                                    <h3 class="overlay-title">Your Community Awaits</h3>
+                                    <p class="overlay-subtitle">Modern living, seamlessly connected</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </main>
+        </section>
 
-        <!-- Mobile Navigation -->
-        <nav class="mobile-nav">
-            <ul class="mobile-nav-menu">
-                <li class="mobile-nav-item">
-                    <a href="index.html" class="mobile-nav-link active">
-                        <i class="fas fa-home"></i>
-                        Home
-                    </a>
-                </li>
-                <li class="mobile-nav-item">
-                    <a href="profile.html" class="mobile-nav-link">
-                        <i class="fas fa-user"></i>
-                        Profile
-                    </a>
-                </li>
-                <li class="mobile-nav-item">
-                    <a href="announcements.html" class="mobile-nav-link">
-                        <i class="fas fa-bullhorn"></i>
-                        News
-                    </a>
-                </li>
-                <li class="mobile-nav-item">
-                    <a href="billing.html" class="mobile-nav-link">
-                        <i class="fas fa-credit-card"></i>
-                        Billing
-                    </a>
-                </li>
-                <li class="mobile-nav-item">
-                    <a href="services.html" class="mobile-nav-link">
-                        <i class="fas fa-concierge-bell"></i>
-                        Services
-                    </a>
-                </li>
-                <li class="mobile-nav-item mobile-nav-more">
-                    <button class="mobile-nav-link" onclick="toggleMobileMore()">
-                        <i class="fas fa-ellipsis-h"></i>
-                        More
-                    </button>
-                    <div class="mobile-nav-dropdown" id="mobileMoreDropdown">
-                        <a href="properties.html" class="mobile-nav-dropdown-item">
-                            <i class="fas fa-key"></i>
-                            Properties
-                        </a>
-                        <a href="complaints.html" class="mobile-nav-dropdown-item">
-                            <i class="fas fa-tools"></i>
-                            Request Service
-                        </a>
+        <!-- Minimalist Features -->
+        <section class="features-section">
+            <div class="features-container">
+                <h2 class="section-title">Everything You Need</h2>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3 class="feature-title">Lightning Fast</h3>
+                        <p class="feature-description">
+                            Instant access to all services with blazing-fast performance.
+                        </p>
                     </div>
-                </li>
-            </ul>
-        </nav>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Bank-Grade Security</h3>
+                        <p class="feature-description">
+                            Your data protected with military-grade encryption.
+                        </p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Mobile First</h3>
+                        <p class="feature-description">
+                            Perfect experience on any device, anywhere.
+                        </p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3 class="feature-title">User Loved</h3>
+                        <p class="feature-description">
+                            Designed with residents' needs at the center.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Clean CTA Section -->
+        <section class="cta-section">
+            <div class="cta-container">
+                <h2 class="cta-title">Ready to Start?</h2>
+                <p class="cta-description">
+                    Join thousands of residents enjoying smart community living.
+                </p>
+                
+                <div class="cta-buttons">
+                    <a href="signup.html" class="cta-primary">
+                        Get Started
+                    </a>
+                    <a href="login.html" class="cta-secondary">
+                        Sign In
+                    </a>
+                </div>
+            </div>
+        </section>
     </div>
 
     <script>
-        // Notification Modal Functions
-        function toggleNotifications() {
-            const modal = document.getElementById('notificationModal');
-            const userMenuModal = document.getElementById('userMenuModal');
-            
-            // Close user menu if open
-            userMenuModal.classList.remove('active');
-            
-            modal.classList.toggle('active');
-        }
-
-        function closeNotifications() {
-            const modal = document.getElementById('notificationModal');
-            modal.classList.remove('active');
-        }
-
-        function switchTab(tab) {
-            // Remove active class from all tabs
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Add active class to clicked tab
-            event.target.classList.add('active');
-            
-            // Filter notifications based on tab
-            const notifications = document.querySelectorAll('.notification-item');
-            notifications.forEach(item => {
-                if (tab === 'all') {
-                    item.style.display = 'flex';
-                } else if (tab === 'mentions') {
-                    // Show only comment/mention type notifications
-                    if (item.dataset.type === 'comment' || item.dataset.type === 'follow') {
-                        item.style.display = 'flex';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                }
-            });
-        }
-
-        function markAllAsRead() {
-            // Remove unread class from all notifications
-            document.querySelectorAll('.notification-item.unread').forEach(item => {
-                item.classList.remove('unread');
-            });
-            
-            // Update notification badge
-            const badge = document.querySelector('.notification-badge');
-            badge.textContent = '0';
-            badge.style.display = 'none';
-            
-            // Show success message
-            showToast('All notifications marked as read');
-        }
-
-        function viewAllNotifications() {
-            // This would typically navigate to a dedicated notifications page
-            showToast('Opening full notifications page...');
-            // window.location.href = 'notifications.html';
-        }
-
-        function showToast(message) {
-            // Create and show a toast notification
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = message;
-            toast.style.cssText = `
-                position: fixed;
-                bottom: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: var(--primary);
-                color: white;
-                padding: 12px 24px;
-                border-radius: 8px;
-                z-index: 10000;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            `;
-            
-            document.body.appendChild(toast);
-            
-            // Fade in
-            setTimeout(() => {
-                toast.style.opacity = '1';
-            }, 100);
-            
-            // Remove after 3 seconds
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => {
-                    document.body.removeChild(toast);
-                }, 300);
-            }, 3000);
-        }
-
-        // Close notification modal when clicking outside
-        document.addEventListener('click', function(event) {
-            const modal = document.getElementById('notificationModal');
-            const notificationBtn = document.querySelector('.notification-btn');
-            const userMenuModal = document.getElementById('userMenuModal');
-            const userAvatar = document.querySelector('.user-avatar');
-            
-            // Close notification modal
-            if (modal.classList.contains('active') && 
-                !modal.contains(event.target) &&
-                !notificationBtn.contains(event.target)) {
-                closeNotifications();
-            }
-            
-            // Close user menu modal
-            if (userMenuModal.classList.contains('active') && 
-                !userMenuModal.contains(event.target) &&
-                !userAvatar.contains(event.target)) {
-                closeUserMenu();
-            }
-        });
-
-        // Close modals with Escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeNotifications();
-                closeUserMenu();
-            }
-        });
-
-        // Mark individual notifications as read when clicked
-        document.querySelectorAll('.notification-item').forEach(item => {
-            item.addEventListener('click', function() {
-                if (this.classList.contains('unread')) {
-                    this.classList.remove('unread');
-                    updateNotificationBadge();
-                }
-            });
-        });
-
-        function updateNotificationBadge() {
-            const unreadCount = document.querySelectorAll('.notification-item.unread').length;
-            const badge = document.querySelector('.notification-badge');
-            
-            if (unreadCount > 0) {
-                badge.textContent = unreadCount;
-                badge.style.display = 'block';
+        // Advanced scroll effects for navbar
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
             } else {
-                badge.style.display = 'none';
-            }
-        }
-
-        // Mobile More Dropdown Functions
-        function toggleMobileMore() {
-            const dropdown = document.getElementById('mobileMoreDropdown');
-            dropdown.classList.toggle('active');
-        }
-
-        // Close mobile more dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('mobileMoreDropdown');
-            const moreButton = document.querySelector('.mobile-nav-more .mobile-nav-link');
-            
-            if (dropdown.classList.contains('active') && 
-                !dropdown.contains(event.target) &&
-                !moreButton.contains(event.target)) {
-                dropdown.classList.remove('active');
+                navbar.classList.remove('scrolled');
             }
         });
 
-        // Close mobile more dropdown with Escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                const dropdown = document.getElementById('mobileMoreDropdown');
-                dropdown.classList.remove('active');
-            }
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation triggers
+        document.querySelectorAll('.feature-card, .community-photo, .cta-container').forEach(el => {
+            observer.observe(el);
         });
 
-        // User Menu Modal Functions
-        function toggleUserMenu() {
-            const userMenuModal = document.getElementById('userMenuModal');
-            const notificationModal = document.getElementById('notificationModal');
+        // Advanced mouse tracking for 3D effects
+        document.addEventListener('mousemove', function(e) {
+            const cards = document.querySelectorAll('.community-photo-container, .feature-card');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
             
-            // Close notification modal if open
-            notificationModal.classList.remove('active');
-            
-            userMenuModal.classList.toggle('active');
-        }
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const cardX = (rect.left + rect.width / 2) / window.innerWidth;
+                const cardY = (rect.top + rect.height / 2) / window.innerHeight;
+                
+                const distanceX = mouseX - cardX;
+                const distanceY = mouseY - cardY;
+                
+                const rotateX = distanceY * 10;
+                const rotateY = distanceX * 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+        });
 
-        function closeUserMenu() {
-            const userMenuModal = document.getElementById('userMenuModal');
-            userMenuModal.classList.remove('active');
-        }
+        // Reset card positions when mouse leaves
+        document.addEventListener('mouseleave', function() {
+            document.querySelectorAll('.community-photo-container, .feature-card').forEach(card => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+            });
+        });
 
-
-
-        // Logout Function
-        function logout() {
-            alert('Logging out...');
-            // In a real application, you would redirect to a login page
-            // window.location.href = 'login.html';
-        }
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html> 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Information - MEMBRO</title>
+    <title>MEMBRO - Your Home Portal</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -21,8 +21,8 @@
                 </div>
                 <div class="user-info">
                     <div class="user-details">
-                        <span class="user-name">Heriberto Nathan</span>
-                        <span class="user-unit">Unit 802</span>
+                        <span class="user-name">John Doe</span>
+                        <span class="user-unit">Unit 1205</span>
                     </div>
                     <button class="notification-btn" onclick="toggleNotifications()">
                         <i class="fas fa-bell"></i>
@@ -44,26 +44,15 @@
                                         <i class="fas fa-user"></i>
                                     </div>
                                     <div class="user-menu-details">
-                                        <span class="user-menu-name">Heriberto Nathan</span>
-                                        <span class="user-menu-unit">Unit 802</span>
-                                        <span class="user-menu-email">heriberto@northwindtraders.com</span>
+                                        <span class="user-menu-name">John Doe</span>
+                                        <span class="user-menu-unit">Unit 1205</span>
+                                        <span class="user-menu-email">johndoe@email.com</span>
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="user-menu-content">
-                                <div class="user-menu-section">
-                                    <a href="notification-settings.html" class="user-menu-item">
-                                        <i class="fas fa-cog"></i>
-                                        <span>Settings</span>
-                                        <i class="fas fa-chevron-right"></i>
-                                    </a>
-                                    <a href="billing.html" class="user-menu-item">
-                                        <i class="fas fa-credit-card"></i>
-                                        <span>Payment Methods</span>
-                                        <i class="fas fa-chevron-right"></i>
-                                    </a>
-                                </div>
+                                
                                 
                                 <div class="user-menu-section">
                                     <a href="#" class="user-menu-item">
@@ -87,12 +76,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Notification Modal -->
-        <div class="notification-modal" id="notificationModal">
+                    
+                    <!-- Notification Modal -->
+                    <div class="notification-modal" id="notificationModal">
             <div class="notification-overlay" onclick="closeNotifications()"></div>
             <div class="notification-panel">
                 <div class="notification-header">
@@ -216,20 +202,27 @@
                     <button class="view-all-btn" onclick="viewAllNotifications()">
                         View all notifications
                     </button>
+                    <a href="notification-settings.html" class="unsubscribe-link">
+                        <i class="fas fa-cog"></i>
+                        Notification Settings
+                    </a>
                 </div>
             </div>
         </div>
+                </div>
+            </div>
+        </header>
 
-         <!-- Desktop Sidebar -->
-         <nav class="sidebar">
+        <!-- Desktop Sidebar -->
+        <nav class="sidebar">
             <ul class="nav-menu">
-                <li class="nav-item">
+                <li class="nav-item active">
                     <a href="dashboard.html" class="nav-link">
                         <i class="fas fa-home"></i>
                         <span>Home</span>
                     </a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a href="profile.html" class="nav-link">
                         <i class="fas fa-user"></i>
                         <span>My Information</span>
@@ -270,200 +263,129 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Page Header -->
+            <!-- Welcome Header -->
             <div class="page-header">
-                <h2>My Information</h2>
-                <p>Keep your details up to date so we can serve you better</p>
+                <h2>Welcome Back, John</h2>
+                <p>Everything you need for your home is right here</p>
             </div>
 
-            <!-- Profile Overview Card -->
-            <div class="profile-overview-card">
-                <div class="profile-avatar-section">
-                    <div class="profile-avatar">
-                        <i class="fas fa-user"></i>
+            <!-- Account Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-dollar-sign"></i>
                     </div>
-                    <div class="profile-name-section">
-                        <h3>Heriberto Nathan</h3>
-                        <p>Unit 802</p>
-                        <span class="profile-status">Active Resident</span>
-                    </div>
+                    <span class="stat-value">$1,250</span>
+                    <span class="stat-label">Amount Due</span>
                 </div>
-                <div class="profile-quick-actions">
-                    <button class="quick-action-btn">
-                        <i class="fas fa-edit"></i>
-                        Edit Profile
-                    </button>
-                    <button class="quick-action-btn">
-                        <i class="fas fa-key"></i>
-                        Change Password
-                    </button>
-                </div>
-            </div>
-
-            <!-- Profile Sections Grid -->
-            <div class="profile-sections-grid">
-                <!-- Personal Information Section -->
-                <div class="profile-section">
-                    <div class="section-header">
-                        <i class="fas fa-user"></i>
-                        <h4>Personal Information</h4>
-                    </div>
-                    <div class="section-content">
-                        <div class="info-row">
-                            <label>First Name</label>
-                            <input type="text" value="Heriberto" class="form-input">
-                        </div>
-                        <div class="info-row">
-                            <label>Middle Name</label>
-                            <input type="text" value="" class="form-input">
-                        </div>
-                        <div class="info-row">
-                            <label>Last Name</label>
-                            <input type="text" value="Nathan" class="form-input">
-                        </div>
-                        <div class="info-row">
-                            <label>Emergency Contact</label>
-                            <input type="text" value="Jane Nathan - (614) 555-9876" class="form-input">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Contact Information Section -->
-                <div class="profile-section">
-                    <div class="section-header">
-                        <i class="fas fa-phone"></i>
-                        <h4>Contact Information</h4>
-                    </div>
-                    <div class="section-content">
-                        <div class="info-row">
-                            <label>Mobile Phone</label>
-                            <input type="tel" value="614-555-0124" class="form-input">
-                        </div>
-                        <div class="info-row">
-                            <label>Home Phone</label>
-                            <input type="tel" value="" class="form-input">
-                        </div>
-                        <div class="info-row">
-                            <label>Email Address</label>
-                            <div class="info-display">heriberto@northwindtraders.com</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Property Details Section -->
-                <div class="profile-section">
-                    <div class="section-header">
-                        <i class="fas fa-home"></i>
-                        <h4>Property Details</h4>
-                    </div>
-                    <div class="section-content">
-                        <div class="info-row">
-                            <label>Unit Number</label>
-                            <div class="info-display readonly">802</div>
-                        </div>
-                        <div class="info-row">
-                            <label>Move-in Date</label>
-                            <input type="date" value="2023-01-15" class="form-input">
-                        </div>
-                        <div class="info-row">
-                            <label>Parking Spaces</label>
-                            <select class="form-input">
-                                <option value="0">None</option>
-                                <option value="1">1 space</option>
-                                <option value="2" selected>2 spaces</option>
-                                <option value="3">3 spaces</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Residency Status Section -->
-                <div class="profile-section">
-                    <div class="section-header">
-                        <i class="fas fa-id-card"></i>
-                        <h4>Residency Status</h4>
-                    </div>
-                    <div class="section-content">
-                        <div class="status-grid">
-                            <div class="status-item">
-                                <label>Primary Owner</label>
-                                <div class="status-badge false">False</div>
-                            </div>
-                            <div class="status-item">
-                                <label>House Member</label>
-                                <div class="status-badge false">False</div>
-                            </div>
-                            <div class="status-item">
-                                <label>Tenant</label>
-                                <div class="status-badge false">False</div>
-                            </div>
-                        </div>
-                        <div class="info-row">
-                            <label>Relation</label>
-                            <select class="form-input">
-                                <option value="">Select Relation</option>
-                                <option value="owner">Owner</option>
-                                <option value="tenant">Tenant</option>
-                                <option value="family">Family Member</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tenant Information Section -->
-                <div class="profile-section">
-                    <div class="section-header">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: var(--warning);">
                         <i class="fas fa-calendar"></i>
-                        <h4>Tenant Information</h4>
                     </div>
-                    <div class="section-content">
-                        <div class="info-row">
-                            <label>Tenant Start Date</label>
-                            <input type="date" value="" class="form-input">
-                        </div>
-                        <div class="info-row">
-                            <label>Tenant End Date</label>
-                            <input type="date" value="" class="form-input">
-                        </div>
-                    </div>
+                    <span class="stat-value">Mar 15</span>
+                    <span class="stat-label">Payment Due</span>
                 </div>
-
-                <!-- Security Settings Section -->
-                <div class="profile-section full-width">
-                    <div class="section-header">
-                        <i class="fas fa-lock"></i>
-                        <h4>Security Settings</h4>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: var(--info);">
+                        <i class="fas fa-wrench"></i>
                     </div>
-                    <div class="section-content">
-                        <div class="security-grid">
-                            <div class="info-row">
-                                <label>Current Password</label>
-                                <input type="password" placeholder="Enter current password" class="form-input">
+                    <span class="stat-value">2</span>
+                    <span class="stat-label">Open Requests</span>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: var(--secondary);">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <span class="stat-value">3</span>
+                    <span class="stat-label">New Updates</span>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-clock"></i>
+                    Recent Activity
+                </div>
+                <div class="card-body">
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon" style="background: var(--secondary);">
+                                <i class="fas fa-check"></i>
                             </div>
-                            <div class="info-row">
-                                <label>New Password</label>
-                                <input type="password" placeholder="Enter new password" class="form-input">
+                            <div class="activity-content">
+                                <div class="activity-title">Payment Received</div>
+                                <div class="activity-date">March 1, 2024</div>
                             </div>
-                            <div class="info-row">
-                                <label>Confirm Password</label>
-                                <input type="password" placeholder="Confirm new password" class="form-input">
+                            <div style="color: var(--secondary); font-weight: 600; font-size: 1rem;">
+                                $1,250
                             </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon" style="background: var(--info);">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Service Request Completed</div>
+                                <div class="activity-date">February 28, 2024</div>
+                            </div>
+                            <span class="status resolved">Completed</span>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon" style="background: var(--warning);">
+                                <i class="fas fa-bullhorn"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Pool Maintenance Notice</div>
+                                <div class="activity-date">February 25, 2024</div>
+                            </div>
+                            <span class="status" style="background: #fef3c7; color: #92400e;">New</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="profile-actions-bar">
-                <button type="button" class="btn btn-primary btn-large">
-                    <i class="fas fa-save"></i>
-                    Save All Changes
-                </button>
-                <button type="button" class="btn btn-secondary">
-                    <i class="fas fa-undo"></i>
-                    Cancel Changes
-                </button>
+            <!-- Important Notice -->
+            <div class="card" style="border-left: 4px solid var(--danger);">
+                <div class="card-header" style="background: #fef2f2; color: var(--danger);">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Important Notice
+                </div>
+                <div class="card-body">
+                    <h3 style="color: var(--danger); margin-bottom: 1rem; font-size: 1.25rem;">
+                        Scheduled Water Service Interruption
+                    </h3>
+                    <p style="margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.6;">
+                        Water service in Building A will be temporarily interrupted on <strong>March 12th from 9:00 AM to 3:00 PM</strong> for scheduled pipe maintenance. Please plan accordingly and store water for essential needs.
+                    </p>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-info-circle"></i>
+                        View Details
+                    </button>
+                </div>
+            </div>
+
+            <!-- Contact Support */
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-headset"></i>
+                    Need Assistance?
+                </div>
+                <div class="card-body">
+                    <p style="margin-bottom: 1.5rem; font-size: 1rem; color: var(--gray-600);">
+                        Our support team is here to help with any questions or concerns you may have.
+                    </p>
+                    <div style="display: grid; gap: 1rem;">
+                        <a href="tel:555-123-4567" class="btn btn-primary btn-block">
+                            <i class="fas fa-phone"></i>
+                            Call Support: (555) 123-4567
+                        </a>
+                        <a href="complaints.html" class="btn btn-secondary btn-block">
+                            <i class="fas fa-envelope"></i>
+                            Submit a Request
+                        </a>
+                    </div>
+                </div>
             </div>
         </main>
 
@@ -471,13 +393,13 @@
         <nav class="mobile-nav">
             <ul class="mobile-nav-menu">
                 <li class="mobile-nav-item">
-                    <a href="dashboard.html" class="mobile-nav-link">
+                    <a href="dashboard.html" class="mobile-nav-link active">
                         <i class="fas fa-home"></i>
                         Home
                     </a>
                 </li>
                 <li class="mobile-nav-item">
-                    <a href="profile.html" class="mobile-nav-link active">
+                    <a href="profile.html" class="mobile-nav-link">
                         <i class="fas fa-user"></i>
                         Profile
                     </a>
@@ -524,19 +446,17 @@
         // Notification Modal Functions
         function toggleNotifications() {
             const modal = document.getElementById('notificationModal');
-            modal.classList.toggle('active');
+            const userMenuModal = document.getElementById('userMenuModal');
             
-            if (modal.classList.contains('active')) {
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.body.style.overflow = '';
-            }
+            // Close user menu if open
+            userMenuModal.classList.remove('active');
+            
+            modal.classList.toggle('active');
         }
 
         function closeNotifications() {
             const modal = document.getElementById('notificationModal');
             modal.classList.remove('active');
-            document.body.style.overflow = '';
         }
 
         function switchTab(tab) {
@@ -624,18 +544,29 @@
         document.addEventListener('click', function(event) {
             const modal = document.getElementById('notificationModal');
             const notificationBtn = document.querySelector('.notification-btn');
+            const userMenuModal = document.getElementById('userMenuModal');
+            const userAvatar = document.querySelector('.user-avatar');
             
+            // Close notification modal
             if (modal.classList.contains('active') && 
-                !modal.querySelector('.notification-panel').contains(event.target) &&
+                !modal.contains(event.target) &&
                 !notificationBtn.contains(event.target)) {
                 closeNotifications();
             }
+            
+            // Close user menu modal
+            if (userMenuModal.classList.contains('active') && 
+                !userMenuModal.contains(event.target) &&
+                !userAvatar.contains(event.target)) {
+                closeUserMenu();
+            }
         });
 
-        // Close notification modal with Escape key
+        // Close modals with Escape key
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 closeNotifications();
+                closeUserMenu();
             }
         });
 
@@ -661,12 +592,6 @@
             }
         }
 
-        // Add photo upload functionality
-        function uploadPhoto() {
-            // This would typically open a file picker
-            alert('Photo upload functionality would be implemented here');
-        }
-
         // Mobile More Dropdown Functions
         function toggleMobileMore() {
             const dropdown = document.getElementById('mobileMoreDropdown');
@@ -678,7 +603,7 @@
             const dropdown = document.getElementById('mobileMoreDropdown');
             const moreButton = document.querySelector('.mobile-nav-more .mobile-nav-link');
             
-            if (dropdown && dropdown.classList.contains('active') && 
+            if (dropdown.classList.contains('active') && 
                 !dropdown.contains(event.target) &&
                 !moreButton.contains(event.target)) {
                 dropdown.classList.remove('active');
@@ -689,55 +614,34 @@
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 const dropdown = document.getElementById('mobileMoreDropdown');
-                if (dropdown) {
-                    dropdown.classList.remove('active');
-                }
+                dropdown.classList.remove('active');
             }
         });
 
-        // User Menu Functions
+        // User Menu Modal Functions
         function toggleUserMenu() {
-            const modal = document.getElementById('userMenuModal');
+            const userMenuModal = document.getElementById('userMenuModal');
             const notificationModal = document.getElementById('notificationModal');
             
             // Close notification modal if open
-            if (notificationModal && notificationModal.classList.contains('active')) {
-                closeNotifications();
-            }
+            notificationModal.classList.remove('active');
             
-            modal.classList.toggle('active');
+            userMenuModal.classList.toggle('active');
         }
 
         function closeUserMenu() {
-            const modal = document.getElementById('userMenuModal');
-            modal.classList.remove('active');
+            const userMenuModal = document.getElementById('userMenuModal');
+            userMenuModal.classList.remove('active');
         }
 
+
+
+        // Logout Function
         function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                // Redirect to login page
-                window.location.href = 'login.html';
-            }
+            alert('Logging out...');
+            // In a real application, you would redirect to a login page
+            // window.location.href = 'login.html';
         }
-
-        // Close user menu when clicking outside
-        document.addEventListener('click', function(event) {
-            const modal = document.getElementById('userMenuModal');
-            const userAvatar = document.querySelector('.user-avatar');
-            
-            if (modal && modal.classList.contains('active') && 
-                !modal.contains(event.target) &&
-                !userAvatar.contains(event.target)) {
-                closeUserMenu();
-            }
-        });
-
-        // Close user menu with Escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeUserMenu();
-            }
-        });
     </script>
 </body>
 </html> 
