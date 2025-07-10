@@ -429,7 +429,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="services.html" class="nav-link">
-                        <i class="fas fa-concierge-bell"></i>
+                        <i class="fa fa-calendar"></i>
                         <span>Book Services/Facilities</span>
                     </a>
                 </li>
@@ -467,7 +467,7 @@
                     <div class="facility-content">
                         <div class="facility-title">Basketball Court</div>
                         <div class="facility-description">Full-size outdoor basketball court with professional hoops and lighting for evening games.</div>
-                        <div class="facility-rate">$25/hour</div>
+                        <div class="facility-rate">₱25/hour</div>
                         <div class="facility-capacity">
                             <i class="fas fa-users"></i>
                             <span>Up to 10 players</span>
@@ -485,7 +485,7 @@
                     <div class="facility-content">
                         <div class="facility-title">Community Event Hall</div>
                         <div class="facility-description">Spacious air-conditioned hall perfect for parties, meetings, and community events.</div>
-                        <div class="facility-rate">$150/day</div>
+                        <div class="facility-rate">₱150/day</div>
                         <div class="facility-capacity">
                             <i class="fas fa-users"></i>
                             <span>Up to 100 guests</span>
@@ -503,7 +503,7 @@
                     <div class="facility-content">
                         <div class="facility-title">Swimming Pool</div>
                         <div class="facility-description">Olympic-size swimming pool with lifeguard on duty and pool equipment available.</div>
-                        <div class="facility-rate">$20/hour</div>
+                        <div class="facility-rate">₱20/hour</div>
                         <div class="facility-capacity">
                             <i class="fas fa-users"></i>
                             <span>Up to 20 swimmers</span>
@@ -521,7 +521,7 @@
                     <div class="facility-content">
                         <div class="facility-title">Fitness Center</div>
                         <div class="facility-description">Fully equipped gym with cardio machines, weights, and exercise equipment.</div>
-                        <div class="facility-rate">$15/hour</div>
+                        <div class="facility-rate">₱15/hour</div>
                         <div class="facility-capacity">
                             <i class="fas fa-users"></i>
                             <span>Up to 15 members</span>
@@ -539,7 +539,7 @@
                     <div class="facility-content">
                         <div class="facility-title">Tennis Court</div>
                         <div class="facility-description">Professional tennis court with high-quality surface and net. Rackets available for rent.</div>
-                        <div class="facility-rate">$30/hour</div>
+                        <div class="facility-rate">₱30/hour</div>
                         <div class="facility-capacity">
                             <i class="fas fa-users"></i>
                             <span>2-4 players</span>
@@ -557,7 +557,7 @@
                     <div class="facility-content">
                         <div class="facility-title">Function Room</div>
                         <div class="facility-description">Elegant meeting room with projector, sound system, and catering kitchen access.</div>
-                        <div class="facility-rate">$100/day</div>
+                        <div class="facility-rate">₱100/day</div>
                         <div class="facility-capacity">
                             <i class="fas fa-users"></i>
                             <span>Up to 50 guests</span>
@@ -597,7 +597,7 @@
                 </li>
                 <li class="mobile-nav-item">
                     <a href="services.html" class="mobile-nav-link active">
-                        <i class="fas fa-concierge-bell"></i>
+                        <i class="fa fa-calendar"></i>
                         Services
                     </a>
                 </li>
@@ -855,7 +855,7 @@
                         </div>
                         <div>
                             <h3 style="margin: 0; color: var(--gray-900);">${facility.title}</h3>
-                            <p style="margin: 0; color: var(--gray-600);">${facility.capacity} • $${facility.rate}/hour</p>
+                            <p style="margin: 0; color: var(--gray-600);">${facility.capacity} • ₱${facility.rate}/hour</p>
                         </div>
                     </div>
                     <p style="color: var(--gray-600); line-height: 1.6; margin-bottom: 1.5rem;">${facility.details}</p>
@@ -876,7 +876,7 @@
                 <div style="background: var(--gray-50); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-weight: 600; color: var(--gray-900);">Hourly Rate:</span>
-                        <span style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">$${facility.rate}/hour</span>
+                        <span style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">₱${facility.rate}/hour</span>
                     </div>
                 </div>
 
@@ -928,7 +928,7 @@
                     const durationHours = durationMs / (1000 * 60 * 60);
                     
                     document.getElementById('summaryDuration').textContent = `${durationHours} hour(s)`;
-                    document.getElementById('summaryTotal').textContent = `$${facility.rate * durationHours}`;
+                    document.getElementById('summaryTotal').textContent = `₱${facility.rate * durationHours}`;
                 }
             });
         }
