@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Household & Visitors - MEMBRO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Additional styles for household page */
+        .quick-actions .btn {
+            cursor: pointer !important;
+            pointer-events: auto !important;
+            z-index: 1 !important;
+        }
+        
+        /* Stats grid adjustment for 3 cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.25rem;
+            }
+        }
+        
+        /* Modal styles to ensure proper display */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-lg);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-500);
+            padding: 0.5rem;
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+        }
+        
+        .close-btn:hover {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        /* Family and Tenant button styles */
+        .btn[onclick*="openAddFamily"], 
+        .btn[onclick*="openAddTenant"] {
+            background: var(--primary) !important;
+            border: 2px solid var(--primary) !important;
+            color: white !important;
+            cursor: pointer !important;
+            pointer-events: auto !important;
+            position: relative !important;
+            z-index: 10 !important;
+        }
+        
+        .btn[onclick*="openAddFamily"]:hover, 
+        .btn[onclick*="openAddTenant"]:hover {
+            background: var(--primary-dark) !important;
+            border-color: var(--primary-dark) !important;
+            transform: translateY(-2px) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Professional Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"><img src="logo.png" alt="MEMBRO Logo"></div>
+                    <div class="logo-text">
+                        <h1>MEMBRO</h1>
+                        <span>Your Home Portal</span>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="user-details">
+                        <span class="user-name">Heriberto Nathan</span>
+                        <span class="user-unit">Unit 802</span>
+                    </div>
+                    <button class="notification-btn" onclick="toggleNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="user-avatar" onclick="toggleUserMenu()">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <button class="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <!-- User Menu Modal -->
+                    <div class="user-menu-modal" id="userMenuModal">
+                        <div class="user-menu-panel">
+                            <div class="user-menu-header">
+                                <div class="user-menu-info">
+                                    <div class="user-menu-avatar">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="user-menu-details">
+                                        <span class="user-menu-name">Heriberto Nathan</span>
+                                        <span class="user-menu-unit">Unit 802</span>
+                                        <span class="user-menu-email">heriberto.nathan@email.com</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="user-menu-content">
+                                <div class="user-menu-section">
+                                    <a href="#" class="user-menu-item">
+                                        <i class="fas fa-question-circle"></i>
+                                        <span>Help & Support</span>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                    <a href="#" class="user-menu-item">
+                                        <i class="fas fa-shield-alt"></i>
+                                        <span>Privacy Policy</span>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </div>
+                                
+                                <div class="user-menu-section">
+                                    <button class="user-menu-item logout-btn" onclick="logout()">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        <span>Logout</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Notification Modal -->
+                    <div class="notification-modal" id="notificationModal">
+                        <div class="notification-overlay" onclick="closeNotifications()"></div>
+                        <div class="notification-panel">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                <button class="close-btn" onclick="closeNotifications()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="notification-tabs">
+                                <button class="tab-btn active" onclick="switchTab('all')">View all</button>
+                                <button class="tab-btn" onclick="switchTab('mentions')">Mentions</button>
+                            </div>
+                            
+                            <div class="notification-content">
+                                <div class="notification-item" data-type="billing">
+                                    <div class="notification-avatar">
+                                        <div class="system-avatar">
+                                            <i class="fas fa-peso-sign"></i>
+                                        </div>
+                                    </div>
+                                    <div class="notification-body">
+                                        <div class="notification-text">
+                                            <strong>Payment Reminder</strong>
+                                        </div>
+                                        <div class="notification-preview">
+                                            Your monthly payment of ₱1,250 is due on March 15th
+                                        </div>
+                                        <div class="notification-time">2 hours ago</div>
+                                    </div>
+                                    <div class="notification-date">Today</div>
+                                </div>
+                                
+                                <div class="notification-item" data-type="maintenance">
+                                    <div class="notification-avatar">
+                                        <div class="system-avatar" style="background: var(--warning);">
+                                            <i class="fas fa-wrench"></i>
+                                        </div>
+                                    </div>
+                                    <div class="notification-body">
+                                        <div class="notification-text">
+                                            <strong>Maintenance Update</strong>
+                                        </div>
+                                        <div class="notification-preview">
+                                            Your service request #2024-156 has been completed
+                                        </div>
+                                        <div class="notification-time">Yesterday</div>
+                                    </div>
+                                    <div class="notification-date">Sep 19, 2024</div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-footer">
+                                <button class="mark-read-btn" onclick="markAllAsRead()">
+                                    <i class="fas fa-check-double"></i>
+                                    Mark all as read
+                                </button>
+                                <button class="view-all-btn" onclick="viewAllNotifications()">
+                                    View all notifications
+                                </button>
+                                <a href="notification-settings.html" class="unsubscribe-link">
+                                    <i class="fas fa-cog"></i>
+                                    Notification Settings
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+         <!-- Desktop Sidebar -->
+         <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="announcements.html" class="nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        <span>Community News</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="profile.html" class="nav-link">
+                        <i class="fas fa-user"></i>
+                        <span>My Information</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="properties.html" class="nav-link">
+                        <i class="fas fa-key"></i>
+                        <span>My Properties</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="household.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>My Household</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="billing.html" class="nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Bills & Payments</span>
+                    </a>
+                </li>
+              
+                <li class="nav-item">
+                    <a href="services.html" class="nav-link">
+                        <i class="fa fa-calendar"></i>
+                        <span>Book Services/Facilities</span>
+                    </a>
+                </li>
+                
+                
+                <li class="nav-item">
+                    <a href="complaints.html" class="nav-link">
+                        <i class="fas fa-tools"></i>
+                        <span>Request Support</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h2>Household & Visitors</h2>
+                <p>Manage your family members, tenants, and visitor access</p>
+            </div>
+
+            
+
+            <!-- Tab Navigation -->
+            <div class="tab-navigation">
+                <button class="tab-btn active" onclick="showTab('visitors')" id="visitorsTab">
+                    <i class="fas fa-door-open"></i>
+                    Visitors
+                </button>
+                <button class="tab-btn" onclick="showTab('family')" id="familyTab">
+                    <i class="fas fa-users"></i>
+                    Family Members
+                </button>
+                <button class="tab-btn" onclick="showTab('tenants')" id="tenantsTab">
+                    <i class="fas fa-user-friends"></i>
+                    Tenants
+                </button>
+            </div>
+
+            <!-- Visitors Tab -->
+            <div id="visitorsContent" class="tab-content active">
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <button class="btn btn-outline" onclick="exportVisitorLog()">
+                        <i class="fas fa-download"></i>
+                        Export Log
+                    </button>
+                </div>
+
+                <!-- Recent Visitors -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-clock"></i>
+                        Recent Visitors
+                        <div class="card-actions">
+                            <select class="filter-select" onchange="filterVisitors(this.value)">
+                                <option value="all">All Visitors</option>
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="expected">Expected</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="visitor-list" id="visitorList">
+                            <!-- Visitor entries will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Family Members Tab -->
+            <div id="familyContent" class="tab-content">
+                <div class="quick-actions">
+                    <button class="btn btn-primary" onclick="openAddFamilyModal()">
+                        <i class="fas fa-plus"></i>
+                        Add Family Member
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-users"></i>
+                        Family Members
+                    </div>
+                    <div class="card-body">
+                        <div class="family-grid" id="familyList">
+                            <!-- Family members will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tenants Tab -->
+            <div id="tenantsContent" class="tab-content">
+                <div class="quick-actions">
+                    <button class="btn btn-primary" onclick="openAddTenantModal()">
+                        <i class="fas fa-plus"></i>
+                        Add Tenant
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-user-friends"></i>
+                        Current Tenants
+                    </div>
+                    <div class="card-body">
+                        <div class="tenant-list" id="tenantList">
+                            <!-- Tenants will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav">
+            <ul class="mobile-nav-menu">
+                <li class="mobile-nav-item">
+                    <a href="dashboard.html" class="mobile-nav-link">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="profile.html" class="mobile-nav-link">
+                        <i class="fas fa-user"></i>
+                        Profile
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="announcements.html" class="mobile-nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        News
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="billing.html" class="mobile-nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        Billing
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="services.html" class="mobile-nav-link">
+                        <i class="fa fa-calendar"></i>
+                        Services
+                    </a>
+                </li>
+                <li class="mobile-nav-item mobile-nav-more">
+                    <button class="mobile-nav-link" onclick="toggleMobileMore()">
+                        <i class="fas fa-ellipsis-h"></i>
+                        More
+                    </button>
+                    <div class="mobile-nav-dropdown" id="mobileMoreDropdown">
+                        <a href="properties.html" class="mobile-nav-dropdown-item">
+                            <i class="fas fa-key"></i>
+                            Properties
+                        </a>
+                        <a href="household.html" class="mobile-nav-dropdown-item active">
+                            <i class="fas fa-users"></i>
+                            Household
+                        </a>
+                        <a href="complaints.html" class="mobile-nav-dropdown-item">
+                            <i class="fas fa-tools"></i>
+                            Request Support
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Add Family Member Modal -->
+    <div class="modal" id="addFamilyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Add Family Member</div>
+                <button class="close-btn" onclick="closeModal('addFamilyModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="familyForm" onsubmit="addFamilyMember(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="familyFirstName">First Name</label>
+                            <input type="text" id="familyFirstName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="familyLastName">Last Name</label>
+                            <input type="text" id="familyLastName" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="familyRelation">Relationship</label>
+                            <select id="familyRelation" class="form-control" required>
+                                <option value="">Select relationship...</option>
+                                <option value="spouse">Spouse</option>
+                                <option value="child">Child</option>
+                                <option value="parent">Parent</option>
+                                <option value="sibling">Sibling</option>
+                                <option value="grandparent">Grandparent</option>
+                                <option value="grandchild">Grandchild</option>
+                                <option value="other">Other Relative</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="familyAge">Age</label>
+                            <input type="number" id="familyAge" class="form-control" min="0" max="120">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="familyPhone">Phone Number</label>
+                        <input type="tel" id="familyPhone" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="familyEmail">Email Address</label>
+                        <input type="email" id="familyEmail" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="familyPermanent" checked>
+                            <label for="familyPermanent">Permanent Resident</label>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('addFamilyModal')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Family Member</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Tenant Modal -->
+    <div class="modal" id="addTenantModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Add Tenant</div>
+                <button class="close-btn" onclick="closeModal('addTenantModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="tenantForm" onsubmit="addTenant(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tenantFirstName">First Name</label>
+                            <input type="text" id="tenantFirstName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tenantLastName">Last Name</label>
+                            <input type="text" id="tenantLastName" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tenantPhone">Phone Number</label>
+                        <input type="tel" id="tenantPhone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tenantEmail">Email Address</label>
+                        <input type="email" id="tenantEmail" class="form-control" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="leaseStart">Lease Start Date</label>
+                            <input type="date" id="leaseStart" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="leaseEnd">Lease End Date</label>
+                            <input type="date" id="leaseEnd" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="monthlyRent">Monthly Rent (₱)</label>
+                        <input type="number" id="monthlyRent" class="form-control" min="0" step="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tenantNotes">Additional Notes</label>
+                        <textarea id="tenantNotes" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('addTenantModal')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Tenant</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script>
+        // Sample data
+        let visitors = [
+            {
+                id: 1,
+                name: "Maria Santos",
+                phone: "+63-917-123-4567",
+                email: "maria.santos@email.com",
+                date: "2024-03-15",
+                time: "14:30",
+                purpose: "personal",
+                status: "expected",
+                notes: "Sister visiting for the weekend"
+            },
+            {
+                id: 2,
+                name: "Juan Delivery",
+                phone: "+63-917-765-4321",
+                email: "",
+                date: "2024-03-14",
+                time: "10:15",
+                purpose: "delivery",
+                status: "completed",
+                notes: "LBC package delivery"
+            },
+            {
+                id: 3,
+                name: "Dr. Roberto Cruz",
+                phone: "+63-917-888-9999",
+                email: "dr.cruz@medical.com",
+                date: "2024-03-13",
+                time: "16:00",
+                purpose: "service",
+                status: "completed",
+                notes: "Home consultation"
+            }
+        ];
+
+        let familyMembers = [
+            {
+                id: 1,
+                firstName: "Isabel",
+                lastName: "Nathan",
+                relation: "spouse",
+                age: 32,
+                phone: "+63-917-111-2222",
+                email: "isabel.nathan@email.com",
+                permanent: true
+            },
+            {
+                id: 2,
+                firstName: "Miguel",
+                lastName: "Nathan",
+                relation: "child",
+                age: 8,
+                phone: "",
+                email: "",
+                permanent: true
+            },
+            {
+                id: 3,
+                firstName: "Sofia",
+                lastName: "Nathan",
+                relation: "child",
+                age: 5,
+                phone: "",
+                email: "",
+                permanent: true
+            },
+            {
+                id: 4,
+                firstName: "Carmen",
+                lastName: "Rodriguez",
+                relation: "parent",
+                age: 65,
+                phone: "+63-917-333-4444",
+                email: "carmen.rodriguez@email.com",
+                permanent: false
+            }
+        ];
+
+        let tenants = [
+            {
+                id: 1,
+                firstName: "Ana",
+                lastName: "Reyes",
+                phone: "+63-917-555-6666",
+                email: "ana.reyes@email.com",
+                leaseStart: "2024-01-01",
+                leaseEnd: "2024-12-31",
+                monthlyRent: 8000,
+                notes: "Renting the guest room"
+            },
+            {
+                id: 2,
+                firstName: "Carlos",
+                lastName: "Martinez",
+                phone: "+63-917-777-8888",
+                email: "carlos.martinez@email.com",
+                leaseStart: "2024-02-15",
+                leaseEnd: "2024-08-15",
+                monthlyRent: 6000,
+                notes: "Student, 6-month lease"
+            }
+        ];
+
+        // Tab Management
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + 'Content').classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            // Load content based on tab
+            if (tabName === 'visitors') {
+                loadVisitors();
+            } else if (tabName === 'family') {
+                loadFamilyMembers();
+            } else if (tabName === 'tenants') {
+                loadTenants();
+            }
+        }
+
+        // Visitor Management
+        function loadVisitors() {
+            const visitorList = document.getElementById('visitorList');
+            visitorList.innerHTML = '';
+
+            visitors.forEach(visitor => {
+                const statusClass = visitor.status === 'expected' ? 'status-warning' : 'status-success';
+                const statusText = visitor.status === 'expected' ? 'Expected' : 'Completed';
+                
+                const visitorCard = `
+                    <div class="visitor-card">
+                        <div class="visitor-info">
+                            <div class="visitor-header">
+                                <h4>${visitor.name}</h4>
+                                <span class="visitor-status ${statusClass}">${statusText}</span>
+                            </div>
+                            <div class="visitor-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span>${visitor.phone}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>${visitor.date} at ${visitor.time}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-clipboard"></i>
+                                    <span>${visitor.purpose.charAt(0).toUpperCase() + visitor.purpose.slice(1)}</span>
+                                </div>
+                                ${visitor.notes ? `<div class="detail-item"><i class="fas fa-sticky-note"></i><span>${visitor.notes}</span></div>` : ''}
+                            </div>
+                        </div>
+                        <div class="visitor-actions">
+                            <button class="btn btn-sm btn-outline" onclick="editVisitor(${visitor.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="removeVisitor(${visitor.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                visitorList.innerHTML += visitorCard;
+            });
+        }
+
+        // Family Management
+        function loadFamilyMembers() {
+            const familyList = document.getElementById('familyList');
+            familyList.innerHTML = '';
+
+            familyMembers.forEach(member => {
+                const memberCard = `
+                    <div class="family-card">
+                        <div class="family-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="family-info">
+                            <h4>${member.firstName} ${member.lastName}</h4>
+                            <p class="family-relation">${member.relation.charAt(0).toUpperCase() + member.relation.slice(1)}</p>
+                            ${member.age ? `<p class="family-age">Age: ${member.age}</p>` : ''}
+                            ${member.phone ? `<p class="family-contact"><i class="fas fa-phone"></i> ${member.phone}</p>` : ''}
+                            ${member.email ? `<p class="family-contact"><i class="fas fa-envelope"></i> ${member.email}</p>` : ''}
+                            <span class="family-status ${member.permanent ? 'permanent' : 'temporary'}">
+                                ${member.permanent ? 'Permanent' : 'Temporary'}
+                            </span>
+                        </div>
+                        <div class="family-actions">
+                            <button class="btn btn-sm btn-outline" onclick="editFamilyMember(${member.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="removeFamilyMember(${member.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                familyList.innerHTML += memberCard;
+            });
+        }
+
+        // Tenant Management
+        function loadTenants() {
+            const tenantList = document.getElementById('tenantList');
+            tenantList.innerHTML = '';
+
+            tenants.forEach(tenant => {
+                const leaseEndDate = new Date(tenant.leaseEnd);
+                const today = new Date();
+                const daysRemaining = Math.ceil((leaseEndDate - today) / (1000 * 60 * 60 * 24));
+                const statusClass = daysRemaining < 30 ? 'status-warning' : 'status-success';
+                
+                const tenantCard = `
+                    <div class="tenant-card">
+                        <div class="tenant-info">
+                            <div class="tenant-header">
+                                <h4>${tenant.firstName} ${tenant.lastName}</h4>
+                                <span class="tenant-rent">₱${tenant.monthlyRent.toLocaleString()}/month</span>
+                            </div>
+                            <div class="tenant-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span>${tenant.phone}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>${tenant.email}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>Lease: ${tenant.leaseStart} to ${tenant.leaseEnd}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span class="${statusClass}">${daysRemaining} days remaining</span>
+                                </div>
+                                ${tenant.notes ? `<div class="detail-item"><i class="fas fa-sticky-note"></i><span>${tenant.notes}</span></div>` : ''}
+                            </div>
+                        </div>
+                        <div class="tenant-actions">
+                            <button class="btn btn-sm btn-outline" onclick="editTenant(${tenant.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="removeTenant(${tenant.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                tenantList.innerHTML += tenantCard;
+            });
+        }
+
+        // Edit and Remove Functions
+        function editVisitor(id) {
+            const visitor = visitors.find(v => v.id === id);
+            if (visitor) {
+                // Populate the form with existing data
+                document.getElementById('visitorName').value = visitor.name;
+                document.getElementById('visitorPhone').value = visitor.phone;
+                document.getElementById('visitorEmail').value = visitor.email || '';
+                document.getElementById('visitDate').value = visitor.date;
+                document.getElementById('visitTime').value = visitor.time;
+                document.getElementById('visitPurpose').value = visitor.purpose;
+                document.getElementById('visitNotes').value = visitor.notes || '';
+                
+                // Store the ID for updating
+                document.getElementById('visitorForm').setAttribute('data-edit-id', id);
+                
+                // Change form title and button text
+                document.querySelector('#addVisitorModal .modal-title').textContent = 'Edit Visitor';
+                document.querySelector('#addVisitorModal button[type="submit"]').textContent = 'Update Visitor';
+                
+                openAddVisitorModal();
+            }
+        }
+
+        function removeVisitor(id) {
+            if (confirm('Are you sure you want to remove this visitor?')) {
+                const index = visitors.findIndex(v => v.id === id);
+                if (index > -1) {
+                    visitors.splice(index, 1);
+                    loadVisitors();
+                    showToast('Visitor removed successfully!');
+                }
+            }
+        }
+
+        function editFamilyMember(id) {
+            const member = familyMembers.find(m => m.id === id);
+            if (member) {
+                // Populate the form with existing data
+                document.getElementById('familyFirstName').value = member.firstName;
+                document.getElementById('familyLastName').value = member.lastName;
+                document.getElementById('familyRelation').value = member.relation;
+                document.getElementById('familyAge').value = member.age || '';
+                document.getElementById('familyPhone').value = member.phone || '';
+                document.getElementById('familyEmail').value = member.email || '';
+                document.getElementById('familyPermanent').checked = member.permanent;
+                
+                // Store the ID for updating
+                document.getElementById('familyForm').setAttribute('data-edit-id', id);
+                
+                // Change form title and button text
+                document.querySelector('#addFamilyModal .modal-title').textContent = 'Edit Family Member';
+                document.querySelector('#addFamilyModal button[type="submit"]').textContent = 'Update Member';
+                
+                openAddFamilyModal();
+            }
+        }
+
+        function removeFamilyMember(id) {
+            if (confirm('Are you sure you want to remove this family member?')) {
+                const index = familyMembers.findIndex(m => m.id === id);
+                if (index > -1) {
+                    familyMembers.splice(index, 1);
+                    loadFamilyMembers();
+                    showToast('Family member removed successfully!');
+                }
+            }
+        }
+
+        function editTenant(id) {
+            const tenant = tenants.find(t => t.id === id);
+            if (tenant) {
+                // Populate the form with existing data
+                document.getElementById('tenantFirstName').value = tenant.firstName;
+                document.getElementById('tenantLastName').value = tenant.lastName;
+                document.getElementById('tenantPhone').value = tenant.phone;
+                document.getElementById('tenantEmail').value = tenant.email;
+                document.getElementById('leaseStart').value = tenant.leaseStart;
+                document.getElementById('leaseEnd').value = tenant.leaseEnd;
+                document.getElementById('monthlyRent').value = tenant.monthlyRent;
+                document.getElementById('tenantNotes').value = tenant.notes || '';
+                
+                // Store the ID for updating
+                document.getElementById('tenantForm').setAttribute('data-edit-id', id);
+                
+                // Change form title and button text
+                document.querySelector('#addTenantModal .modal-title').textContent = 'Edit Tenant';
+                document.querySelector('#addTenantModal button[type="submit"]').textContent = 'Update Tenant';
+                
+                openAddTenantModal();
+            }
+        }
+
+        function removeTenant(id) {
+            if (confirm('Are you sure you want to remove this tenant?')) {
+                const index = tenants.findIndex(t => t.id === id);
+                if (index > -1) {
+                    tenants.splice(index, 1);
+                    loadTenants();
+                    showToast('Tenant removed successfully!');
+                }
+            }
+        }
+
+        // Filter and Search Functions
+        function filterVisitors(filterType) {
+            const visitorList = document.getElementById('visitorList');
+            const today = new Date().toISOString().split('T')[0];
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            const weekAgoString = weekAgo.toISOString().split('T')[0];
+
+            let filteredVisitors = visitors;
+
+            switch (filterType) {
+                case 'today':
+                    filteredVisitors = visitors.filter(v => v.date === today);
+                    break;
+                case 'week':
+                    filteredVisitors = visitors.filter(v => v.date >= weekAgoString);
+                    break;
+                case 'expected':
+                    filteredVisitors = visitors.filter(v => v.status === 'expected');
+                    break;
+                default:
+                    filteredVisitors = visitors;
+            }
+
+            // Clear and rebuild the visitor list
+            visitorList.innerHTML = '';
+            filteredVisitors.forEach(visitor => {
+                const statusClass = visitor.status === 'expected' ? 'status-warning' : 'status-success';
+                const statusText = visitor.status === 'expected' ? 'Expected' : 'Completed';
+                
+                const visitorCard = `
+                    <div class="visitor-card">
+                        <div class="visitor-info">
+                            <div class="visitor-header">
+                                <h4>${visitor.name}</h4>
+                                <span class="visitor-status ${statusClass}">${statusText}</span>
+                            </div>
+                            <div class="visitor-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span>${visitor.phone}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>${visitor.date} at ${visitor.time}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-clipboard"></i>
+                                    <span>${visitor.purpose.charAt(0).toUpperCase() + visitor.purpose.slice(1)}</span>
+                                </div>
+                                ${visitor.notes ? `<div class="detail-item"><i class="fas fa-sticky-note"></i><span>${visitor.notes}</span></div>` : ''}
+                            </div>
+                        </div>
+                        <div class="visitor-actions">
+                            <button class="btn btn-sm btn-outline" onclick="editVisitor(${visitor.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="removeVisitor(${visitor.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                visitorList.innerHTML += visitorCard;
+            });
+
+            if (filteredVisitors.length === 0) {
+                visitorList.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--gray-500);">No visitors found for the selected filter.</div>';
+            }
+        }
+
+        // Bulk Operations
+        function exportVisitorLog() {
+            // Create CSV content
+            let csvContent = "Date,Name,Phone,Email,Time,Purpose,Status,Notes\n";
+            
+            visitors.forEach(visitor => {
+                const row = [
+                    visitor.date,
+                    `"${visitor.name}"`,
+                    visitor.phone,
+                    visitor.email || '',
+                    visitor.time,
+                    visitor.purpose,
+                    visitor.status,
+                    `"${visitor.notes || ''}"`
+                ].join(',');
+                csvContent += row + '\n';
+            });
+
+            // Create and download file
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `visitor_log_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+            
+            showToast('Visitor log exported successfully!');
+        }
+
+        // Modal Management - Enhanced with debugging
+        function openAddFamilyModal() {
+            console.log('openAddFamilyModal called'); // Debug log
+            
+            // Reset form and modal state
+            document.getElementById('familyForm').removeAttribute('data-edit-id');
+            document.querySelector('#addFamilyModal .modal-title').textContent = 'Add Family Member';
+            document.querySelector('#addFamilyModal button[type="submit"]').textContent = 'Add Family Member';
+            
+            const modal = document.getElementById('addFamilyModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                console.log('Family modal opened'); // Debug log
+            } else {
+                console.error('Family modal not found'); // Debug log
+            }
+        }
+
+        function openAddTenantModal() {
+            console.log('openAddTenantModal called'); // Debug log
+            
+            // Reset form and modal state
+            document.getElementById('tenantForm').removeAttribute('data-edit-id');
+            document.querySelector('#addTenantModal .modal-title').textContent = 'Add Tenant';
+            document.querySelector('#addTenantModal button[type="submit"]').textContent = 'Add Tenant';
+            
+            const modal = document.getElementById('addTenantModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                console.log('Tenant modal opened'); // Debug log
+            } else {
+                console.error('Tenant modal not found'); // Debug log
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            
+            // Reset forms when closing
+            if (modalId === 'addFamilyModal') {
+                document.getElementById('familyForm').reset();
+                document.getElementById('familyForm').removeAttribute('data-edit-id');
+            } else if (modalId === 'addTenantModal') {
+                document.getElementById('tenantForm').reset();
+                document.getElementById('tenantForm').removeAttribute('data-edit-id');
+            }
+        }
+
+        // Enhanced Form Submissions
+        function addFamilyMember(event) {
+            event.preventDefault();
+            
+            const form = document.getElementById('familyForm');
+            const editId = form.getAttribute('data-edit-id');
+            
+            const memberData = {
+                firstName: document.getElementById('familyFirstName').value,
+                lastName: document.getElementById('familyLastName').value,
+                relation: document.getElementById('familyRelation').value,
+                age: parseInt(document.getElementById('familyAge').value) || null,
+                phone: document.getElementById('familyPhone').value,
+                email: document.getElementById('familyEmail').value,
+                permanent: document.getElementById('familyPermanent').checked
+            };
+            
+            if (editId) {
+                // Update existing family member
+                const index = familyMembers.findIndex(m => m.id == editId);
+                if (index > -1) {
+                    familyMembers[index] = { ...familyMembers[index], ...memberData };
+                    showToast('Family member updated successfully!');
+                }
+            } else {
+                // Add new family member
+                const newMember = {
+                    id: Math.max(...familyMembers.map(m => m.id), 0) + 1,
+                    ...memberData
+                };
+                familyMembers.push(newMember);
+                showToast('Family member added successfully!');
+            }
+            
+            loadFamilyMembers();
+            closeModal('addFamilyModal');
+        }
+
+        function addTenant(event) {
+            event.preventDefault();
+            
+            const form = document.getElementById('tenantForm');
+            const editId = form.getAttribute('data-edit-id');
+            
+            const tenantData = {
+                firstName: document.getElementById('tenantFirstName').value,
+                lastName: document.getElementById('tenantLastName').value,
+                phone: document.getElementById('tenantPhone').value,
+                email: document.getElementById('tenantEmail').value,
+                leaseStart: document.getElementById('leaseStart').value,
+                leaseEnd: document.getElementById('leaseEnd').value,
+                monthlyRent: parseInt(document.getElementById('monthlyRent').value),
+                notes: document.getElementById('tenantNotes').value
+            };
+            
+            if (editId) {
+                // Update existing tenant
+                const index = tenants.findIndex(t => t.id == editId);
+                if (index > -1) {
+                    tenants[index] = { ...tenants[index], ...tenantData };
+                    showToast('Tenant updated successfully!');
+                }
+            } else {
+                // Add new tenant
+                const newTenant = {
+                    id: Math.max(...tenants.map(t => t.id), 0) + 1,
+                    ...tenantData
+                };
+                tenants.push(newTenant);
+                showToast('Tenant added successfully!');
+            }
+            
+            loadTenants();
+            closeModal('addTenantModal');
+        }
+
+        // Utility Functions
+        function showToast(message) {
+            // Create and show toast notification
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--secondary);
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: var(--radius-md);
+                z-index: 10000;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.style.opacity = '1', 100);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => document.body.removeChild(toast), 300);
+            }, 3000);
+        }
+
+        // Header Functions
+        function toggleUserMenu() {
+            const modal = document.getElementById('userMenuModal');
+            modal.classList.toggle('active');
+        }
+
+        function toggleNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.toggle('active');
+        }
+
+        function closeNotifications() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.remove('active');
+        }
+
+        function markAllAsRead() {
+            const notifications = document.querySelectorAll('.notification-item.unread');
+            notifications.forEach(notification => {
+                notification.classList.remove('unread');
+            });
+            
+            // Update notification badge
+            const badge = document.querySelector('.notification-badge');
+            if (badge) {
+                badge.textContent = '0';
+                badge.style.display = 'none';
+            }
+            
+            showToast('All notifications marked as read');
+        }
+
+        function viewAllNotifications() {
+            window.location.href = 'announcements.html';
+        }
+
+        function switchTab(tabName) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.notification-tabs .tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = 'login.html';
+            }
+        }
+
+        function toggleMobileMore() {
+            document.getElementById('mobileMoreDropdown').classList.toggle('active');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing household page');
+            
+            showTab('visitors');
+            
+            // Add event listeners for family and tenant buttons
+            const addFamilyBtn = document.querySelector('button[onclick="openAddFamilyModal()"]');
+            if (addFamilyBtn) {
+                addFamilyBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Family button clicked via event listener');
+                    openAddFamilyModal();
+                });
+                console.log('Family button found and listener added');
+            } else {
+                console.error('Family button not found');
+            }
+
+            const addTenantBtn = document.querySelector('button[onclick="openAddTenantModal()"]');
+            if (addTenantBtn) {
+                addTenantBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Tenant button clicked via event listener');
+                    openAddTenantModal();
+                });
+                console.log('Tenant button found and listener added');
+            } else {
+                console.error('Tenant button not found');
+            }
+            
+            // Close modals when clicking outside
+            document.addEventListener('click', function(event) {
+                // Close user menu if clicking outside
+                const userMenu = document.getElementById('userMenuModal');
+                if (!event.target.closest('.user-avatar') && !event.target.closest('.user-menu-modal')) {
+                    userMenu.classList.remove('active');
+                }
+                
+                // Close notification modal if clicking on overlay
+                const notificationModal = document.getElementById('notificationModal');
+                if (event.target.classList.contains('notification-overlay')) {
+                    notificationModal.classList.remove('active');
+                }
+            });
+        });
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html> 
