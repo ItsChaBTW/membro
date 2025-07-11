@@ -396,20 +396,33 @@
             <!-- Tenants Tab -->
             <div id="tenantsContent" class="tab-content">
                 <div class="quick-actions">
-                    <button class="btn btn-primary" onclick="openAddTenantModal()">
-                        <i class="fas fa-plus"></i>
-                        Add Tenant
+                    <button class="btn btn-primary" onclick="openTenantRequestModal()">
+                        <i class="fas fa-file-contract"></i>
+                        Request Tenant Application
+                    </button>
+                    <button class="btn btn-outline" onclick="viewTenantApplications()">
+                        <i class="fas fa-list-alt"></i>
+                        View Applications
                     </button>
                 </div>
 
                 <div class="card">
                     <div class="card-header">
                         <i class="fas fa-user-friends"></i>
-                        Current Tenants
+                        Active Tenant Applications
+                        <div class="card-actions">
+                            <select class="filter-select" onchange="filterApplications(this.value)">
+                                <option value="all">All Applications</option>
+                                <option value="pending">Pending Approval</option>
+                                <option value="approved">Approved</option>
+                                <option value="active">Currently Active</option>
+                                <option value="expired">Expired</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="tenant-list" id="tenantList">
-                            <!-- Tenants will be populated by JavaScript -->
+                            <!-- Tenant applications will be populated by JavaScript -->
                         </div>
                     </div>
                 </div>
@@ -534,54 +547,104 @@
         </div>
     </div>
 
-    <!-- Add Tenant Modal -->
-    <div class="modal" id="addTenantModal">
+    <!-- Tenant Request Application Modal -->
+    <div class="modal" id="tenantRequestModal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title">Add Tenant</div>
-                <button class="close-btn" onclick="closeModal('addTenantModal')">&times;</button>
+                <div class="modal-title">Tenant Request Application</div>
+                <button class="close-btn" onclick="closeModal('tenantRequestModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="tenantForm" onsubmit="addTenant(event)">
+                <div style="background: var(--info-light); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; border-left: 4px solid var(--info);">
+                    <p style="margin: 0; color: var(--gray-700); font-size: 0.875rem;">
+                        <i class="fas fa-info-circle" style="color: var(--info); margin-right: 0.5rem;"></i>
+                        This application serves as a request for tenant approval, facilitating a temporary transfer of occupancy rights from the unit owner to the specified tenant for the selected duration. The building administration will validate the applicant's eligibility and required documents before granting final approval.
+                    </p>
+                </div>
+                
+                <form id="tenantRequestForm" onsubmit="submitTenantRequest(event)">
+                    <div class="form-group">
+                        <label for="applicationTitle">Application Title</label>
+                        <input type="text" id="applicationTitle" class="form-control" placeholder="e.g., Temporary rental for work assignment" required>
+                    </div>
+                    
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="tenantFirstName">First Name</label>
+                            <label for="tenantFirstName">Tenant First Name</label>
                             <input type="text" id="tenantFirstName" class="form-control" required>
                         </div>
                         <div class="form-group">
-                            <label for="tenantLastName">Last Name</label>
+                            <label for="tenantLastName">Tenant Last Name</label>
                             <input type="text" id="tenantLastName" class="form-control" required>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="tenantPhone">Phone Number</label>
-                        <input type="tel" id="tenantPhone" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="tenantEmail">Email Address</label>
-                        <input type="email" id="tenantEmail" class="form-control" required>
-                    </div>
+                    
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="leaseStart">Lease Start Date</label>
-                            <input type="date" id="leaseStart" class="form-control" required>
+                            <label for="tenantPhone">Phone Number</label>
+                            <input type="tel" id="tenantPhone" class="form-control" required>
                         </div>
                         <div class="form-group">
-                            <label for="leaseEnd">Lease End Date</label>
-                            <input type="date" id="leaseEnd" class="form-control" required>
+                            <label for="tenantEmail">Email Address</label>
+                            <input type="email" id="tenantEmail" class="form-control" required>
                         </div>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="monthlyRent">Monthly Rent (₱)</label>
-                        <input type="number" id="monthlyRent" class="form-control" min="0" step="100" required>
+                        <label for="ownershipType">Ownership Transfer Type</label>
+                        <select id="ownershipType" class="form-control" required onchange="updateOwnershipDescription()">
+                            <option value="">Select transfer type...</option>
+                            <option value="full_temporary">Full Temporary Ownership</option>
+                            <option value="shared_temporary">Shared Temporary Ownership</option>
+                            <option value="guest_access">Extended Guest Access</option>
+                            <option value="sublease">Authorized Sublease</option>
+                        </select>
+                        <small id="ownershipDescription" class="form-text" style="color: var(--gray-600); margin-top: 0.5rem;"></small>
                     </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="transferStart">Transfer Start Date</label>
+                            <input type="date" id="transferStart" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="transferEnd">Transfer End Date</label>
+                            <input type="date" id="transferEnd" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="monthlyCompensation">Monthly Compensation (₱)</label>
+                            <input type="number" id="monthlyCompensation" class="form-control" min="0" step="100" placeholder="0">
+                            <small class="form-text" style="color: var(--gray-600);">Leave blank or 0 if no compensation</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="securityDeposit">Security Deposit (₱)</label>
+                            <input type="number" id="securityDeposit" class="form-control" min="0" step="100" placeholder="0">
+                        </div>
+                    </div>
+                    
                     <div class="form-group">
-                        <label for="tenantNotes">Additional Notes</label>
-                        <textarea id="tenantNotes" class="form-control" rows="3"></textarea>
+                        <label for="transferReason">Reason for Transfer</label>
+                        <textarea id="transferReason" class="form-control" rows="3" placeholder="Please explain why you need to temporarily transfer ownership rights..." required></textarea>
                     </div>
+                    
+                    <div class="form-group">
+                        <label for="additionalTerms">Additional Terms & Conditions</label>
+                        <textarea id="additionalTerms" class="form-control" rows="3" placeholder="Any specific conditions, restrictions, or agreements..."></textarea>
+                    </div>
+                    
+                    <div class="checkbox-wrapper" style="margin: 1.5rem 0;">
+                        <input type="checkbox" id="agreeTerms" required>
+                        <label for="agreeTerms" style="margin-left: 0.5rem; font-size: 0.875rem;">
+                            I understand this application requires admin approval and I agree to the terms of temporary ownership transfer
+                        </label>
+                    </div>
+                    
                     <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" onclick="closeModal('addTenantModal')">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Add Tenant</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('tenantRequestModal')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit Application</button>
                     </div>
                 </form>
             </div>
@@ -670,28 +733,60 @@
             }
         ];
 
-        let tenants = [
+        let tenantApplications = [
             {
                 id: 1,
+                applicationTitle: "Business Trip Extended Stay",
                 firstName: "Ana",
                 lastName: "Reyes",
                 phone: "+63-917-555-6666",
                 email: "ana.reyes@email.com",
-                leaseStart: "2024-01-01",
-                leaseEnd: "2024-12-31",
-                monthlyRent: 8000,
-                notes: "Renting the guest room"
+                ownershipType: "full_temporary",
+                transferStart: "2024-01-01",
+                transferEnd: "2024-12-31",
+                monthlyCompensation: 8000,
+                securityDeposit: 16000,
+                transferReason: "Extended business trip requires temporary rental of unit",
+                additionalTerms: "Guest room access only, shared common areas",
+                status: "active",
+                submittedDate: "2023-12-15",
+                approvedDate: "2023-12-20"
             },
             {
                 id: 2,
+                applicationTitle: "Student Accommodation Request",
                 firstName: "Carlos",
                 lastName: "Martinez",
                 phone: "+63-917-777-8888",
                 email: "carlos.martinez@email.com",
-                leaseStart: "2024-02-15",
-                leaseEnd: "2024-08-15",
-                monthlyRent: 6000,
-                notes: "Student, 6-month lease"
+                ownershipType: "shared_temporary",
+                transferStart: "2024-02-15",
+                transferEnd: "2024-08-15",
+                monthlyCompensation: 6000,
+                securityDeposit: 12000,
+                transferReason: "Student needs temporary accommodation during semester",
+                additionalTerms: "Study room access, shared utilities",
+                status: "active",
+                submittedDate: "2024-01-10",
+                approvedDate: "2024-02-01"
+            },
+            {
+                id: 3,
+                applicationTitle: "Family Visit Extended Stay",
+                firstName: "Maria",
+                lastName: "Santos",
+                phone: "+63-917-999-0000",
+                email: "maria.santos@email.com",
+                ownershipType: "guest_access",
+                transferStart: "2024-04-01",
+                transferEnd: "2024-06-30",
+                monthlyCompensation: 0,
+                securityDeposit: 5000,
+                transferReason: "Elderly family member needs temporary care and accommodation",
+                additionalTerms: "No compensation required, family assistance arrangement",
+                status: "pending",
+                submittedDate: "2024-03-10",
+                approvedDate: null
             }
         ];
 
@@ -717,7 +812,7 @@
             } else if (tabName === 'family') {
                 loadFamilyMembers();
             } else if (tabName === 'tenants') {
-                loadTenants();
+                loadTenantApplications();
             }
         }
 
@@ -804,56 +899,91 @@
             });
         }
 
-        // Tenant Management
-        function loadTenants() {
+        // Tenant Application Management
+        function loadTenantApplications() {
             const tenantList = document.getElementById('tenantList');
             tenantList.innerHTML = '';
 
-            tenants.forEach(tenant => {
-                const leaseEndDate = new Date(tenant.leaseEnd);
+            tenantApplications.forEach(application => {
+                const transferEndDate = new Date(application.transferEnd);
                 const today = new Date();
-                const daysRemaining = Math.ceil((leaseEndDate - today) / (1000 * 60 * 60 * 24));
-                const statusClass = daysRemaining < 30 ? 'status-warning' : 'status-success';
+                const daysRemaining = Math.ceil((transferEndDate - today) / (1000 * 60 * 60 * 24));
                 
-                const tenantCard = `
+                let statusClass, statusText, timeText;
+                if (application.status === 'pending') {
+                    statusClass = 'status-warning';
+                    statusText = 'Pending Approval';
+                    timeText = `Submitted: ${application.submittedDate}`;
+                } else if (application.status === 'approved') {
+                    statusClass = 'status-success';
+                    statusText = 'Approved';
+                    timeText = `Starts: ${application.transferStart}`;
+                } else if (application.status === 'active') {
+                    statusClass = daysRemaining < 30 ? 'status-warning' : 'status-success';
+                    statusText = 'Currently Active';
+                    timeText = `${daysRemaining} days remaining`;
+                } else {
+                    statusClass = 'status-danger';
+                    statusText = 'Expired';
+                    timeText = `Ended: ${application.transferEnd}`;
+                }
+
+                const ownershipTypeText = {
+                    'full_temporary': 'Full Temporary Ownership',
+                    'shared_temporary': 'Shared Temporary Ownership',
+                    'guest_access': 'Extended Guest Access',
+                    'sublease': 'Authorized Sublease'
+                };
+                
+                const applicationCard = `
                     <div class="tenant-card">
                         <div class="tenant-info">
                             <div class="tenant-header">
-                                <h4>${tenant.firstName} ${tenant.lastName}</h4>
-                                <span class="tenant-rent">₱${tenant.monthlyRent.toLocaleString()}/month</span>
+                                <h4>${application.firstName} ${application.lastName}</h4>
+                                <span class="application-status ${statusClass}">${statusText}</span>
+                            </div>
+                            <div class="application-title">
+                                <strong>${application.applicationTitle}</strong>
                             </div>
                             <div class="tenant-details">
                                 <div class="detail-item">
                                     <i class="fas fa-phone"></i>
-                                    <span>${tenant.phone}</span>
+                                    <span>${application.phone}</span>
                                 </div>
                                 <div class="detail-item">
                                     <i class="fas fa-envelope"></i>
-                                    <span>${tenant.email}</span>
+                                    <span>${application.email}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-file-contract"></i>
+                                    <span>${ownershipTypeText[application.ownershipType]}</span>
                                 </div>
                                 <div class="detail-item">
                                     <i class="fas fa-calendar"></i>
-                                    <span>Lease: ${tenant.leaseStart} to ${tenant.leaseEnd}</span>
+                                    <span>Transfer: ${application.transferStart} to ${application.transferEnd}</span>
                                 </div>
                                 <div class="detail-item">
                                     <i class="fas fa-clock"></i>
-                                    <span class="${statusClass}">${daysRemaining} days remaining</span>
+                                    <span class="${statusClass}">${timeText}</span>
                                 </div>
-                                ${tenant.notes ? `<div class="detail-item"><i class="fas fa-sticky-note"></i><span>${tenant.notes}</span></div>` : ''}
+                                ${application.monthlyCompensation > 0 ? `<div class="detail-item"><i class="fas fa-peso-sign"></i><span>₱${application.monthlyCompensation.toLocaleString()}/month</span></div>` : ''}
+                                <div class="detail-item">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>${application.transferReason}</span>
+                                </div>
                             </div>
                         </div>
                         <div class="tenant-actions">
-                            <button class="btn btn-sm btn-outline" onclick="editTenant(${tenant.id})">
-                                <i class="fas fa-edit"></i>
+                            <button class="btn btn-sm btn-outline" onclick="viewApplicationDetails(${application.id})" title="View Details">
+                                <i class="fas fa-eye"></i>
                             </button>
-                            <button class="btn btn-sm btn-danger" onclick="removeTenant(${tenant.id})">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                            ${application.status === 'pending' ? `<button class="btn btn-sm btn-outline" onclick="editApplication(${application.id})" title="Edit Application"><i class="fas fa-edit"></i></button>` : ''}
+                            ${application.status === 'pending' ? `<button class="btn btn-sm btn-danger" onclick="cancelApplication(${application.id})" title="Cancel Application"><i class="fas fa-trash"></i></button>` : ''}
                         </div>
                     </div>
                 `;
                 
-                tenantList.innerHTML += tenantCard;
+                tenantList.innerHTML += applicationCard;
             });
         }
 
@@ -1084,20 +1214,25 @@
             }
         }
 
-        function openAddTenantModal() {
-            console.log('openAddTenantModal called'); // Debug log
+        function openTenantRequestModal() {
+            console.log('openTenantRequestModal called'); // Debug log
             
             // Reset form and modal state
-            document.getElementById('tenantForm').removeAttribute('data-edit-id');
-            document.querySelector('#addTenantModal .modal-title').textContent = 'Add Tenant';
-            document.querySelector('#addTenantModal button[type="submit"]').textContent = 'Add Tenant';
+            document.getElementById('tenantRequestForm').removeAttribute('data-edit-id');
+            document.querySelector('#tenantRequestModal .modal-title').textContent = 'Tenant Request Application';
+            document.querySelector('#tenantRequestModal button[type="submit"]').textContent = 'Submit Application';
             
-            const modal = document.getElementById('addTenantModal');
+            // Set minimum dates to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('transferStart').min = today;
+            document.getElementById('transferEnd').min = today;
+            
+            const modal = document.getElementById('tenantRequestModal');
             if (modal) {
                 modal.style.display = 'flex';
-                console.log('Tenant modal opened'); // Debug log
+                console.log('Tenant request modal opened'); // Debug log
             } else {
-                console.error('Tenant modal not found'); // Debug log
+                console.error('Tenant request modal not found'); // Debug log
             }
         }
 
@@ -1108,9 +1243,9 @@
             if (modalId === 'addFamilyModal') {
                 document.getElementById('familyForm').reset();
                 document.getElementById('familyForm').removeAttribute('data-edit-id');
-            } else if (modalId === 'addTenantModal') {
-                document.getElementById('tenantForm').reset();
-                document.getElementById('tenantForm').removeAttribute('data-edit-id');
+            } else if (modalId === 'tenantRequestModal') {
+                document.getElementById('tenantRequestForm').reset();
+                document.getElementById('tenantRequestForm').removeAttribute('data-edit-id');
             }
         }
 
@@ -1152,42 +1287,253 @@
             closeModal('addFamilyModal');
         }
 
-        function addTenant(event) {
+        // Tenant Application Management Functions
+        function submitTenantRequest(event) {
             event.preventDefault();
             
-            const form = document.getElementById('tenantForm');
+            const form = document.getElementById('tenantRequestForm');
             const editId = form.getAttribute('data-edit-id');
             
-            const tenantData = {
+            const applicationData = {
+                applicationTitle: document.getElementById('applicationTitle').value,
                 firstName: document.getElementById('tenantFirstName').value,
                 lastName: document.getElementById('tenantLastName').value,
                 phone: document.getElementById('tenantPhone').value,
                 email: document.getElementById('tenantEmail').value,
-                leaseStart: document.getElementById('leaseStart').value,
-                leaseEnd: document.getElementById('leaseEnd').value,
-                monthlyRent: parseInt(document.getElementById('monthlyRent').value),
-                notes: document.getElementById('tenantNotes').value
+                ownershipType: document.getElementById('ownershipType').value,
+                transferStart: document.getElementById('transferStart').value,
+                transferEnd: document.getElementById('transferEnd').value,
+                monthlyCompensation: parseInt(document.getElementById('monthlyCompensation').value) || 0,
+                securityDeposit: parseInt(document.getElementById('securityDeposit').value) || 0,
+                transferReason: document.getElementById('transferReason').value,
+                additionalTerms: document.getElementById('additionalTerms').value,
+                status: 'pending',
+                submittedDate: new Date().toISOString().split('T')[0],
+                approvedDate: null
             };
             
             if (editId) {
-                // Update existing tenant
-                const index = tenants.findIndex(t => t.id == editId);
+                // Update existing application
+                const index = tenantApplications.findIndex(t => t.id == editId);
                 if (index > -1) {
-                    tenants[index] = { ...tenants[index], ...tenantData };
-                    showToast('Tenant updated successfully!');
+                    tenantApplications[index] = { ...tenantApplications[index], ...applicationData };
+                    showToast('Tenant application updated successfully!');
                 }
             } else {
-                // Add new tenant
-                const newTenant = {
-                    id: Math.max(...tenants.map(t => t.id), 0) + 1,
-                    ...tenantData
+                // Add new application
+                const newApplication = {
+                    id: Math.max(...tenantApplications.map(t => t.id), 0) + 1,
+                    ...applicationData
                 };
-                tenants.push(newTenant);
-                showToast('Tenant added successfully!');
+                tenantApplications.push(newApplication);
+                showToast('Tenant application submitted successfully! Awaiting admin approval.');
             }
             
-            loadTenants();
-            closeModal('addTenantModal');
+            loadTenantApplications();
+            closeModal('tenantRequestModal');
+        }
+
+        // Update ownership description based on selection
+        function updateOwnershipDescription() {
+            const ownershipType = document.getElementById('ownershipType').value;
+            const description = document.getElementById('ownershipDescription');
+            
+            const descriptions = {
+                'full_temporary': 'Complete temporary ownership transfer. Tenant will have full access and responsibilities for the unit during the specified period.',
+                'shared_temporary': 'Shared ownership arrangement. Both owner and tenant will have access and shared responsibilities.',
+                'guest_access': 'Extended guest privileges. Tenant will have living access but limited ownership rights.',
+                'sublease': 'Authorized subletting arrangement. Tenant becomes temporary lessee under your ownership.'
+            };
+            
+            description.textContent = descriptions[ownershipType] || '';
+        }
+
+        // New functions for tenant application management
+        function viewApplicationDetails(id) {
+            const application = tenantApplications.find(app => app.id === id);
+            if (application) {
+                const ownershipTypeText = {
+                    'full_temporary': 'Full Temporary Ownership',
+                    'shared_temporary': 'Shared Temporary Ownership',
+                    'guest_access': 'Extended Guest Access',
+                    'sublease': 'Authorized Sublease'
+                };
+                
+                alert(`Application Details:
+Title: ${application.applicationTitle}
+Applicant: ${application.firstName} ${application.lastName}
+Contact: ${application.phone} | ${application.email}
+Type: ${ownershipTypeText[application.ownershipType]}
+Period: ${application.transferStart} to ${application.transferEnd}
+Compensation: ₱${application.monthlyCompensation}/month
+Security Deposit: ₱${application.securityDeposit}
+Status: ${application.status.toUpperCase()}
+Reason: ${application.transferReason}
+${application.additionalTerms ? `Additional Terms: ${application.additionalTerms}` : ''}`);
+            }
+        }
+
+        function editApplication(id) {
+            const application = tenantApplications.find(app => app.id === id);
+            if (application && application.status === 'pending') {
+                // Populate the form with existing data
+                document.getElementById('applicationTitle').value = application.applicationTitle;
+                document.getElementById('tenantFirstName').value = application.firstName;
+                document.getElementById('tenantLastName').value = application.lastName;
+                document.getElementById('tenantPhone').value = application.phone;
+                document.getElementById('tenantEmail').value = application.email;
+                document.getElementById('ownershipType').value = application.ownershipType;
+                document.getElementById('transferStart').value = application.transferStart;
+                document.getElementById('transferEnd').value = application.transferEnd;
+                document.getElementById('monthlyCompensation').value = application.monthlyCompensation;
+                document.getElementById('securityDeposit').value = application.securityDeposit;
+                document.getElementById('transferReason').value = application.transferReason;
+                document.getElementById('additionalTerms').value = application.additionalTerms;
+                
+                // Update ownership description
+                updateOwnershipDescription();
+                
+                // Store the ID for updating
+                document.getElementById('tenantRequestForm').setAttribute('data-edit-id', id);
+                
+                // Change form title and button text
+                document.querySelector('#tenantRequestModal .modal-title').textContent = 'Edit Tenant Application';
+                document.querySelector('#tenantRequestModal button[type="submit"]').textContent = 'Update Application';
+                
+                openTenantRequestModal();
+            } else {
+                showToast('Only pending applications can be edited.');
+            }
+        }
+
+        function cancelApplication(id) {
+            if (confirm('Are you sure you want to cancel this tenant application? This action cannot be undone.')) {
+                const index = tenantApplications.findIndex(app => app.id === id);
+                if (index > -1) {
+                    tenantApplications.splice(index, 1);
+                    loadTenantApplications();
+                    showToast('Tenant application cancelled successfully!');
+                }
+            }
+        }
+
+        function viewTenantApplications() {
+            // Show all applications by resetting filter
+            document.querySelector('.filter-select').value = 'all';
+            loadTenantApplications();
+            showToast('Showing all tenant applications');
+        }
+
+        function filterApplications(filterType) {
+            const tenantList = document.getElementById('tenantList');
+            let filteredApplications = tenantApplications;
+
+            switch (filterType) {
+                case 'pending':
+                    filteredApplications = tenantApplications.filter(app => app.status === 'pending');
+                    break;
+                case 'approved':
+                    filteredApplications = tenantApplications.filter(app => app.status === 'approved');
+                    break;
+                case 'active':
+                    filteredApplications = tenantApplications.filter(app => app.status === 'active');
+                    break;
+                case 'expired':
+                    const today = new Date();
+                    filteredApplications = tenantApplications.filter(app => new Date(app.transferEnd) < today);
+                    break;
+                default:
+                    filteredApplications = tenantApplications;
+            }
+
+            // Rebuild the list with filtered applications
+            tenantList.innerHTML = '';
+            
+            filteredApplications.forEach(application => {
+                const transferEndDate = new Date(application.transferEnd);
+                const today = new Date();
+                const daysRemaining = Math.ceil((transferEndDate - today) / (1000 * 60 * 60 * 24));
+                
+                let statusClass, statusText, timeText;
+                if (application.status === 'pending') {
+                    statusClass = 'status-warning';
+                    statusText = 'Pending Approval';
+                    timeText = `Submitted: ${application.submittedDate}`;
+                } else if (application.status === 'approved') {
+                    statusClass = 'status-success';
+                    statusText = 'Approved';
+                    timeText = `Starts: ${application.transferStart}`;
+                } else if (application.status === 'active') {
+                    statusClass = daysRemaining < 30 ? 'status-warning' : 'status-success';
+                    statusText = 'Currently Active';
+                    timeText = `${daysRemaining} days remaining`;
+                } else {
+                    statusClass = 'status-danger';
+                    statusText = 'Expired';
+                    timeText = `Ended: ${application.transferEnd}`;
+                }
+
+                const ownershipTypeText = {
+                    'full_temporary': 'Full Temporary Ownership',
+                    'shared_temporary': 'Shared Temporary Ownership',
+                    'guest_access': 'Extended Guest Access',
+                    'sublease': 'Authorized Sublease'
+                };
+                
+                const applicationCard = `
+                    <div class="tenant-card">
+                        <div class="tenant-info">
+                            <div class="tenant-header">
+                                <h4>${application.firstName} ${application.lastName}</h4>
+                                <span class="application-status ${statusClass}">${statusText}</span>
+                            </div>
+                            <div class="application-title">
+                                <strong>${application.applicationTitle}</strong>
+                            </div>
+                            <div class="tenant-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span>${application.phone}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>${application.email}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-file-contract"></i>
+                                    <span>${ownershipTypeText[application.ownershipType]}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>Transfer: ${application.transferStart} to ${application.transferEnd}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span class="${statusClass}">${timeText}</span>
+                                </div>
+                                ${application.monthlyCompensation > 0 ? `<div class="detail-item"><i class="fas fa-peso-sign"></i><span>₱${application.monthlyCompensation.toLocaleString()}/month</span></div>` : ''}
+                                <div class="detail-item">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>${application.transferReason}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tenant-actions">
+                            <button class="btn btn-sm btn-outline" onclick="viewApplicationDetails(${application.id})" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            ${application.status === 'pending' ? `<button class="btn btn-sm btn-outline" onclick="editApplication(${application.id})" title="Edit Application"><i class="fas fa-edit"></i></button>` : ''}
+                            ${application.status === 'pending' ? `<button class="btn btn-sm btn-danger" onclick="cancelApplication(${application.id})" title="Cancel Application"><i class="fas fa-trash"></i></button>` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                tenantList.innerHTML += applicationCard;
+            });
+
+            if (filteredApplications.length === 0) {
+                tenantList.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--gray-500);">No applications found for the selected filter.</div>';
+            }
         }
 
         // Utility Functions

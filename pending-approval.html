@@ -8,124 +8,291 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            background: linear-gradient(135deg, #fef2f2 0%, #f0fdfa 20%, #fef3c7 40%, #f0f9ff 60%, #faf5ff 80%, #fef2f2 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: var(--space-lg);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(185, 28, 28, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(20, 184, 166, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(245, 158, 11, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
         }
         
         .approval-container {
-            max-width: 600px;
+            max-width: 1400px;
             width: 100%;
-            background: var(--white);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-xl);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.5);
             overflow: hidden;
+            transform: translateY(0);
+            animation: slideInUp 0.8s ease-out;
+            display: grid;
+            grid-template-rows: auto 1fr;
+            min-height: 85vh;
+        }
+
+        @keyframes slideInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .approval-header {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: var(--white);
             text-align: center;
-            padding: var(--space-2xl);
+            padding: var(--space-xl) var(--space-2xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .approval-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='30'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            animation: floatPattern 20s ease-in-out infinite;
+        }
+
+        @keyframes floatPattern {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
         
         .approval-header .logo {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: var(--space-sm);
-            margin-bottom: var(--space-lg);
+            gap: var(--space-md);
+            position: relative;
+            z-index: 2;
         }
         
         .approval-header .logo-icon {
             width: 48px;
             height: 48px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .approval-header .logo-icon:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.2);
         }
         
         .approval-header .logo-icon img {
             width: 32px;
             height: 32px;
             object-fit: contain;
+            filter: brightness(0) invert(1);
         }
         
         .approval-header h1 {
             margin: 0;
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 1.875rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 2;
         }
         
         .approval-content {
             padding: var(--space-2xl);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-2xl);
+            align-items: start;
+        }
+
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xl);
+        }
+
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xl);
+        }
+        
+        .status-section {
             text-align: center;
+            padding: var(--space-xl);
+            background: linear-gradient(135deg, rgba(249, 250, 251, 0.8) 0%, rgba(255, 255, 255, 0.9) 100%);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
         }
         
         .status-icon {
             width: 80px;
             height: 80px;
             margin: 0 auto var(--space-lg);
-            background: var(--warning);
+            background: linear-gradient(135deg, var(--warning) 0%, #f97316 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--white);
             font-size: 2rem;
-            animation: pulse 2s infinite;
+            animation: pulseGlow 3s ease-in-out infinite;
+            box-shadow: 
+                0 10px 25px rgba(245, 158, 11, 0.3),
+                0 0 0 0 rgba(245, 158, 11, 0.4);
+            position: relative;
+        }
+
+        .status-icon::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(135deg, var(--warning), #f97316);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.3;
+            animation: pulseGlow 3s ease-in-out infinite 0.5s;
         }
         
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        @keyframes pulseGlow {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 
+                    0 10px 25px rgba(245, 158, 11, 0.3),
+                    0 0 0 0 rgba(245, 158, 11, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 
+                    0 15px 30px rgba(245, 158, 11, 0.4),
+                    0 0 0 15px rgba(245, 158, 11, 0.1);
+            }
         }
         
-        .approval-content h2 {
+        .status-section h2 {
             color: var(--gray-900);
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 700;
             margin-bottom: var(--space-md);
+            background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-700) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
-        .approval-content p {
+        .status-section p {
             color: var(--gray-600);
             font-size: 1rem;
             line-height: 1.6;
-            margin-bottom: var(--space-lg);
+            margin: 0;
         }
         
         .user-info {
-            background: var(--gray-50);
-            border-radius: var(--radius-lg);
-            padding: var(--space-lg);
-            margin-bottom: var(--space-xl);
-            border: 1px solid var(--gray-200);
+            background: linear-gradient(135deg, rgba(249, 250, 251, 0.8) 0%, rgba(255, 255, 255, 0.9) 100%);
+            border-radius: 24px;
+            padding: var(--space-xl);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .user-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
         }
         
         .user-info h3 {
             color: var(--gray-900);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+
+        .user-info h3::before {
+            content: '\f007';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--secondary);
             font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: var(--space-md);
         }
         
         .info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: var(--space-md);
-            text-align: left;
+            gap: var(--space-lg);
         }
         
         .info-item {
             display: flex;
             flex-direction: column;
+            padding: var(--space-md);
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .info-item:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateY(-1px);
         }
         
         .info-label {
@@ -140,64 +307,131 @@
         .info-value {
             color: var(--gray-900);
             font-size: 0.875rem;
-            font-weight: 500;
+            font-weight: 600;
         }
         
         .timeline {
-            text-align: left;
-            margin-bottom: var(--space-xl);
+            background: linear-gradient(135deg, rgba(249, 250, 251, 0.8) 0%, rgba(255, 255, 255, 0.9) 100%);
+            border-radius: 24px;
+            padding: var(--space-xl);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            height: fit-content;
         }
         
         .timeline h3 {
             color: var(--gray-900);
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: var(--space-md);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: var(--space-xl);
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+
+        .timeline h3::before {
+            content: '\f0ae';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--secondary);
+            font-size: 1rem;
         }
         
         .timeline-item {
             display: flex;
-            align-items: center;
-            margin-bottom: var(--space-md);
+            align-items: flex-start;
+            margin-bottom: var(--space-xl);
             position: relative;
+            padding-left: var(--space-sm);
         }
         
         .timeline-item:last-child {
             margin-bottom: 0;
         }
+
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 19px;
+            top: 48px;
+            bottom: -24px;
+            width: 2px;
+            background: linear-gradient(to bottom, 
+                var(--secondary) 0%, 
+                rgba(20, 184, 166, 0.3) 100%);
+            border-radius: 1px;
+        }
+
+        .timeline-item.completed:not(:last-child)::after {
+            background: linear-gradient(to bottom, 
+                var(--secondary) 0%, 
+                var(--secondary) 100%);
+        }
+
+        .timeline-item.current:not(:last-child)::after {
+            background: linear-gradient(to bottom, 
+                var(--warning) 0%, 
+                rgba(245, 158, 11, 0.3) 100%);
+        }
         
         .timeline-icon {
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--white);
-            font-size: 0.875rem;
-            margin-right: var(--space-md);
+            font-size: 1rem;
+            margin-right: var(--space-lg);
             flex-shrink: 0;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
         }
         
         .timeline-icon.completed {
-            background: var(--secondary);
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
         }
         
         .timeline-icon.current {
-            background: var(--warning);
-            animation: pulse 2s infinite;
+            background: linear-gradient(135deg, var(--warning) 0%, #f97316 100%);
+            animation: currentPulse 2s ease-in-out infinite;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        @keyframes currentPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 6px 20px rgba(245, 158, 11, 0.6);
+            }
         }
         
         .timeline-icon.pending {
-            background: var(--gray-300);
+            background: linear-gradient(135deg, var(--gray-300) 0%, var(--gray-400) 100%);
             color: var(--gray-600);
+            box-shadow: 0 4px 12px rgba(156, 163, 175, 0.2);
+        }
+        
+        .timeline-content {
+            flex: 1;
+            padding-top: var(--space-xs);
         }
         
         .timeline-content h4 {
             color: var(--gray-900);
             font-size: 0.875rem;
-            font-weight: 600;
+            font-weight: 700;
             margin: 0 0 var(--space-xs) 0;
         }
         
@@ -205,94 +439,285 @@
             color: var(--gray-600);
             font-size: 0.75rem;
             margin: 0;
-            line-height: 1.4;
+            line-height: 1.5;
+        }
+
+        .actions-contact-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xl);
+            grid-column: 1 / -1;
+            margin-top: var(--space-lg);
         }
         
         .action-buttons {
-            display: grid;
+            display: flex;
+            flex-direction: column;
             gap: var(--space-md);
+            background: linear-gradient(135deg, rgba(249, 250, 251, 0.8) 0%, rgba(255, 255, 255, 0.9) 100%);
+            border-radius: 24px;
+            padding: var(--space-xl);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
         }
-        
-        .btn-refresh {
-            background: var(--primary);
-            color: var(--white);
-            border: none;
-            padding: var(--space-md) var(--space-lg);
-            border-radius: var(--radius-md);
-            font-size: 0.875rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
+
+        .action-buttons h4 {
+            color: var(--gray-900);
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: var(--space-md);
+            text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: var(--space-xs);
+            gap: var(--space-sm);
+        }
+
+        .action-buttons h4::before {
+            content: '\f0e7';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+        
+        .btn-refresh {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            border: none;
+            padding: var(--space-lg) var(--space-xl);
+            border-radius: 16px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            box-shadow: 
+                0 8px 20px rgba(185, 28, 28, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-refresh::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn-refresh:hover::before {
+            left: 100%;
         }
         
         .btn-refresh:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #7f1d1d 100%);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 25px rgba(185, 28, 28, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-refresh:active {
+            transform: translateY(0);
         }
         
         .btn-logout {
-            background: var(--white);
+            background: rgba(255, 255, 255, 0.8);
             color: var(--gray-700);
-            border: 1px solid var(--gray-300);
-            padding: var(--space-sm) var(--space-lg);
-            border-radius: var(--radius-md);
+            border: 1px solid rgba(209, 213, 219, 0.8);
+            padding: var(--space-md) var(--space-xl);
+            border-radius: 16px;
             font-size: 0.875rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: var(--space-xs);
+            gap: var(--space-sm);
+            backdrop-filter: blur(10px);
         }
         
         .btn-logout:hover {
-            background: var(--gray-50);
-            border-color: var(--gray-400);
+            background: rgba(249, 250, 251, 0.9);
+            border-color: rgba(156, 163, 175, 0.8);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         
         .contact-info {
-            background: var(--gray-50);
-            border-radius: var(--radius-lg);
-            padding: var(--space-lg);
-            border: 1px solid var(--gray-200);
-            margin-top: var(--space-lg);
+            background: linear-gradient(135deg, rgba(239, 246, 255, 0.8) 0%, rgba(255, 255, 255, 0.9) 100%);
+            border-radius: 24px;
+            padding: var(--space-xl);
+            border: 1px solid rgba(147, 197, 253, 0.3);
+            box-shadow: 
+                0 10px 25px rgba(59, 130, 246, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
         }
         
         .contact-info h4 {
             color: var(--gray-900);
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: var(--space-sm);
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: var(--space-md);
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+
+        .contact-info h4::before {
+            content: '\f059';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--info);
+            font-size: 1rem;
         }
         
         .contact-info p {
             color: var(--gray-600);
-            font-size: 0.75rem;
-            margin-bottom: var(--space-sm);
+            font-size: 0.875rem;
+            margin-bottom: var(--space-md);
             text-align: center;
+            line-height: 1.6;
+        }
+
+        .contact-links {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
         }
         
         .contact-link {
             color: var(--primary);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            padding: var(--space-md);
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.2s ease;
         }
         
         .contact-link:hover {
             color: var(--primary-dark);
-            text-decoration: underline;
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(185, 28, 28, 0.15);
+        }
+
+        .contact-link i {
+            font-size: 0.875rem;
         }
         
-        @media (max-width: 640px) {
+        @media (max-width: 1024px) {
+            .approval-content {
+                grid-template-columns: 1fr;
+                gap: var(--space-xl);
+            }
+
+            .actions-contact-section {
+                grid-template-columns: 1fr;
+                grid-column: 1;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .approval-container {
+                max-width: 100%;
+                margin: var(--space-md);
+                border-radius: 24px;
+                min-height: auto;
+            }
+
+            .approval-header {
+                padding: var(--space-lg);
+            }
+
+            .approval-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .approval-content {
+                padding: var(--space-lg);
+                grid-template-columns: 1fr;
+            }
+
+            .status-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 1.75rem;
+            }
+
+            .status-section h2 {
+                font-size: 1.5rem;
+            }
+
             .info-grid {
                 grid-template-columns: 1fr;
+                gap: var(--space-md);
+            }
+
+            .actions-contact-section {
+                grid-template-columns: 1fr;
+                gap: var(--space-lg);
+            }
+
+            .contact-links {
+                gap: var(--space-sm);
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: var(--space-md);
+            }
+
+            .approval-container {
+                margin: 0;
+                border-radius: 20px;
+            }
+
+            .approval-header {
+                padding: var(--space-md);
+            }
+
+            .approval-content {
+                padding: var(--space-md);
+            }
+
+            .user-info, .timeline, .action-buttons, .contact-info {
+                padding: var(--space-lg);
+            }
+
+            .timeline-content h4 {
+                font-size: 0.8rem;
+            }
+
+            .timeline-content p {
+                font-size: 0.7rem;
             }
         }
         
@@ -314,93 +739,107 @@
         </div>
         
         <div class="approval-content">
-            <div class="status-icon">
-                <i class="fas fa-clock"></i>
-            </div>
-            
-            <h2>Account Pending Approval</h2>
-            <p>Thank you for registering with MEMBRO! Your account has been created and is currently pending admin approval. You'll receive an email notification once your account has been approved and activated.</p>
-            
-            <div class="user-info">
-                <h3>Registration Details</h3>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <span class="info-label">Full Name</span>
-                        <span class="info-value">Heriberto Nathan</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Email</span>
-                        <span class="info-value">heriberto.nathan@email.com</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Unit Number</span>
-                        <span class="info-value">1205</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Registration Date</span>
-                        <span class="info-value">March 10, 2024</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="timeline">
-                <h3>Application Status</h3>
-                <div class="timeline-item">
-                    <div class="timeline-icon completed">
-                        <i class="fas fa-check"></i>
-                    </div>
-                    <div class="timeline-content">
-                        <h4>Account Created</h4>
-                        <p>Your registration has been successfully submitted</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-icon completed">
-                        <i class="fas fa-check"></i>
-                    </div>
-                    <div class="timeline-content">
-                        <h4>Email Verified</h4>
-                        <p>Your email address has been confirmed</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-icon current">
+            <div class="left-section">
+                <div class="status-section">
+                    <div class="status-icon">
                         <i class="fas fa-clock"></i>
                     </div>
-                    <div class="timeline-content">
-                        <h4>Admin Review</h4>
-                        <p>Your application is currently under review by our admin team</p>
-                    </div>
+                    <h2>Account Pending Approval</h2>
+                    <p>Thank you for registering with MEMBRO! Your account has been created and is currently under review by our admin team. You'll receive an email notification once your account has been approved and activated.</p>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-icon pending">
-                        <i class="fas fa-user-check"></i>
-                    </div>
-                    <div class="timeline-content">
-                        <h4>Account Activation</h4>
-                        <p>You'll receive access to your portal once approved</p>
+                
+                <div class="user-info">
+                    <h3>Registration Details</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Full Name</span>
+                            <span class="info-value">Heriberto Nathan</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email</span>
+                            <span class="info-value">heriberto.nathan@email.com</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Unit Number</span>
+                            <span class="info-value">1205</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Registration Date</span>
+                            <span class="info-value">March 10, 2024</span>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="action-buttons">
-                <button class="btn-refresh" onclick="checkStatus()">
-                    <i class="fas fa-sync-alt"></i>
-                    Refresh Status
-                </button>
-                <a href="login.html" class="btn-logout">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Return to Login
-                </a>
+
+            <div class="right-section">
+                <div class="timeline">
+                    <h3>Application Progress</h3>
+                    <div class="timeline-item completed">
+                        <div class="timeline-icon completed">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Account Created</h4>
+                            <p>Your registration has been successfully submitted and processed</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item completed">
+                        <div class="timeline-icon completed">
+                            <i class="fas fa-envelope-check"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Email Verified</h4>
+                            <p>Your email address has been confirmed and validated</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item current">
+                        <div class="timeline-icon current">
+                            <i class="fas fa-user-clock"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Admin Review</h4>
+                            <p>Your application is currently being reviewed by our admin team. This typically takes 1-2 business days.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-icon pending">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Account Activation</h4>
+                            <p>You'll receive full access to your MEMBRO portal once approved</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
-            <div class="contact-info">
-                <h4>Need Help?</h4>
-                <p>If you have questions about your application status, please contact our support team:</p>
-                <p>
-                    Email: <a href="mailto:support@membro.com" class="contact-link">support@membro.com</a><br>
-                    Phone: <a href="tel:555-123-4567" class="contact-link">(555) 123-4567</a>
-                </p>
+
+            <div class="actions-contact-section">
+                <div class="action-buttons">
+                    <h4>Quick Actions</h4>
+                    <button class="btn-refresh" onclick="checkStatus()">
+                        <i class="fas fa-sync-alt"></i>
+                        Check Status
+                    </button>
+                    <a href="login.html" class="btn-logout">
+                        <i class="fas fa-arrow-left"></i>
+                        Return to Login
+                    </a>
+                </div>
+                
+                <div class="contact-info">
+                    <h4>Need Assistance?</h4>
+                    <p>If you have questions about your application status or need immediate assistance, please contact our support team:</p>
+                    <div class="contact-links">
+                        <a href="mailto:support@membro.com" class="contact-link">
+                            <i class="fas fa-envelope"></i>
+                            support@membro.com
+                        </a>
+                        <a href="tel:555-123-4567" class="contact-link">
+                            <i class="fas fa-phone"></i>
+                            (555) 123-4567
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -409,61 +848,87 @@
         function checkStatus() {
             const button = document.querySelector('.btn-refresh');
             const icon = button.querySelector('i');
+            const originalText = button.innerHTML;
             
             // Show loading state
             button.disabled = true;
+            button.style.background = 'linear-gradient(135deg, #9ca3af 0%, #6b7280 100%)';
             icon.style.animation = 'spin 1s linear infinite';
-            button.textContent = '';
-            button.appendChild(icon);
-            button.appendChild(document.createTextNode(' Checking...'));
+            button.innerHTML = '<i class="fas fa-sync-alt" style="animation: spin 1s linear infinite;"></i> Checking Status...';
             
             // Simulate API call
             setTimeout(() => {
                 // Reset button
                 button.disabled = false;
+                button.style.background = '';
                 icon.style.animation = '';
-                button.textContent = '';
-                button.appendChild(icon);
-                button.appendChild(document.createTextNode(' Refresh Status'));
+                button.innerHTML = originalText;
                 
-                // Show message
-                showToast('Status checked. Your account is still pending approval.');
-            }, 2000);
+                // Show success message
+                showToast('Status updated! Your account is still under review. We\'ll notify you once approved.', 'info');
+            }, 2500);
         }
         
-        function showToast(message) {
+        function showToast(message, type = 'info') {
             const toast = document.createElement('div');
+            const iconClass = type === 'success' ? 'fa-check-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle';
+            const bgColor = type === 'success' ? 'var(--secondary)' : type === 'warning' ? 'var(--warning)' : 'var(--info)';
+            
             toast.style.cssText = `
                 position: fixed;
-                bottom: 20px;
+                bottom: 30px;
                 left: 50%;
-                transform: translateX(-50%);
-                background: var(--info);
+                transform: translateX(-50%) translateY(100px);
+                background: ${bgColor};
                 color: white;
-                padding: 12px 24px;
-                border-radius: 8px;
+                padding: 16px 24px;
+                border-radius: 16px;
                 z-index: 10000;
                 opacity: 0;
-                transition: opacity 0.3s ease;
-                font-weight: 500;
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                font-weight: 600;
                 max-width: 400px;
                 text-align: center;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                backdrop-filter: blur(10px);
+                display: flex;
+                align-items: center;
+                gap: 12px;
             `;
-            toast.textContent = message;
             
+            toast.innerHTML = `<i class="fas ${iconClass}"></i>${message}`;
             document.body.appendChild(toast);
             
+            // Animate in
             setTimeout(() => {
                 toast.style.opacity = '1';
+                toast.style.transform = 'translateX(-50%) translateY(0)';
             }, 100);
             
+            // Animate out
             setTimeout(() => {
                 toast.style.opacity = '0';
+                toast.style.transform = 'translateX(-50%) translateY(-50px)';
                 setTimeout(() => {
                     document.body.removeChild(toast);
-                }, 300);
-            }, 4000);
+                }, 400);
+            }, 4500);
         }
+
+        // Add subtle entrance animations for timeline items
+        document.addEventListener('DOMContentLoaded', function() {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-20px)';
+                item.style.transition = 'all 0.6s ease';
+                
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, 800 + (index * 150));
+            });
+        });
     </script>
 </body>
 </html> 
