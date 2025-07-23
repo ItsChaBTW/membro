@@ -343,6 +343,10 @@
             <div id="visitorsContent" class="tab-content active">
                 <!-- Quick Actions -->
                 <div class="quick-actions">
+                    <button class="btn btn-primary" onclick="openExpectedVisitorModal()">
+                        <i class="fas fa-user-plus"></i>
+                        Add Expected Visitor
+                    </button>
                     <button class="btn btn-outline" onclick="exportVisitorLog()">
                         <i class="fas fa-download"></i>
                         Export Log
@@ -580,14 +584,14 @@
                     </div>
                     
                     <div class="form-row">
-                        <div class="form-group">
-                            <label for="tenantPhone">Phone Number</label>
-                            <input type="tel" id="tenantPhone" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="tenantEmail">Email Address</label>
-                            <input type="email" id="tenantEmail" class="form-control" required>
-                        </div>
+                    <div class="form-group">
+                        <label for="tenantPhone">Phone Number</label>
+                        <input type="tel" id="tenantPhone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tenantEmail">Email Address</label>
+                        <input type="email" id="tenantEmail" class="form-control" required>
+                    </div>
                     </div>
                     
                     <div class="form-group">
@@ -601,7 +605,7 @@
                         </select>
                         <small id="ownershipDescription" class="form-text" style="color: var(--gray-600); margin-top: 0.5rem;"></small>
                     </div>
-                    
+                        
                     <div class="form-row">
                         <div class="form-group">
                             <label for="transferStart">Transfer Start Date</label>
@@ -614,15 +618,15 @@
                     </div>
                     
                     <div class="form-row">
-                        <div class="form-group">
+                    <div class="form-group">
                             <label for="monthlyCompensation">Monthly Compensation (₱)</label>
                             <input type="number" id="monthlyCompensation" class="form-control" min="0" step="100" placeholder="0">
                             <small class="form-text" style="color: var(--gray-600);">Leave blank or 0 if no compensation</small>
-                        </div>
-                        <div class="form-group">
+                    </div>
+                    <div class="form-group">
                             <label for="securityDeposit">Security Deposit (₱)</label>
                             <input type="number" id="securityDeposit" class="form-control" min="0" step="100" placeholder="0">
-                        </div>
+                    </div>
                     </div>
                     
                     <div class="form-group">
@@ -651,7 +655,80 @@
         </div>
     </div>
 
+    <!-- Add Expected Visitor Modal -->
+    <div class="modal" id="expectedVisitorModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Add Expected Visitor</div>
+                <button class="close-btn" onclick="closeModal('expectedVisitorModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="expectedVisitorForm" onsubmit="addExpectedVisitor(event)">
+                    <div class="form-group">
+                        <label for="visitorName">Visitor Name</label>
+                        <input type="text" id="visitorName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="visitorPhone">Phone Number</label>
+                        <input type="tel" id="visitorPhone" class="form-control">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="visitDate">Visit Date</label>
+                            <input type="date" id="visitDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="visitTime">Visit Time</label>
+                            <input type="time" id="visitTime" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="visitPurpose">Purpose</label>
+                        <select id="visitPurpose" class="form-control" required>
+                            <option value="personal">Personal</option>
+                            <option value="delivery">Delivery</option>
+                            <option value="service">Service</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="visitNotes">Notes</label>
+                        <textarea id="visitNotes" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('expectedVisitorModal')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Visitor</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add this after the expectedVisitorModal -->
+    <div class="modal" id="visitorQRModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Visitor QR Code</div>
+                <button class="close-btn" onclick="closeModal('visitorQRModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+                <div id="visitorQRCodeDisplay"></div>
+                <div id="qrVisitorDetailsDisplay" style="margin-top:1rem; color:var(--gray-600);"></div>
+                <button id="downloadQRBtn2" class="btn btn-primary" style="margin-top:1rem;" onclick="downloadVisitorQR('visitorQRCodeDisplay')">
+                    <i class="fas fa-download"></i> Download QR
+                </button>
+                <div style="margin-top:1.5rem;">
+                    <span style="display:block; margin-bottom:0.5rem; color:var(--gray-500); font-size:0.95em;">Share QR via:</span>
+                    <button class="btn btn-outline" onclick="shareVisitorQR('gmail', 'visitorQRCodeDisplay')" title="Send via Gmail"><i class="fas fa-envelope"></i> Gmail</button>
+                    <button class="btn btn-outline" onclick="shareVisitorQR('whatsapp', 'visitorQRCodeDisplay')" title="Share on WhatsApp"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                    <button class="btn btn-outline" onclick="shareVisitorQR('messenger', 'visitorQRCodeDisplay')" title="Share on Messenger"><i class="fab fa-facebook-messenger"></i> Messenger</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         // Sample data
         let visitors = [
@@ -1236,16 +1313,21 @@
             }
         }
 
+        // Enhanced closeModal to work for all modals
         function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-            
-            // Reset forms when closing
+            var modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'none';
+            }
+            // Reset forms if needed
             if (modalId === 'addFamilyModal') {
                 document.getElementById('familyForm').reset();
                 document.getElementById('familyForm').removeAttribute('data-edit-id');
             } else if (modalId === 'tenantRequestModal') {
                 document.getElementById('tenantRequestForm').reset();
                 document.getElementById('tenantRequestForm').removeAttribute('data-edit-id');
+            } else if (modalId === 'expectedVisitorModal') {
+                document.getElementById('expectedVisitorForm').reset();
             }
         }
 
@@ -1669,10 +1751,99 @@ ${application.additionalTerms ? `Additional Terms: ${application.additionalTerms
             });
         });
 
-        // Close modals when clicking outside
+        // Only close modal when clicking outside modal-content
         window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = 'none';
+            var modals = document.querySelectorAll('.modal');
+            modals.forEach(function(modal) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        };
+
+        // Replace addExpectedVisitor to show QR in a new modal
+        function addExpectedVisitor(event) {
+            event.preventDefault();
+            const name = document.getElementById('visitorName').value;
+            const phone = document.getElementById('visitorPhone').value;
+            const date = document.getElementById('visitDate').value;
+            const time = document.getElementById('visitTime').value;
+            const purpose = document.getElementById('visitPurpose').value;
+            const notes = document.getElementById('visitNotes').value;
+            
+            // Add to visitors array as expected
+            visitors.push({
+                id: Math.max(...visitors.map(v => v.id), 0) + 1,
+                name,
+                phone,
+                email: '',
+                date,
+                time,
+                purpose,
+                status: 'expected',
+                notes
+            });
+            loadVisitors();
+            // Generate QR code
+            const qrData = JSON.stringify({name, phone, date, time, purpose, notes});
+            document.getElementById('expectedVisitorModal').style.display = 'none';
+            // Show QR in new modal
+            document.getElementById('visitorQRCodeDisplay').innerHTML = '';
+            new QRCode(document.getElementById('visitorQRCodeDisplay'), {
+                text: qrData,
+                width: 180,
+                height: 180
+            });
+            document.getElementById('qrVisitorDetailsDisplay').innerText = `${name} | ${date} ${time}`;
+            document.getElementById('visitorQRModal').style.display = 'flex';
+        }
+
+        function openExpectedVisitorModal() {
+            console.log('openExpectedVisitorModal called'); // Debug log
+            var modal = document.getElementById('expectedVisitorModal');
+            if (modal) {
+                document.getElementById('expectedVisitorForm').reset();
+                modal.style.display = 'flex';
+            } else {
+                alert('Modal with id expectedVisitorModal not found!');
+            }
+        }
+
+        // Download QR code as PNG (for both modals)
+        function downloadVisitorQR(qrDivId = 'visitorQRCode') {
+            const qrCanvas = document.querySelector(`#${qrDivId} canvas`);
+            if (qrCanvas) {
+                const link = document.createElement('a');
+                link.href = qrCanvas.toDataURL('image/png');
+                link.download = 'visitor-qr.png';
+                link.click();
+            } else {
+                alert('QR code not found. Please generate a visitor QR first.');
+            }
+        }
+
+        // Share QR (for both modals)
+        function shareVisitorQR(method, qrDivId = 'visitorQRCode') {
+            const qrCanvas = document.querySelector(`#${qrDivId} canvas`);
+            const details = qrDivId === 'visitorQRCodeDisplay' ? document.getElementById('qrVisitorDetailsDisplay').innerText : document.getElementById('qrVisitorDetails').innerText;
+            let qrDataUrl = '';
+            if (qrCanvas) {
+                qrDataUrl = qrCanvas.toDataURL('image/png');
+            } else {
+                alert('QR code not found. Please generate a visitor QR first.');
+                return;
+            }
+            const subject = encodeURIComponent('Your Visitor QR Code');
+            const body = encodeURIComponent(`Here is your visitor QR code for access.\n${details}`);
+            if (method === 'gmail') {
+                const mailto = `mailto:?subject=${subject}&body=${body}%0A%0A(If you cannot see the QR image, download it from the link below:)%0A${qrDataUrl}`;
+                window.open(mailto, '_blank');
+            } else if (method === 'whatsapp') {
+                const text = encodeURIComponent(`Visitor QR for access:\n${details}\n(Download QR image: ${qrDataUrl})`);
+                window.open(`https://wa.me/?text=${text}`, '_blank');
+            } else if (method === 'messenger') {
+                const text = encodeURIComponent(`Visitor QR for access:\n${details}\n(Download QR image: ${qrDataUrl})`);
+                window.open(`https://www.facebook.com/dialog/send?app_id=123456789&link=${qrDataUrl}&redirect_uri=${window.location.href}`, '_blank');
             }
         }
     </script>
