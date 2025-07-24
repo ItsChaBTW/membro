@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Updates - MEMBRO Security</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .emergency-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .emergency-card {
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .emergency-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+        }
+        .emergency-card.warning {
+            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+        }
+        .emergency-card.info {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        }
+        .emergency-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .alert-form {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+        .alert-preview {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .alert-preview.warning {
+            background: #fffbeb;
+            border-color: #fed7aa;
+        }
+        .alert-preview.info {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+        }
+        .active-alerts {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+        .alert-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-left: 4px solid var(--danger);
+            background: #fef2f2;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .alert-item.warning {
+            border-left-color: var(--warning);
+            background: #fffbeb;
+        }
+        .alert-item.info {
+            border-left-color: #2563eb;
+            background: #eff6ff;
+        }
+        .alert-content {
+            flex: 1;
+        }
+        .alert-title {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        .alert-time {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        .broadcast-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .contact-method:hover {
+            background: #f3f4f6;
+        }
+        .contact-method.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"><img src="../logo.png" alt="MEMBRO Logo"></div>
+                    <div class="logo-text">
+                        <h1>MEMBRO</h1>
+                        <span>Security Portal</span>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="user-details">
+                        <span class="user-name">Officer Rodriguez</span>
+                        <span class="user-unit">Security Team</span>
+                    </div>
+                    <div class="user-avatar">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="visitor-log.html" class="nav-link">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Visitor Log</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="entry-exit.html" class="nav-link">
+                        <i class="fas fa-door-open"></i>
+                        <span>Entry/Exit</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="access-pass.html" class="nav-link">
+                        <i class="fas fa-id-card"></i>
+                        <span>Access Pass</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="qr-rfid.html" class="nav-link">
+                        <i class="fas fa-qrcode"></i>
+                        <span>QR/RFID</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="gatekeeper.html" class="nav-link">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Gatekeeper</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="guard-dashboard.html" class="nav-link">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Guard Panel</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="incident-reports.html" class="nav-link">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Incidents</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="report-categories.html" class="nav-link">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Categories</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="ticket-status.html" class="nav-link">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span>Tickets</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="emergency-updates.html" class="nav-link active">
+                        <i class="fas fa-bell"></i>
+                        <span>Emergency</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h2>Emergency Updates & Notifications</h2>
+                <p>Send real-time alerts to residents and staff</p>
+                <a href="index.html" class="btn btn-outline">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+
+            <div class="emergency-actions">
+                <div class="emergency-card" onclick="quickAlert('emergency')">
+                    <div class="emergency-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>Emergency Alert</h3>
+                    <p>Critical emergency requiring immediate action</p>
+                </div>
+                <div class="emergency-card warning" onclick="quickAlert('warning')">
+                    <div class="emergency-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <h3>Warning Alert</h3>
+                    <p>Important safety warning for residents</p>
+                </div>
+                <div class="emergency-card info" onclick="quickAlert('info')">
+                    <div class="emergency-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <h3>General Notice</h3>
+                    <p>General information or updates</p>
+                </div>
+            </div>
+
+            <div class="broadcast-stats">
+                <div class="stat-card">
+                    <div class="stat-number">245</div>
+                    <div class="stat-label">Total Residents</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">38</div>
+                    <div class="stat-label">Staff Members</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Active Alerts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">Delivery Rate</div>
+                </div>
+            </div>
+
+            <div class="alert-form" id="alertForm" style="display: none;">
+                <h3 id="alertFormTitle">Create Emergency Alert</h3>
+                <form onsubmit="sendAlert(event)">
+                    <div class="form-group">
+                        <label for="alertTitle">Alert Title</label>
+                        <input type="text" class="form-control" id="alertTitle" required placeholder="Brief, descriptive title">
+                    </div>
+                    <div class="form-group">
+                        <label for="alertMessage">Alert Message</label>
+                        <textarea class="form-control" id="alertMessage" rows="4" required placeholder="Detailed message with instructions..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Methods</label>
+                        <div class="contact-methods">
+                            <div class="contact-method selected" onclick="toggleContactMethod(this, 'app')">
+                                <i class="fas fa-mobile-alt"></i>
+                                <span>App Push</span>
+                            </div>
+                            <div class="contact-method selected" onclick="toggleContactMethod(this, 'sms')">
+                                <i class="fas fa-sms"></i>
+                                <span>SMS</span>
+                            </div>
+                            <div class="contact-method" onclick="toggleContactMethod(this, 'email')">
+                                <i class="fas fa-envelope"></i>
+                                <span>Email</span>
+                            </div>
+                            <div class="contact-method" onclick="toggleContactMethod(this, 'speakers')">
+                                <i class="fas fa-volume-up"></i>
+                                <span>PA System</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="alertTargets">Send To</label>
+                        <select class="form-control" id="alertTargets" required>
+                            <option value="all">All Residents & Staff</option>
+                            <option value="residents">Residents Only</option>
+                            <option value="staff">Staff Only</option>
+                            <option value="building-a">Building A Only</option>
+                            <option value="building-b">Building B Only</option>
+                            <option value="custom">Custom Selection</option>
+                        </select>
+                    </div>
+                    <div id="alertPreview" class="alert-preview">
+                        <h4>Preview:</h4>
+                        <div class="alert-title" id="previewTitle">Alert Title</div>
+                        <div id="previewMessage">Alert message will appear here...</div>
+                        <div class="alert-time">Sent: <span id="previewTime"></span></div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="cancelAlert()">Cancel</button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-broadcast-tower"></i> Send Alert
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="active-alerts">
+                <h3>Active Alerts</h3>
+                <div id="activeAlertsList">
+                    <!-- Active alerts will be populated here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let currentAlertType = '';
+        let selectedContactMethods = ['app', 'sms'];
+        let activeAlerts = [
+            {
+                id: 'ALERT-001',
+                type: 'emergency',
+                title: 'Fire Alarm - Building A',
+                message: 'Fire alarm activated in Building A. Please evacuate immediately using designated exits. Do not use elevators.',
+                time: '2024-03-20 15:30',
+                status: 'active',
+                contactMethods: ['app', 'sms', 'speakers'],
+                sentTo: 'Building A Only'
+            },
+            {
+                id: 'ALERT-002',
+                type: 'warning',
+                title: 'Water Service Interruption',
+                message: 'Water service will be interrupted from 2:00 PM to 6:00 PM today for emergency repairs. Please store water accordingly.',
+                time: '2024-03-20 13:00',
+                status: 'active',
+                contactMethods: ['app', 'email'],
+                sentTo: 'All Residents'
+            },
+            {
+                id: 'ALERT-003',
+                type: 'info',
+                title: 'Security System Maintenance',
+                message: 'Scheduled maintenance on access control systems tomorrow 6:00 AM - 8:00 AM. Temporary access procedures will be in place.',
+                time: '2024-03-19 18:00',
+                status: 'active',
+                contactMethods: ['app', 'email'],
+                sentTo: 'All Residents & Staff'
+            }
+        ];
+
+        function quickAlert(type) {
+            currentAlertType = type;
+            document.getElementById('alertForm').style.display = 'block';
+            
+            const formTitle = document.getElementById('alertFormTitle');
+            const preview = document.getElementById('alertPreview');
+            
+            switch(type) {
+                case 'emergency':
+                    formTitle.textContent = 'Create Emergency Alert';
+                    preview.className = 'alert-preview';
+                    document.getElementById('alertTitle').value = 'Emergency Alert';
+                    break;
+                case 'warning':
+                    formTitle.textContent = 'Create Warning Alert';
+                    preview.className = 'alert-preview warning';
+                    document.getElementById('alertTitle').value = 'Warning Notice';
+                    break;
+                case 'info':
+                    formTitle.textContent = 'Create General Notice';
+                    preview.className = 'alert-preview info';
+                    document.getElementById('alertTitle').value = 'General Notice';
+                    break;
+            }
+            
+            updatePreview();
+            document.getElementById('alertForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function toggleContactMethod(element, method) {
+            element.classList.toggle('selected');
+            
+            if (selectedContactMethods.includes(method)) {
+                selectedContactMethods = selectedContactMethods.filter(m => m !== method);
+            } else {
+                selectedContactMethods.push(method);
+            }
+        }
+
+        function updatePreview() {
+            const title = document.getElementById('alertTitle').value || 'Alert Title';
+            const message = document.getElementById('alertMessage').value || 'Alert message will appear here...';
+            const now = new Date().toLocaleString();
+            
+            document.getElementById('previewTitle').textContent = title;
+            document.getElementById('previewMessage').textContent = message;
+            document.getElementById('previewTime').textContent = now;
+        }
+
+        function sendAlert(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('alertTitle').value;
+            const message = document.getElementById('alertMessage').value;
+            const targets = document.getElementById('alertTargets').value;
+            
+            if (selectedContactMethods.length === 0) {
+                alert('Please select at least one contact method.');
+                return;
+            }
+            
+            // Create new alert
+            const newAlert = {
+                id: 'ALERT-' + String(activeAlerts.length + 1).padStart(3, '0'),
+                type: currentAlertType,
+                title,
+                message,
+                time: new Date().toLocaleString(),
+                status: 'active',
+                contactMethods: [...selectedContactMethods],
+                sentTo: document.getElementById('alertTargets').options[document.getElementById('alertTargets').selectedIndex].text
+            };
+            
+            // Add to active alerts
+            activeAlerts.unshift(newAlert);
+            
+            // Simulate sending
+            simulateBroadcast(newAlert);
+            
+            // Reset form
+            cancelAlert();
+            loadActiveAlerts();
+        }
+
+        function simulateBroadcast(alert) {
+            // Show sending notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 10000;
+                background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+                color: white; padding: 1rem 1.5rem; border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                max-width: 300px;
+            `;
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <i class="fas fa-broadcast-tower"></i>
+                    <strong>Broadcasting Alert...</strong>
+                </div>
+                <div style="font-size: 0.875rem; opacity: 0.9;">
+                    ${alert.title}<br>
+                    Methods: ${alert.contactMethods.join(', ')}<br>
+                    Recipients: ${alert.sentTo}
+                </div>
+            `;
+            document.body.appendChild(notification);
+
+            // Update to success after 3 seconds
+            setTimeout(() => {
+                notification.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Alert sent successfully!</span>
+                    </div>
+                `;
+                notification.style.background = 'linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%)';
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }, 3000);
+        }
+
+        function cancelAlert() {
+            document.getElementById('alertForm').style.display = 'none';
+            document.getElementById('alertForm').querySelector('form').reset();
+            currentAlertType = '';
+            selectedContactMethods = ['app', 'sms'];
+            
+            // Reset contact method selections
+            document.querySelectorAll('.contact-method').forEach(method => {
+                method.classList.remove('selected');
+            });
+            document.querySelectorAll('.contact-method')[0].classList.add('selected'); // App
+            document.querySelectorAll('.contact-method')[1].classList.add('selected'); // SMS
+        }
+
+        function loadActiveAlerts() {
+            const container = document.getElementById('activeAlertsList');
+            container.innerHTML = '';
+
+            if (activeAlerts.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">No active alerts</p>';
+                return;
+            }
+
+            activeAlerts.forEach(alert => {
+                const alertElement = document.createElement('div');
+                alertElement.className = `alert-item ${alert.type}`;
+                alertElement.innerHTML = `
+                    <div class="alert-content">
+                        <div class="alert-title">${alert.title}</div>
+                        <div style="margin: 0.5rem 0; font-size: 0.875rem;">${alert.message}</div>
+                        <div class="alert-time">
+                            Sent: ${alert.time} | To: ${alert.sentTo} | 
+                            Via: ${alert.contactMethods.map(method => {
+                                const icons = {
+                                    app: '<i class="fas fa-mobile-alt"></i>',
+                                    sms: '<i class="fas fa-sms"></i>',
+                                    email: '<i class="fas fa-envelope"></i>',
+                                    speakers: '<i class="fas fa-volume-up"></i>'
+                                };
+                                return icons[method] || method;
+                            }).join(' ')}
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-sm btn-outline" onclick="resolveAlert('${alert.id}')">
+                            <i class="fas fa-check"></i> Resolve
+                        </button>
+                    </div>
+                `;
+                container.appendChild(alertElement);
+            });
+        }
+
+        function resolveAlert(id) {
+            if (confirm('Mark this alert as resolved?')) {
+                const alertIndex = activeAlerts.findIndex(alert => alert.id === id);
+                if (alertIndex !== -1) {
+                    activeAlerts.splice(alertIndex, 1);
+                    loadActiveAlerts();
+                    showNotification('Alert resolved successfully');
+                }
+            }
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 10000;
+                background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+                color: white; padding: 1rem 1.5rem; border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            `;
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-check-circle"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Real-time preview updates
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('alertTitle').addEventListener('input', updatePreview);
+            document.getElementById('alertMessage').addEventListener('input', updatePreview);
+            loadActiveAlerts();
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitor Log System - MEMBRO Security</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        .search-filters {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: end;
+        }
+        .visitor-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .table-header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr auto;
+            gap: 1rem;
+            font-weight: 600;
+        }
+        .visitor-row {
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr auto;
+            gap: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+            align-items: center;
+        }
+        .visitor-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        .status-in {
+            background: var(--secondary-light);
+            color: var(--secondary-dark);
+        }
+        .status-out {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+        .status-expected {
+            background: var(--warning);
+            color: white;
+        }
+        .qr-scanner {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .modal-body {
+            padding: 2rem;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"><img src="../logo.png" alt="MEMBRO Logo"></div>
+                    <div class="logo-text">
+                        <h1>MEMBRO</h1>
+                        <span>Security Portal</span>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="user-details">
+                        <span class="user-name">Officer Rodriguez</span>
+                        <span class="user-unit">Security Team</span>
+                    </div>
+                    <div class="user-avatar">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="visitor-log.html" class="nav-link active">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Visitor Log</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="entry-exit.html" class="nav-link">
+                        <i class="fas fa-door-open"></i>
+                        <span>Entry/Exit</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="access-pass.html" class="nav-link">
+                        <i class="fas fa-id-card"></i>
+                        <span>Access Pass</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="qr-rfid.html" class="nav-link">
+                        <i class="fas fa-qrcode"></i>
+                        <span>QR/RFID</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="gatekeeper.html" class="nav-link">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Gatekeeper</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="guard-dashboard.html" class="nav-link">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Guard Panel</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="incident-reports.html" class="nav-link">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Incidents</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="report-categories.html" class="nav-link">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Categories</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="ticket-status.html" class="nav-link">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span>Tickets</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="emergency-updates.html" class="nav-link">
+                        <i class="fas fa-bell"></i>
+                        <span>Emergency</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h2>Visitor Log System</h2>
+                <p>Track and manage all visitor entries and exits</p>
+                <a href="index.html" class="btn btn-outline">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+
+            <div class="search-filters">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search by name, unit, or phone..." id="searchInput">
+                </div>
+                <div class="form-group">
+                    <select class="form-control" id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="in">Currently In</option>
+                        <option value="out">Checked Out</option>
+                        <option value="expected">Expected</option>
+                    </select>
+                </div>
+                <button class="qr-scanner" onclick="openQRScanner()">
+                    <i class="fas fa-qrcode"></i> Scan QR
+                </button>
+            </div>
+
+            <div class="visitor-table">
+                <div class="table-header">
+                    <div>Visitor Details</div>
+                    <div>Host Unit</div>
+                    <div>Entry Time</div>
+                    <div>Exit Time</div>
+                    <div>Status</div>
+                    <div>Actions</div>
+                </div>
+                <div id="visitorLogList">
+                    <!-- Visitor entries will be populated here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- QR Scanner Modal -->
+    <div class="modal" id="qrScannerModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">QR Code Scanner</div>
+                <button class="close-btn" onclick="closeQRScanner()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="qrCamera" style="width: 100%; height: 300px; border-radius: 8px;"></div>
+                <div id="qrScanResult" style="margin-top: 1rem; display: none;">
+                    <div style="padding: 1rem; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #0ea5e9;">
+                        <strong>Scanned Data:</strong>
+                        <pre id="qrScanData" style="margin: 0.5rem 0; padding: 0.5rem; background: white; border-radius: 4px; font-size: 0.875rem;"></pre>
+                        <button class="btn btn-primary" onclick="processScannedQR()">Process Entry/Exit</button>
+                        <button class="btn btn-secondary" onclick="startQRScanner()">Scan Again</button>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 1rem;">
+                    <button class="btn btn-secondary" onclick="simulateVisitorQR()">Demo: Simulate Visitor QR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let visitorLogs = [
+            {
+                id: 1,
+                name: "Maria Santos",
+                phone: "+63-917-123-4567",
+                unit: "Unit 802",
+                entryTime: "2024-03-20 09:30",
+                exitTime: "",
+                status: "in",
+                purpose: "Personal Visit",
+                hostName: "Heriberto Nathan"
+            },
+            {
+                id: 2,
+                name: "John Delivery",
+                phone: "+63-917-765-4321",
+                unit: "Unit 505",
+                entryTime: "2024-03-20 10:15",
+                exitTime: "2024-03-20 10:45",
+                status: "out",
+                purpose: "Package Delivery",
+                hostName: "Anna Cruz"
+            },
+            {
+                id: 3,
+                name: "Dr. Roberto Martinez",
+                phone: "+63-917-888-9999",
+                unit: "Unit 802",
+                entryTime: "",
+                exitTime: "",
+                status: "expected",
+                purpose: "Medical Consultation",
+                hostName: "Heriberto Nathan"
+            }
+        ];
+
+        function loadVisitorLogs() {
+            const container = document.getElementById('visitorLogList');
+            container.innerHTML = '';
+
+            visitorLogs.forEach(visitor => {
+                const statusClass = `status-${visitor.status}`;
+                const statusText = visitor.status.charAt(0).toUpperCase() + visitor.status.slice(1);
+                
+                const row = document.createElement('div');
+                row.className = 'visitor-row';
+                row.innerHTML = `
+                    <div>
+                        <strong>${visitor.name}</strong><br>
+                        <small>${visitor.phone}</small><br>
+                        <small>${visitor.purpose}</small>
+                    </div>
+                    <div>
+                        <strong>${visitor.unit}</strong><br>
+                        <small>Host: ${visitor.hostName}</small>
+                    </div>
+                    <div>${visitor.entryTime || 'Not entered'}</div>
+                    <div>${visitor.exitTime || 'Still inside'}</div>
+                    <div><span class="visitor-status ${statusClass}">${statusText}</span></div>
+                    <div>
+                        ${visitor.status === 'in' ? 
+                            `<button class="btn btn-sm btn-secondary" onclick="checkOut(${visitor.id})">Check Out</button>` :
+                            visitor.status === 'expected' ?
+                            `<button class="btn btn-sm btn-primary" onclick="checkIn(${visitor.id})">Check In</button>` :
+                            '<span class="text-muted">Completed</span>'
+                        }
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function checkIn(id) {
+            const visitor = visitorLogs.find(v => v.id === id);
+            if (visitor) {
+                visitor.status = 'in';
+                visitor.entryTime = new Date().toISOString().replace('T', ' ').substr(0, 16);
+                loadVisitorLogs();
+            }
+        }
+
+        function checkOut(id) {
+            const visitor = visitorLogs.find(v => v.id === id);
+            if (visitor) {
+                visitor.status = 'out';
+                visitor.exitTime = new Date().toISOString().replace('T', ' ').substr(0, 16);
+                loadVisitorLogs();
+            }
+        }
+
+        var html5QrCode;
+        var currentQRData = null;
+
+        function openQRScanner() {
+            document.getElementById('qrScannerModal').style.display = 'flex';
+            // Reset previous scan results
+            document.getElementById('qrScanResult').style.display = 'none';
+            document.getElementById('qrCamera').innerHTML = '';
+            startQRScanner();
+        }
+
+        function closeQRScanner() {
+            document.getElementById('qrScannerModal').style.display = 'none';
+            if (html5QrCode) {
+                html5QrCode.stop().then(function() {
+                    html5QrCode.clear();
+                    html5QrCode = null;
+                }).catch(function(err) {
+                    console.log('Error stopping scanner:', err);
+                });
+            }
+        }
+
+        function startQRScanner() {
+            var qrCodeElement = document.getElementById("qrCamera");
+            qrCodeElement.innerHTML = '';
+            
+            html5QrCode = new Html5Qrcode("qrCamera");
+            
+            var qrCodeSuccessCallback = function(decodedText, decodedResult) {
+                console.log('QR Code decoded: ' + decodedText);
+                
+                // Stop scanning
+                html5QrCode.stop().then(function() {
+                    // Parse the QR data
+                    try {
+                        var qrData = JSON.parse(decodedText);
+                        currentQRData = qrData;
+                        displayQRScanResult(decodedText);
+                    } catch (e) {
+                        // If not JSON, treat as simple text
+                        currentQRData = { rawData: decodedText };
+                        displayQRScanResult(decodedText);
+                    }
+                }).catch(function(err) {
+                    console.log('Error stopping scanner:', err);
+                });
+            };
+
+            var config = { 
+                fps: 10, 
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0
+            };
+
+            // Start scanning
+            Html5Qrcode.getCameras().then(function(devices) {
+                if (devices && devices.length) {
+                    var cameraId = devices[0].id;
+                    html5QrCode.start(cameraId, config, qrCodeSuccessCallback)
+                    .catch(function(err) {
+                        console.log('Error starting scanner:', err);
+                        qrCodeElement.innerHTML = 
+                            '<div style="text-align: center; padding: 2rem;">' +
+                                '<i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #f59e0b; margin-bottom: 1rem;"></i>' +
+                                '<p>Camera access denied or not available</p>' +
+                                '<p>Please allow camera access or use simulation</p>' +
+                            '</div>';
+                    });
+                }
+            }).catch(function(err) {
+                console.log('Error getting cameras:', err);
+                qrCodeElement.innerHTML = 
+                    '<div style="text-align: center; padding: 2rem;">' +
+                        '<i class="fas fa-camera-slash" style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;"></i>' +
+                        '<p>No camera found</p>' +
+                        '<p>Please use simulation for demo</p>' +
+                    '</div>';
+            });
+        }
+
+        function displayQRScanResult(rawData) {
+            document.getElementById('qrScanData').textContent = rawData;
+            document.getElementById('qrScanResult').style.display = 'block';
+        }
+
+        function processScannedQR() {
+            if (currentQRData) {
+                processVisitorQR(currentQRData);
+                closeQRScanner();
+            }
+        }
+
+        function simulateVisitorQR() {
+            // Simulate scanning a visitor QR code
+            var qrData = {
+                name: "Dr. Roberto Martinez",
+                phone: "+63-917-888-9999",
+                unit: "Unit 802",
+                host: "Heriberto Nathan",
+                visitDate: "2024-03-20",
+                visitTime: "15:30",
+                purpose: "Medical Consultation"
+            };
+
+            currentQRData = qrData;
+            displayQRScanResult(JSON.stringify(qrData, null, 2));
+        }
+
+        function processVisitorQR(qrData) {
+            // Check if visitor already exists in log
+            var existingVisitor = visitorLogs.find(function(v) { 
+                return v.name === qrData.name && v.phone === qrData.phone; 
+            });
+
+            if (existingVisitor) {
+                if (existingVisitor.status === 'in') {
+                    // Check out the visitor
+                    existingVisitor.status = 'out';
+                    existingVisitor.exitTime = new Date().toISOString().replace('T', ' ').substr(0, 16);
+                    showNotification('Visitor checked out successfully!', 'success');
+                } else if (existingVisitor.status === 'expected') {
+                    // Check in the visitor
+                    existingVisitor.status = 'in';
+                    existingVisitor.entryTime = new Date().toISOString().replace('T', ' ').substr(0, 16);
+                    showNotification('Visitor checked in successfully!', 'success');
+                }
+            } else {
+                // Add new visitor entry
+                var newVisitor = {
+                    id: visitorLogs.length + 1,
+                    name: qrData.name,
+                    phone: qrData.phone,
+                    unit: qrData.unit,
+                    entryTime: new Date().toISOString().replace('T', ' ').substr(0, 16),
+                    exitTime: "",
+                    status: "in",
+                    purpose: qrData.purpose,
+                    hostName: qrData.host
+                };
+                visitorLogs.unshift(newVisitor);
+                showNotification('New visitor checked in successfully!', 'success');
+            }
+
+            loadVisitorLogs();
+        }
+
+        function showNotification(message, type) {
+            var notification = document.createElement('div');
+            notification.style.cssText = 
+                'position: fixed; top: 20px; right: 20px; z-index: 10000;' +
+                'background: ' + (type === 'success' ? 'linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%)' : '#ef4444') + ';' +
+                'color: white; padding: 1rem 1.5rem; border-radius: 8px;' +
+                'box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);';
+            notification.innerHTML = 
+                '<div style="display: flex; align-items: center; gap: 0.5rem;">' +
+                    '<i class="fas fa-' + (type === 'success' ? 'check-circle' : 'exclamation-triangle') + '"></i>' +
+                    '<span>' + message + '</span>' +
+                '</div>';
+            document.body.appendChild(notification);
+
+            setTimeout(function() {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const search = this.value.toLowerCase();
+            const rows = document.querySelectorAll('.visitor-row');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(search) ? 'grid' : 'none';
+            });
+        });
+
+        // Filter functionality
+        document.getElementById('statusFilter').addEventListener('change', function() {
+            const filter = this.value;
+            const rows = document.querySelectorAll('.visitor-row');
+            rows.forEach(row => {
+                if (!filter) {
+                    row.style.display = 'grid';
+                } else {
+                    const statusElement = row.querySelector('.visitor-status');
+                    row.style.display = statusElement.classList.contains(`status-${filter}`) ? 'grid' : 'none';
+                }
+            });
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            var qrModal = document.getElementById('qrScannerModal');
+            if (event.target === qrModal) {
+                closeQRScanner();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadVisitorLogs);
+    </script>
+</body>
+</html> 

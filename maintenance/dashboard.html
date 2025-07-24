@@ -1,0 +1,2209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MEMBRO Maintenance Management - CMMS Dashboard</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --maintenance-primary: #2563eb;
+            --maintenance-secondary: #10b981;
+            --maintenance-warning: #f59e0b;
+            --maintenance-danger: #ef4444;
+            --maintenance-dark: #1e40af;
+            --maintenance-light: #dbeafe;
+        }
+
+        .maintenance-header {
+            background: linear-gradient(135deg, var(--maintenance-primary) 0%, var(--maintenance-dark) 100%);
+            color: white;
+            padding: 0 1.5rem;
+            position: fixed;
+            top: 0;
+            left: 280px;
+            right: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .maintenance-header .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .maintenance-header .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .maintenance-header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .maintenance-header .btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            white-space: nowrap;
+            min-width: fit-content;
+            height: 40px;
+            line-height: 1;
+        }
+
+        .maintenance-header .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .maintenance-header .user-info {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            white-space: nowrap;
+            min-width: fit-content;
+            height: 40px;
+            line-height: 1;
+        }
+
+        .maintenance-header .user-info i {
+            font-size: 1.1rem;
+        }
+
+        .maintenance-header .user-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* General Button Styles */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            white-space: nowrap;
+            min-width: fit-content;
+            height: auto;
+            line-height: 1;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--maintenance-primary) 0%, var(--maintenance-dark) 100%);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--maintenance-dark) 0%, var(--maintenance-primary) 100%);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--maintenance-secondary) 0%, #059669 100%);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #059669 0%, var(--maintenance-secondary) 100%);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--maintenance-primary);
+            border: 2px solid var(--maintenance-primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--maintenance-primary);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            height: 36px;
+            min-width: fit-content;
+        }
+
+        .maintenance-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .maintenance-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid var(--maintenance-primary);
+            transition: all 0.3s ease;
+        }
+
+        .maintenance-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .maintenance-card.urgent {
+            border-left-color: var(--maintenance-danger);
+        }
+
+        .maintenance-card.scheduled {
+            border-left-color: var(--maintenance-secondary);
+        }
+
+        .maintenance-card.overdue {
+            border-left-color: var(--maintenance-warning);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .cases-section {
+            margin-bottom: 2rem;
+        }
+
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .case-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .case-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .case-id {
+            font-weight: 600;
+            color: var(--maintenance-primary);
+            font-size: 0.9rem;
+        }
+
+        .case-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .case-status.active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .case-status.urgent {
+            background: #fee2e2;
+            color: #dc2626;
+            animation: pulse 2s infinite;
+        }
+
+        .case-card h4 {
+            margin: 0 0 0.5rem 0;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .case-description {
+            margin: 0 0 1rem 0;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .case-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .case-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .case-info .label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .case-info .value {
+            font-size: 0.9rem;
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .case-timeline {
+            margin-bottom: 1rem;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .timeline-item.completed {
+            color: #059669;
+        }
+
+        .timeline-item.pending {
+            color: #6b7280;
+        }
+
+        .timeline-item i {
+            font-size: 0.9rem;
+        }
+        
+        .work-order-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .work-order-list {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .work-order-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+        }
+
+        .work-order-item:hover {
+            border-color: var(--maintenance-primary);
+            background: var(--maintenance-light);
+        }
+
+        .priority-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .priority-high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .priority-medium {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .priority-low {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-open {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-progress {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-completed {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .action-card:hover {
+            border-color: var(--maintenance-primary);
+            transform: translateY(-2px);
+        }
+
+        .asset-overview {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .asset-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .asset-item:last-child {
+            border-bottom: none;
+        }
+
+        .maintenance-calendar {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .calendar-day:hover {
+            background: var(--maintenance-light);
+        }
+
+        .calendar-day.has-task {
+            background: var(--maintenance-primary);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-day.has-task:hover {
+            background: var(--maintenance-dark);
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+        }
+
+        .calendar-day.has-task::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 6px;
+            height: 6px;
+            background: var(--maintenance-warning);
+            border-radius: 50%;
+        }
+
+        /* Button Styling */
+        .btn-text, .user-text {
+            display: inline;
+        }
+
+        /* Mobile Responsive Updates */
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -280px;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.mobile-open {
+                left: 0;
+            }
+
+            .main-container {
+                margin-left: 0;
+                padding-top: 70px;
+            }
+
+            .maintenance-header {
+                left: 0;
+                padding: 0.75rem 1rem;
+            }
+
+            .maintenance-header h1 {
+                font-size: 1.2rem !important;
+            }
+
+            .btn-text {
+                display: none;
+            }
+
+            .user-text {
+                display: none;
+            }
+
+            .maintenance-header .btn {
+                padding: 0.5rem !important;
+                min-width: 40px;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+                    .mobile-overlay.active {
+            display: block;
+        }
+
+        /* Activity Card Styling */
+        .activity-card {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--maintenance-primary);
+            transition: all 0.2s ease;
+        }
+
+        .activity-card:hover {
+            background: #f3f4f6;
+            transform: translateX(4px);
+        }
+
+        .activity-card h4 {
+            margin: 0;
+            color: var(--maintenance-primary);
+            font-size: 1rem;
+        }
+
+        .activity-card .badge {
+            background: var(--maintenance-primary);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+            .maintenance-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .work-order-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .action-btn {
+                padding: 1rem 0.5rem;
+                text-align: center;
+            }
+
+            .action-btn h3 {
+                font-size: 0.9rem;
+                margin: 0.5rem 0 0.25rem 0;
+            }
+
+            .action-btn p {
+                font-size: 0.75rem;
+                margin: 0;
+            }
+
+            .work-order-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+                padding: 1rem;
+            }
+
+            .maintenance-calendar {
+                padding: 1rem;
+            }
+
+            .calendar-grid {
+                gap: 0.25rem;
+            }
+
+            .calendar-day {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .maintenance-header h1 {
+                font-size: 1rem !important;
+            }
+
+            .maintenance-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                padding: 1rem;
+                text-align: center;
+            }
+
+            .stat-card h3 {
+                font-size: 1.5rem;
+            }
+
+            .card-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+                margin: 0 auto 0.75rem auto;
+            }
+
+            .card-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            display: none;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--maintenance-primary) 0%, var(--maintenance-dark) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, var(--maintenance-dark) 0%, var(--maintenance-primary) 100%);
+            z-index: 1000;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            box-shadow: 4px 0 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+            position: relative;
+        }
+
+        .sidebar-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 1.5rem;
+            right: 1.5rem;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 1.5rem 0.75rem;
+            margin: 0;
+        }
+
+        .nav-item {
+            margin: 0 0 0.5rem 0;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%);
+            color: white;
+            transform: translateX(8px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.15) 100%);
+            color: white;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+
+        .nav-link.active::before {
+            content: '';
+            position: absolute;
+            left: -0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 60%;
+            background: linear-gradient(180deg, var(--maintenance-secondary) 0%, #059669 100%);
+            border-radius: 0 2px 2px 0;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+        }
+
+        .nav-link i {
+            width: 22px;
+            text-align: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover i {
+            transform: scale(1.1);
+        }
+
+        .nav-link.active i {
+            color: var(--maintenance-secondary);
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: linear-gradient(135deg, var(--maintenance-danger) 0%, #dc2626 100%);
+            color: white;
+            padding: 0.375rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .nav-badge.membro-badge {
+            background: var(--maintenance-warning);
+            color: white;
+        }
+
+        .nav-section {
+            margin: 1.5rem 0 0.5rem 0;
+        }
+
+        .nav-section-title {
+            padding: 0 1.5rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.15) 100%);
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 1.5rem;
+            right: 1.5rem;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+        }
+
+        .user-info-sidebar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar-sidebar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .user-avatar-sidebar:hover {
+            transform: scale(1.05);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .user-details-sidebar {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name-sidebar {
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-role-sidebar {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.75rem;
+        }
+
+        .main-container {
+            margin-left: 280px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 0;
+            position: relative;
+        }
+
+        .content-area {
+            padding: 2rem;
+            margin-top: 70px;
+        }
+
+        .container {
+            max-width: none;
+            padding: 0;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1100;
+            background: var(--maintenance-primary);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: var(--maintenance-dark);
+            transform: scale(1.1);
+        }
+
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        /* Mobile Responsive Updates */
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -280px;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.mobile-open {
+                left: 0;
+            }
+
+            .main-container {
+                margin-left: 0;
+                padding-top: 70px;
+            }
+
+            .maintenance-header {
+                left: 0;
+                padding: 0 1rem;
+            }
+
+            .maintenance-header .btn-text {
+                display: none;
+            }
+
+            .maintenance-header .user-name {
+                display: none;
+            }
+
+            .maintenance-header .btn {
+                padding: 0.5rem;
+                min-width: 40px;
+                justify-content: center;
+            }
+
+            .maintenance-header .user-info {
+                padding: 0.5rem;
+                min-width: 40px;
+                justify-content: center;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .mobile-overlay.active {
+                display: block;
+            }
+
+            .maintenance-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .work-order-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .action-btn {
+                padding: 1rem 0.5rem;
+                text-align: center;
+            }
+
+            .action-btn h3 {
+                font-size: 0.9rem;
+                margin: 0.5rem 0 0.25rem 0;
+            }
+
+            .action-btn p {
+                font-size: 0.75rem;
+                margin: 0;
+            }
+
+            .work-order-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+                padding: 1rem;
+            }
+
+            .maintenance-calendar {
+                padding: 1rem;
+            }
+
+            .calendar-grid {
+                gap: 0.25rem;
+            }
+
+            .calendar-day {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .maintenance-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                padding: 1rem;
+                text-align: center;
+            }
+
+            .stat-card h3 {
+                font-size: 1.5rem;
+            }
+
+            .card-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+                margin: 0 auto 0.75rem auto;
+            }
+
+            .card-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" onclick="closeMobileMenu()"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="../logo.png" alt="MEMBRO Logo" style="width: 40px; height: 40px;">
+                <div>
+                    <h3 style="margin: 0; color: white; font-size: 1.2rem;">MEMBRO</h3>
+                    <span style="color: rgba(255,255,255,0.8); font-size: 0.8rem;">CMMS</span>
+                </div>
+            </div>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="dashboard.html" class="nav-link active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a href="work-orders.html" class="nav-link">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Work Orders</span>
+                    <span class="nav-badge">3</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="asset-calendar.html" class="nav-link">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Asset Calendar</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a href="asset-tagging.html" class="nav-link">
+                    <i class="fas fa-qrcode"></i>
+                    <span>Asset Tagging</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a href="asset-management.html" class="nav-link">
+                    <i class="fas fa-cogs"></i>
+                    <span>Assets & Equipment</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a href="../dashboard.html" class="nav-link" style="color: #10b981;">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to MEMBRO</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div class="user-info-sidebar">
+                <div class="user-avatar-sidebar">
+                    <i class="fas fa-user-cog"></i>
+                </div>
+                <div class="user-details-sidebar">
+                    <span class="user-name-sidebar">Carlos Rodriguez</span>
+                    <span class="user-role-sidebar">Maintenance Manager</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Header -->
+        <div class="maintenance-header">
+            <div class="header-left">
+                <h1>MEMBRO Maintenance</h1>
+            </div>
+            <div class="header-right">
+                <button class="btn" onclick="openWorkOrderModal()">
+                    <i class="fas fa-plus"></i>
+                    <span class="btn-text">New Work Order</span>
+                </button>
+                <div class="user-info">
+                    <i class="fas fa-user"></i>
+                    <span class="user-name">Carlos R.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- Simplified Statistics Dashboard -->
+            <div class="maintenance-stats">
+                <div class="maintenance-card urgent">
+                    <div class="card-header">
+                        <div>
+                            <h3 style="margin: 0; color: var(--maintenance-danger); font-size: 1.8rem;">12</h3>
+                            <p style="margin: 0; font-size: 0.8rem; color: #6b7280;">Urgent Tasks</p>
+                        </div>
+                        <div class="card-icon" style="background: var(--maintenance-danger);">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="maintenance-card scheduled">
+                    <div class="card-header">
+                        <div>
+                            <h3 style="margin: 0; color: var(--maintenance-secondary); font-size: 1.8rem;">28</h3>
+                            <p style="margin: 0; font-size: 0.8rem; color: #6b7280;">Scheduled</p>
+                        </div>
+                        <div class="card-icon" style="background: var(--maintenance-secondary);">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="maintenance-card">
+                    <div class="card-header">
+                        <div>
+                            <h3 style="margin: 0; color: var(--maintenance-primary); font-size: 1.8rem;">156</h3>
+                            <p style="margin: 0; font-size: 0.8rem; color: #6b7280;">Total Assets</p>
+                        </div>
+                        <div class="card-icon" style="background: var(--maintenance-primary);">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="maintenance-card overdue">
+                    <div class="card-header">
+                        <div>
+                            <h3 style="margin: 0; color: var(--maintenance-warning); font-size: 1.8rem;">5</h3>
+                            <p style="margin: 0; font-size: 0.8rem; color: #6b7280;">Overdue</p>
+                        </div>
+                        <div class="card-icon" style="background: var(--maintenance-warning);">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Cases -->
+            <div class="cases-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="margin: 0;"><i class="fas fa-folder-open"></i> Active Cases</h3>
+                    <button class="btn btn-sm btn-primary" onclick="openWorkOrderModal()">
+                        <i class="fas fa-plus"></i> New Case
+                    </button>
+                </div>
+                <div class="cases-grid">
+                    <div class="case-card">
+                        <div class="case-header">
+                            <div class="case-id">Case #001</div>
+                            <div class="case-status active">Active</div>
+                        </div>
+                        <h4>Toilet Leak - Unit 5A</h4>
+                        <p class="case-description">Resident reported water leak from toilet area</p>
+                        <div class="case-details">
+                            <div class="case-info">
+                                <span class="label">Type:</span>
+                                <span class="value">Plumbing</span>
+                            </div>
+                            <div class="case-info">
+                                <span class="label">Work Orders:</span>
+                                <span class="value">2</span>
+                            </div>
+                            <div class="case-info">
+                                <span class="label">Status:</span>
+                                <span class="value">Assessment Complete</span>
+                            </div>
+                        </div>
+                        <div class="case-timeline">
+                            <div class="timeline-item completed">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Initial Visit (Non-billable)</span>
+                            </div>
+                            <div class="timeline-item completed">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Assessment (Non-billable)</span>
+                            </div>
+                            <div class="timeline-item pending">
+                                <i class="fas fa-clock"></i>
+                                <span>Repair (Billable)</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-primary" onclick="openWorkOrderModal()">
+                            <i class="fas fa-plus"></i> Add Work Order
+                        </button>
+                    </div>
+
+                    <div class="case-card">
+                        <div class="case-header">
+                            <div class="case-id">Case #002</div>
+                            <div class="case-status urgent">Urgent</div>
+                        </div>
+                        <h4>AC Not Working - Unit 3B</h4>
+                        <p class="case-description">Air conditioning system not cooling properly</p>
+                        <div class="case-details">
+                            <div class="case-info">
+                                <span class="label">Type:</span>
+                                <span class="value">HVAC</span>
+                            </div>
+                            <div class="case-info">
+                                <span class="label">Work Orders:</span>
+                                <span class="value">1</span>
+                            </div>
+                            <div class="case-info">
+                                <span class="label">Status:</span>
+                                <span class="value">Initial Visit Scheduled</span>
+                            </div>
+                        </div>
+                        <div class="case-timeline">
+                            <div class="timeline-item pending">
+                                <i class="fas fa-clock"></i>
+                                <span>Initial Visit (Non-billable)</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-primary" onclick="openWorkOrderModal()">
+                            <i class="fas fa-plus"></i> Add Work Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simplified Quick Actions -->
+            <div class="quick-actions">
+                <div class="action-card" onclick="openWorkOrderModal()">
+                    <div style="font-size: 2rem; color: var(--maintenance-primary); margin-bottom: 0.75rem;">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <h3 style="margin: 0 0 0.25rem 0; font-size: 1rem;">New Task</h3>
+                    <p style="margin: 0; font-size: 0.75rem; color: #6b7280;">Create work order</p>
+                </div>
+
+                <div class="action-card" onclick="window.location.href='work-orders.html'">
+                    <div style="font-size: 2rem; color: var(--maintenance-secondary); margin-bottom: 0.75rem;">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <h3 style="margin: 0 0 0.25rem 0; font-size: 1rem;">View Tasks</h3>
+                    <p style="margin: 0; font-size: 0.75rem; color: #6b7280;">All work orders</p>
+                </div>
+
+                <div class="action-card" onclick="window.location.href='asset-management.html'">
+                    <div style="font-size: 2rem; color: var(--maintenance-warning); margin-bottom: 0.75rem;">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3 style="margin: 0 0 0.25rem 0; font-size: 1rem;">Equipment</h3>
+                    <p style="margin: 0; font-size: 0.75rem; color: #6b7280;">Manage assets</p>
+                </div>
+
+                <div class="action-card" onclick="window.location.href='inventory.html'">
+                    <div style="font-size: 2rem; color: var(--maintenance-danger); margin-bottom: 0.75rem;">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <h3 style="margin: 0 0 0.25rem 0; font-size: 1rem;">Inventory</h3>
+                    <p style="margin: 0; font-size: 0.75rem; color: #6b7280;">Parts & supplies</p>
+                </div>
+            </div>
+
+            <!-- Work Orders and Asset Overview -->
+            <div class="work-order-grid">
+                <div class="work-order-list">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3 style="margin: 0;">Recent Work Orders</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-sm btn-outline" onclick="filterWorkOrders('all')">All</button>
+                            <button class="btn btn-sm btn-outline" onclick="filterWorkOrders('membro')">From MEMBRO</button>
+                            <button class="btn btn-sm btn-primary" onclick="window.location.href='work-orders.html'">View All</button>
+                        </div>
+                    </div>
+
+                    <div id="workOrdersList">
+                        <div class="work-order-item" data-source="membro">
+                            <div style="flex: 1;">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                                    <h4 style="margin: 0; font-size: 1rem;">Elevator Maintenance - Building A</h4>
+                                    <span class="priority-badge priority-high">High</span>
+                                    <span class="status-badge status-open">Open</span>
+                                </div>
+                                <p style="margin: 0; font-size: 0.875rem; color: #6b7280;">
+                                    <i class="fas fa-user"></i> Reported by: Maria Santos (Unit 802)
+                                    <span style="margin-left: 1rem;"><i class="fas fa-clock"></i> 2 hours ago</span>
+                                </p>
+                                <div style="margin-top: 0.5rem; padding: 0.5rem; background: #fef3c7; border-radius: 6px; font-size: 0.75rem;">
+                                    <i class="fas fa-link" style="color: var(--maintenance-primary);"></i> 
+                                    <strong>MEMBRO Ticket #MB-2024-001</strong> - Elevator making unusual noise
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <button class="btn btn-sm btn-primary" onclick="assignWorkOrder('WO-001')">Assign</button>
+                            </div>
+                        </div>
+
+                        <div class="work-order-item" data-source="internal">
+                            <div style="flex: 1;">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                                    <h4 style="margin: 0; font-size: 1rem;">HVAC Filter Replacement</h4>
+                                    <span class="priority-badge priority-medium">Medium</span>
+                                    <span class="status-badge status-progress">In Progress</span>
+                                </div>
+                                <p style="margin: 0; font-size: 0.875rem; color: #6b7280;">
+                                    <i class="fas fa-user"></i> Assigned to: John Martinez
+                                    <span style="margin-left: 1rem;"><i class="fas fa-clock"></i> Started 1 day ago</span>
+                                </p>
+                            </div>
+                            <div style="text-align: right;">
+                                <button class="btn btn-sm btn-secondary" onclick="viewWorkOrder('WO-002')">View</button>
+                            </div>
+                        </div>
+
+                        <div class="work-order-item" data-source="membro">
+                            <div style="flex: 1;">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                                    <h4 style="margin: 0; font-size: 1rem;">Plumbing Leak - Unit 505</h4>
+                                    <span class="priority-badge priority-high">High</span>
+                                    <span class="status-badge status-open">Open</span>
+                                </div>
+                                <p style="margin: 0; font-size: 0.875rem; color: #6b7280;">
+                                    <i class="fas fa-user"></i> Reported by: Dr. Roberto Martinez
+                                    <span style="margin-left: 1rem;"><i class="fas fa-clock"></i> 4 hours ago</span>
+                                </p>
+                                <div style="margin-top: 0.5rem; padding: 0.5rem; background: #fef3c7; border-radius: 6px; font-size: 0.75rem;">
+                                    <i class="fas fa-link" style="color: var(--maintenance-primary);"></i> 
+                                    <strong>MEMBRO Ticket #MB-2024-002</strong> - Water leak in bathroom
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <button class="btn btn-sm btn-primary" onclick="assignWorkOrder('WO-003')">Assign</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="asset-overview">
+                    <h3 style="margin: 0 0 1.5rem 0;">Asset Status Overview</h3>
+                    
+                    <div class="asset-item">
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.9rem;">Elevators (4)</h4>
+                            <p style="margin: 0; font-size: 0.75rem; color: #6b7280;">Building A & B</p>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div style="width: 8px; height: 8px; background: var(--maintenance-warning); border-radius: 50%;"></div>
+                            <span style="font-size: 0.75rem;">1 Issue</span>
+                        </div>
+                    </div>
+
+                    <div class="asset-item">
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.9rem;">HVAC Systems (8)</h4>
+                            <p style="margin: 0; font-size: 0.75rem; color: #6b7280;">All floors</p>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div style="width: 8px; height: 8px; background: var(--maintenance-secondary); border-radius: 50%;"></div>
+                            <span style="font-size: 0.75rem;">Operational</span>
+                        </div>
+                    </div>
+
+                    <div class="asset-item">
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.9rem;">Fire Safety (24)</h4>
+                            <p style="margin: 0; font-size: 0.75rem; color: #6b7280;">Alarms & Extinguishers</p>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div style="width: 8px; height: 8px; background: var(--maintenance-secondary); border-radius: 50%;"></div>
+                            <span style="font-size: 0.75rem;">Operational</span>
+                        </div>
+                    </div>
+
+                    <div class="asset-item">
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.9rem;">Plumbing (156)</h4>
+                            <p style="margin: 0; font-size: 0.75rem; color: #6b7280;">Units & Common Areas</p>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div style="width: 8px; height: 8px; background: var(--maintenance-danger); border-radius: 50%;"></div>
+                            <span style="font-size: 0.75rem;">2 Issues</span>
+                        </div>
+                    </div>
+
+                    <div class="asset-item">
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.9rem;">Electrical (89)</h4>
+                            <p style="margin: 0; font-size: 0.75rem; color: #6b7280;">Panels & Outlets</p>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div style="width: 8px; height: 8px; background: var(--maintenance-secondary); border-radius: 50%;"></div>
+                            <span style="font-size: 0.75rem;">Operational</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Maintenance Calendar -->
+            <div class="maintenance-calendar">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3 style="margin: 0;">Maintenance Schedule - March 2024</h3>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-sm btn-outline" onclick="previousMonth()">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline" onclick="nextMonth()">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.75rem; color: #6b7280;">
+                    <div style="text-align: center;">SUN</div>
+                    <div style="text-align: center;">MON</div>
+                    <div style="text-align: center;">TUE</div>
+                    <div style="text-align: center;">WED</div>
+                    <div style="text-align: center;">THU</div>
+                    <div style="text-align: center;">FRI</div>
+                    <div style="text-align: center;">SAT</div>
+                </div>
+
+                <div class="calendar-grid" id="maintenanceCalendar">
+                    <!-- Calendar will be populated by JavaScript -->
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 1rem; font-size: 0.75rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div style="width: 12px; height: 12px; background: var(--maintenance-primary); border-radius: 50%;"></div>
+                        <span>Scheduled Maintenance</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div style="width: 12px; height: 12px; background: var(--maintenance-warning); border-radius: 50%;"></div>
+                        <span>Overdue Tasks</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scheduled Activities Modal -->
+    <div id="scheduledActivitiesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <i class="fas fa-calendar-check"></i> <span id="modalDateTitle">Scheduled Activities</span>
+                </div>
+                <button class="close-btn" onclick="closeModal('scheduledActivitiesModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="scheduledActivitiesList">
+                    <!-- Activities will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Work Order Modal -->
+    <div id="workOrderModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <i class="fas fa-clipboard-list"></i> Create Work Order
+                </div>
+                <button class="close-btn" onclick="closeModal('workOrderModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="workOrderForm" onsubmit="createWorkOrder(event)">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label">Case/Issue</label>
+                            <select class="form-control" id="workOrderCase" onchange="toggleCaseFields()">
+                                <option value="">Select Existing Case</option>
+                                <option value="new">Create New Case</option>
+                                <option value="case-001">Case #001 - Toilet Leak (Unit 5A)</option>
+                                <option value="case-002">Case #002 - AC Not Working (Unit 3B)</option>
+                                <option value="case-003">Case #003 - Elevator Issue (Tower 1)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Work Order Type</label>
+                            <select class="form-control" id="workOrderType" onchange="toggleMEMBROFields()">
+                                <option value="initial-visit">Initial Visit</option>
+                                <option value="assessment">Assessment</option>
+                                <option value="repair">Repair</option>
+                                <option value="follow-up">Follow-up</option>
+                                <option value="preventive">Preventive Maintenance</option>
+                                <option value="emergency">Emergency</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label">Priority Level</label>
+                            <select class="form-control" id="workOrderPriority">
+                                <option value="low">Low Priority</option>
+                                <option value="medium">Medium Priority</option>
+                                <option value="high">High Priority</option>
+                                <option value="emergency">Emergency</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Billing Type</label>
+                            <select class="form-control" id="workOrderBilling">
+                                <option value="non-billable">Non-Billable</option>
+                                <option value="billable">Billable</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label">Estimated Cost</label>
+                            <input type="number" class="form-control" id="workOrderCost" placeholder="₱0.00" step="0.01" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Related Work Order</label>
+                            <select class="form-control" id="relatedWorkOrder">
+                                <option value="">None</option>
+                                <option value="wo-001">WO-001 (Initial Visit)</option>
+                                <option value="wo-002">WO-002 (Assessment)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="newCaseFields" style="display: none; margin-bottom: 1.5rem; padding: 1rem; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #0ea5e9;">
+                        <h4 style="margin: 0 0 1rem 0; color: #0ea5e9;">
+                            <i class="fas fa-folder-plus"></i> New Case Details
+                        </h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Issue Type</label>
+                                <select class="form-control" id="issueType">
+                                    <option value="plumbing">Plumbing</option>
+                                    <option value="electrical">Electrical</option>
+                                    <option value="hvac">HVAC</option>
+                                    <option value="elevator">Elevator</option>
+                                    <option value="security">Security</option>
+                                    <option value="general">General</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location/Unit</label>
+                                <input type="text" class="form-control" id="issueLocation" placeholder="e.g., Unit 5A, Tower 1">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Issue Description</label>
+                            <textarea class="form-control" id="issueDescription" rows="3" placeholder="Describe the issue..."></textarea>
+                        </div>
+                    </div>
+
+                    <div id="membroFields" style="display: none; margin-bottom: 1.5rem; padding: 1rem; background: #fef3c7; border-radius: 8px;">
+                        <h4 style="margin: 0 0 1rem 0; color: var(--maintenance-primary);">
+                            <i class="fas fa-link"></i> MEMBRO Ticket Integration
+                        </h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">MEMBRO Ticket ID</label>
+                                <input type="text" class="form-control" id="membroTicketId" placeholder="MB-2024-XXX">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Reported By</label>
+                                <input type="text" class="form-control" id="membroReporter" placeholder="Resident name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label class="form-label">Work Order Title</label>
+                        <input type="text" class="form-control" id="workOrderTitle" required>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label">Asset/Location</label>
+                            <select class="form-control" id="workOrderAsset">
+                                <option value="">Select Asset</option>
+                                <option value="elevator-a">Elevator A</option>
+                                <option value="elevator-b">Elevator B</option>
+                                <option value="hvac-1">HVAC System 1</option>
+                                <option value="hvac-2">HVAC System 2</option>
+                                <option value="plumbing">Plumbing System</option>
+                                <option value="electrical">Electrical System</option>
+                                <option value="fire-safety">Fire Safety</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Assign To</label>
+                            <select class="form-control" id="workOrderAssignee">
+                                <option value="">Unassigned</option>
+                                <option value="john-martinez">John Martinez - Plumbing</option>
+                                <option value="sarah-chen">Sarah Chen - Electrical</option>
+                                <option value="mike-rodriguez">Mike Rodriguez - HVAC</option>
+                                <option value="lisa-wong">Lisa Wong - General</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" id="workOrderDescription" rows="4" required></textarea>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label">Due Date</label>
+                            <input type="date" class="form-control" id="workOrderDueDate">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Estimated Hours</label>
+                            <input type="number" class="form-control" id="workOrderHours" min="0.5" step="0.5">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('workOrderModal')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Create Work Order
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample maintenance schedule data
+        const maintenanceSchedule = {
+            5: [
+                {
+                    id: 'MAINT-001',
+                    title: 'Elevator A Preventive Maintenance',
+                    asset: 'Elevator A - Building Main',
+                    time: '09:00 AM',
+                    duration: '2 hours',
+                    type: 'Preventive',
+                    status: 'Scheduled',
+                    technician: 'Carlos Rodriguez',
+                    description: 'Monthly preventive maintenance including safety checks, lubrication, and performance testing.'
+                },
+                {
+                    id: 'MAINT-002',
+                    title: 'AC Unit B2-003 Filter Replacement',
+                    asset: 'AC Unit B2-003',
+                    time: '02:00 PM',
+                    duration: '1 hour',
+                    type: 'Preventive',
+                    status: 'Scheduled',
+                    technician: 'Maria Santos',
+                    description: 'Replace air filters and clean condenser coils for optimal performance.'
+                }
+            ],
+            12: [
+                {
+                    id: 'MAINT-003',
+                    title: 'Water Pump C1-001 Inspection',
+                    asset: 'Water Pump C1-001',
+                    time: '10:00 AM',
+                    duration: '3 hours',
+                    type: 'Preventive',
+                    status: 'Scheduled',
+                    technician: 'Juan Dela Cruz',
+                    description: 'Quarterly inspection including pressure testing, valve checks, and motor maintenance.'
+                }
+            ],
+            18: [
+                {
+                    id: 'MAINT-004',
+                    title: 'Generator A-001 Test Run',
+                    asset: 'Generator A-001',
+                    time: '08:00 AM',
+                    duration: '4 hours',
+                    type: 'Preventive',
+                    status: 'Scheduled',
+                    technician: 'Pedro Martinez',
+                    description: 'Monthly generator test run, fuel system check, and battery maintenance.'
+                },
+                {
+                    id: 'MAINT-005',
+                    title: 'Fire Panel B-001 System Check',
+                    asset: 'Fire Panel B-001',
+                    time: '01:00 PM',
+                    duration: '2 hours',
+                    type: 'Preventive',
+                    status: 'Scheduled',
+                    technician: 'Ana Garcia',
+                    description: 'Fire alarm system testing, sensor calibration, and emergency lighting check.'
+                }
+            ],
+            25: [
+                {
+                    id: 'MAINT-006',
+                    title: 'CCTV Camera L-001 Maintenance',
+                    asset: 'CCTV Camera L-001',
+                    time: '11:00 AM',
+                    duration: '1.5 hours',
+                    type: 'Preventive',
+                    status: 'Scheduled',
+                    technician: 'Luis Fernandez',
+                    description: 'Camera lens cleaning, PTZ mechanism lubrication, and recording system check.'
+                }
+            ]
+        };
+
+        // Initialize calendar
+        function initializeCalendar() {
+            const calendar = document.getElementById('maintenanceCalendar');
+            const daysInMonth = 31;
+            const startDay = 5; // March 1, 2024 starts on Friday
+            
+            // Add empty cells for days before month starts
+            for (let i = 0; i < startDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day';
+                calendar.appendChild(emptyDay);
+            }
+            
+            // Add days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                
+                // Add scheduled maintenance indicators and click functionality
+                if ([5, 12, 18, 25].includes(day)) {
+                    dayElement.classList.add('has-task');
+                    dayElement.title = 'Click to view scheduled maintenance';
+                    dayElement.style.cursor = 'pointer';
+                    dayElement.onclick = () => showScheduledActivities(day);
+                }
+                
+                calendar.appendChild(dayElement);
+            }
+        }
+
+        // Show scheduled activities for a specific date
+        function showScheduledActivities(day) {
+            const activities = maintenanceSchedule[day] || [];
+            const modalTitle = document.getElementById('modalDateTitle');
+            const activitiesList = document.getElementById('scheduledActivitiesList');
+            
+            modalTitle.textContent = `Scheduled Activities - March ${day}, 2024`;
+            
+            if (activities.length === 0) {
+                activitiesList.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #6b7280;">
+                        <i class="fas fa-calendar-times" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <p>No scheduled activities for this date</p>
+                    </div>
+                `;
+            } else {
+                activitiesList.innerHTML = activities.map(activity => `
+                    <div class="activity-card" style="background: #f9fafb; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; border-left: 4px solid var(--maintenance-primary);">
+                        <div style="display: flex; justify-content: between; align-items: flex-start; margin-bottom: 0.5rem;">
+                            <h4 style="margin: 0; color: var(--maintenance-primary);">${activity.title}</h4>
+                            <span class="badge" style="background: var(--maintenance-primary); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">${activity.type}</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 0.5rem; font-size: 0.875rem;">
+                            <div><i class="fas fa-cog"></i> <strong>Asset:</strong> ${activity.asset}</div>
+                            <div><i class="fas fa-clock"></i> <strong>Time:</strong> ${activity.time}</div>
+                            <div><i class="fas fa-hourglass-half"></i> <strong>Duration:</strong> ${activity.duration}</div>
+                            <div><i class="fas fa-user"></i> <strong>Technician:</strong> ${activity.technician}</div>
+                        </div>
+                        <p style="margin: 0; color: #6b7280; font-size: 0.875rem;">${activity.description}</p>
+                        <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                            <button class="btn btn-sm btn-primary" onclick="createWorkOrderFromActivity('${activity.id}')">
+                                <i class="fas fa-clipboard-list"></i> Create Work Order
+                            </button>
+                            <button class="btn btn-sm btn-secondary" onclick="rescheduleActivity('${activity.id}')">
+                                <i class="fas fa-calendar-alt"></i> Reschedule
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            document.getElementById('scheduledActivitiesModal').style.display = 'flex';
+        }
+
+        // Create work order from scheduled activity
+        function createWorkOrderFromActivity(activityId) {
+            // Find the activity
+            const activity = Object.values(maintenanceSchedule).flat().find(a => a.id === activityId);
+            if (!activity) return;
+            
+            // Pre-fill work order form
+            document.getElementById('workOrderTitle').value = activity.title;
+            document.getElementById('workOrderAsset').value = activity.asset;
+            document.getElementById('workOrderPriority').value = 'medium';
+            
+            // Close activities modal and open work order modal
+            closeModal('scheduledActivitiesModal');
+            openWorkOrderModal();
+            
+            showNotification('Work order form pre-filled from scheduled activity!', 'success');
+        }
+
+        // Reschedule activity
+        function rescheduleActivity(activityId) {
+            showNotification('Reschedule functionality coming soon!', 'info');
+        }
+
+        // Modal functions
+        function openWorkOrderModal() {
+            document.getElementById('workOrderModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function toggleCaseFields() {
+            const caseValue = document.getElementById('workOrderCase').value;
+            const newCaseFields = document.getElementById('newCaseFields');
+            const relatedWorkOrder = document.getElementById('relatedWorkOrder');
+            const workOrderType = document.getElementById('workOrderType');
+            
+            if (caseValue === 'new') {
+                newCaseFields.style.display = 'block';
+                // Clear related work order when creating new case
+                relatedWorkOrder.value = '';
+                // Show only Internal and Customer options for new cases
+                updateWorkOrderTypeOptions('new');
+            } else if (caseValue && caseValue !== '') {
+                newCaseFields.style.display = 'none';
+                // Populate related work orders based on selected case
+                populateRelatedWorkOrders(caseValue);
+                // Show all work order type options for existing cases
+                updateWorkOrderTypeOptions('existing');
+            } else {
+                newCaseFields.style.display = 'none';
+                relatedWorkOrder.value = '';
+                // Reset to default options
+                updateWorkOrderTypeOptions('default');
+            }
+        }
+
+        function updateWorkOrderTypeOptions(caseType) {
+            const workOrderType = document.getElementById('workOrderType');
+            
+            // Clear existing options
+            workOrderType.innerHTML = '';
+            
+            if (caseType === 'new') {
+                // Only Internal and Customer for new cases
+                const newCaseOptions = [
+                    { value: 'internal', text: 'Internal' },
+                    { value: 'customer', text: 'Customer' }
+                ];
+                
+                newCaseOptions.forEach(option => {
+                    const optionElement = document.createElement('option');
+                    optionElement.value = option.value;
+                    optionElement.textContent = option.text;
+                    workOrderType.appendChild(optionElement);
+                });
+            } else if (caseType === 'existing') {
+                // All options for existing cases
+                const existingCaseOptions = [
+                    { value: 'initial-visit', text: 'Initial Visit' },
+                    { value: 'assessment', text: 'Assessment' },
+                    { value: 'repair', text: 'Repair' },
+                    { value: 'follow-up', text: 'Follow-up' },
+                    { value: 'preventive', text: 'Preventive Maintenance' },
+                    { value: 'emergency', text: 'Emergency' }
+                ];
+                
+                existingCaseOptions.forEach(option => {
+                    const optionElement = document.createElement('option');
+                    optionElement.value = option.value;
+                    optionElement.textContent = option.text;
+                    workOrderType.appendChild(optionElement);
+                });
+            } else {
+                // Default options (when no case is selected)
+                const defaultOptions = [
+                    { value: 'initial-visit', text: 'Initial Visit' },
+                    { value: 'assessment', text: 'Assessment' },
+                    { value: 'repair', text: 'Repair' },
+                    { value: 'follow-up', text: 'Follow-up' },
+                    { value: 'preventive', text: 'Preventive Maintenance' },
+                    { value: 'emergency', text: 'Emergency' }
+                ];
+                
+                defaultOptions.forEach(option => {
+                    const optionElement = document.createElement('option');
+                    optionElement.value = option.value;
+                    optionElement.textContent = option.text;
+                    workOrderType.appendChild(optionElement);
+                });
+            }
+        }
+
+        function populateRelatedWorkOrders(caseId) {
+            const relatedWorkOrder = document.getElementById('relatedWorkOrder');
+            
+            // Sample data - in real app, this would come from database
+            const caseWorkOrders = {
+                'case-001': [
+                    { id: 'wo-001', title: 'WO-001 (Initial Visit)' },
+                    { id: 'wo-002', title: 'WO-002 (Assessment)' }
+                ],
+                'case-002': [
+                    { id: 'wo-003', title: 'WO-003 (Initial Visit)' }
+                ],
+                'case-003': [
+                    { id: 'wo-004', title: 'WO-004 (Emergency Response)' }
+                ]
+            };
+            
+            // Clear existing options
+            relatedWorkOrder.innerHTML = '<option value="">None</option>';
+            
+            // Add related work orders
+            if (caseWorkOrders[caseId]) {
+                caseWorkOrders[caseId].forEach(wo => {
+                    const option = document.createElement('option');
+                    option.value = wo.id;
+                    option.textContent = wo.title;
+                    relatedWorkOrder.appendChild(option);
+                });
+            }
+        }
+
+        function toggleMEMBROFields() {
+            const type = document.getElementById('workOrderType').value;
+            const membroFields = document.getElementById('membroFields');
+            
+            if (type === 'membro') {
+                membroFields.style.display = 'block';
+            } else {
+                membroFields.style.display = 'none';
+            }
+        }
+
+        function createWorkOrder(event) {
+            event.preventDefault();
+            
+            const caseId = document.getElementById('workOrderCase').value;
+            const type = document.getElementById('workOrderType').value;
+            const title = document.getElementById('workOrderTitle').value;
+            const priority = document.getElementById('workOrderPriority').value;
+            const billing = document.getElementById('workOrderBilling').value;
+            const cost = document.getElementById('workOrderCost').value;
+            const relatedWO = document.getElementById('relatedWorkOrder').value;
+            
+            // Validate case selection
+            if (!caseId) {
+                showNotification('Please select a case or create a new one', 'error');
+                return;
+            }
+            
+            // Simulate work order creation
+            const message = caseId === 'new' ? 
+                'New case and work order created successfully!' : 
+                'Work order added to existing case successfully!';
+            
+            showNotification(message, 'success');
+            closeModal('workOrderModal');
+            
+            // Add to work orders list (simulation)
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        }
+
+        function filterWorkOrders(filter) {
+            const workOrders = document.querySelectorAll('.work-order-item');
+            
+            workOrders.forEach(item => {
+                if (filter === 'all') {
+                    item.style.display = 'flex';
+                } else if (filter === 'membro' && item.dataset.source === 'membro') {
+                    item.style.display = 'flex';
+                } else if (filter === 'membro' && item.dataset.source !== 'membro') {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function assignWorkOrder(workOrderId) {
+            showNotification('Work order assigned successfully!', 'success');
+        }
+
+        function viewWorkOrder(workOrderId) {
+            window.location.href = `work-order-details.html?id=${workOrderId}`;
+        }
+
+        // Notification system
+        function showNotification(message, type) {
+            const bgColor = type === 'success' ? 'var(--maintenance-secondary)' : 'var(--maintenance-primary)';
+            const icon = type === 'success' ? 'check-circle' : 'info-circle';
+
+            const notification = document.createElement('div');
+            notification.style.cssText = 
+                'position: fixed; top: 20px; right: 20px; z-index: 10000;' +
+                'background: ' + bgColor + ';' +
+                'color: white; padding: 1rem 1.5rem; border-radius: 8px;' +
+                'box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);' +
+                'animation: slideIn 0.3s ease;';
+            notification.innerHTML = 
+                '<div style="display: flex; align-items: center; gap: 0.5rem;">' +
+                    '<i class="fas fa-' + icon + '"></i>' +
+                    '<span>' + message + '</span>' +
+                '</div>';
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Mobile menu functions
+        function toggleMobileMenu() {
+            var sidebar = document.querySelector('.sidebar');
+            var overlay = document.querySelector('.mobile-overlay');
+            var toggle = document.querySelector('.mobile-menu-toggle');
+            
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('active');
+            
+            // Change icon
+            var icon = toggle.querySelector('i');
+            if (sidebar.classList.contains('mobile-open')) {
+                icon.className = 'fas fa-times';
+            } else {
+                icon.className = 'fas fa-bars';
+            }
+        }
+
+        function closeMobileMenu() {
+            var sidebar = document.querySelector('.sidebar');
+            var overlay = document.querySelector('.mobile-overlay');
+            var toggle = document.querySelector('.mobile-menu-toggle');
+            
+            sidebar.classList.remove('mobile-open');
+            overlay.classList.remove('active');
+            
+            // Reset icon
+            toggle.querySelector('i').className = 'fas fa-bars';
+        }
+
+        // Close mobile menu when clicking nav links
+        document.addEventListener('click', function(event) {
+            if (event.target.closest('.nav-link')) {
+                closeMobileMenu();
+            }
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCalendar();
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
