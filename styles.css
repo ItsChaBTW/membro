@@ -332,7 +332,7 @@ body::before {
 /* Main Content */
 .main-content {
     flex: 1;
-    padding: var(--space-lg);
+    padding: var(--space-md);
     padding-bottom: calc(var(--space-lg) + 70px); /* Account for mobile nav */
     max-width: 1200px;
     margin: 0 auto;
