@@ -3,332 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security Management - MEMBRO</title>
+    <title>MEMBRO Security - Redirecting...</title>
     <link rel="stylesheet" href="../styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .dashboard-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
-            border-radius: 16px;
-            padding: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .dashboard-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
-        }
-        .card-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            border-radius: 12px;
+        body {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1.5rem;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        .redirect-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .logo {
+            font-size: 3rem;
             margin-bottom: 1rem;
         }
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--gray-900);
-            margin-bottom: 0.5rem;
+        
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
         }
-        .card-description {
-            font-size: 0.875rem;
-            color: var(--gray-600);
-            line-height: 1.5;
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-        .status-badge {
+        
+        .manual-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            margin-top: 1rem;
             display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
         }
-        .status-active {
-            background: var(--secondary-light);
-            color: var(--secondary-dark);
-        }
-        .status-alert {
-            background: var(--warning);
+        
+        .manual-link:hover {
             color: white;
-        }
-        .quick-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        .stat-card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1rem;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        .stat-label {
-            font-size: 0.875rem;
-            color: var(--gray-600);
-            margin-top: 0.25rem;
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Security Header -->
-        <header class="header">
-            <div class="header-content">
-                <div class="logo">
-                    <div class="logo-icon"><img src="../logo.png" alt="MEMBRO Logo"></div>
-                    <div class="logo-text">
-                        <h1>MEMBRO</h1>
-                        <span>Security Portal</span>
-                    </div>
-                </div>
-                <div class="user-info">
-                    <div class="user-details">
-                        <span class="user-name">Officer Rodriguez</span>
-                        <span class="user-unit">Security Team</span>
-                    </div>
-                    <button class="notification-btn" onclick="toggleNotifications()">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge">3</span>
-                    </button>
-                    <div class="user-avatar" onclick="toggleUserMenu()">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <nav class="sidebar">
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="index.html" class="nav-link active">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="visitor-log.html" class="nav-link">
-                        <i class="fas fa-clipboard-list"></i>
-                        <span>Visitor Log</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="entry-exit.html" class="nav-link">
-                        <i class="fas fa-door-open"></i>
-                        <span>Entry/Exit</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="access-pass.html" class="nav-link">
-                        <i class="fas fa-id-card"></i>
-                        <span>Access Pass</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="qr-rfid.html" class="nav-link">
-                        <i class="fas fa-qrcode"></i>
-                        <span>QR/RFID</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="gatekeeper.html" class="nav-link">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>Gatekeeper</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="guard-dashboard.html" class="nav-link">
-                        <i class="fas fa-user-shield"></i>
-                        <span>Guard Panel</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="incident-reports.html" class="nav-link">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <span>Incidents</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="report-categories.html" class="nav-link">
-                        <i class="fas fa-folder-open"></i>
-                        <span>Categories</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="ticket-status.html" class="nav-link">
-                        <i class="fas fa-ticket-alt"></i>
-                        <span>Tickets</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="emergency-updates.html" class="nav-link">
-                        <i class="fas fa-bell"></i>
-                        <span>Emergency</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="page-header">
-                <h2>Security Management Dashboard</h2>
-                <p>Monitor and manage building security operations</p>
-            </div>
-
-            <!-- Quick Stats -->
-            <div class="quick-stats">
-                <div class="stat-card">
-                    <div class="stat-number">24</div>
-                    <div class="stat-label">Active Visitors</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">156</div>
-                    <div class="stat-label">Total Check-ins Today</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">2</div>
-                    <div class="stat-label">Pending Incidents</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">98%</div>
-                    <div class="stat-label">System Status</div>
-                </div>
-            </div>
-
-            <!-- Security Features Grid -->
-            <div class="dashboard-grid">
-                <div class="dashboard-card" onclick="location.href='visitor-log.html'">
-                    <div class="card-icon">
-                        <i class="fas fa-clipboard-list"></i>
-                    </div>
-                    <div class="card-title">Visitor Log System</div>
-                    <div class="card-description">Track all visitor entries and exits with detailed logging and search capabilities</div>
-                    <div style="margin-top: 1rem;">
-                        <span class="status-badge status-active">Active</span>
-                    </div>
-                </div>
-
-                <div class="dashboard-card" onclick="location.href='entry-exit.html'">
-                    <div class="card-icon">
-                        <i class="fas fa-door-open"></i>
-                    </div>
-                    <div class="card-title">Entry/Exit Time Logging</div>
-                    <div class="card-description">Monitor real-time entry and exit times for residents and visitors</div>
-                    <div style="margin-top: 1rem;">
-                        <span class="status-badge status-active">Live</span>
-                    </div>
-                </div>
-
-                <div class="dashboard-card" onclick="location.href='access-pass.html'">
-                    <div class="card-icon">
-                        <i class="fas fa-id-card"></i>
-                    </div>
-                    <div class="card-title">Access Pass Generation</div>
-                    <div class="card-description">Generate temporary and permanent access passes for residents and visitors</div>
-                </div>
-
-                <div class="dashboard-card" onclick="location.href='qr-rfid.html'">
-                    <div class="card-icon">
-                        <i class="fas fa-qrcode"></i>
-                    </div>
-                    <div class="card-title">QR/RFID Integration</div>
-                    <div class="card-description">Scan and verify QR codes and RFID tags for seamless access control</div>
-                </div>
-
-                <div class="dashboard-card" onclick="location.href='gatekeeper.html'">
-                    <div class="card-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <div class="card-title">Gatekeeper Systems</div>
-                    <div class="card-description">Manage gate access controls and security checkpoints</div>
-                </div>
-
-                <div class="dashboard-card" onclick="location.href='guard-dashboard.html'">
-                    <div class="card-icon">
-                        <i class="fas fa-user-shield"></i>
-                    </div>
-                    <div class="card-title">Security Guard Dashboard</div>
-                    <div class="card-description">Central control panel for security personnel operations and monitoring</div>
-                </div>
-
-                <div class="dashboard-card" onclick="location.href='incident-reports.html'">
-                    <div class="card-icon">
-                        <i class="fas fa-exclamation-triangle"></i>
-                    </div>
-                    <div class="card-title">Report Incidents</div>
-                    <div class="card-description">File and track security incidents with detailed reporting system</div>
-                    <div style="margin-top: 1rem;">
-                        <span class="status-badge status-alert">2 Pending</span>
-                    </div>
-                </div>
-
-                <div class="dashboard-card" onclick="location.href='report-categories.html'">
-                    <div class="card-icon">
-                        <i class="fas fa-folder-open"></i>
-                    </div>
-                    <div class="card-title">Categorize Reports</div>
-                    <div class="card-description">Organize and categorize incident reports by type and agency</div>
-                </div>
-
-                <div class="dashboard-card" onclick="location.href='ticket-status.html'">
-                    <div class="card-icon">
-                        <i class="fas fa-ticket-alt"></i>
-                    </div>
-                    <div class="card-title">Ticket Status</div>
-                    <div class="card-description">Track status of security tickets and maintenance requests</div>
-                </div>
-
-                <div class="dashboard-card" onclick="location.href='emergency-updates.html'">
-                    <div class="card-icon">
-                        <i class="fas fa-bell"></i>
-                    </div>
-                    <div class="card-title">Emergency Updates</div>
-                    <div class="card-description">Send real-time emergency notifications and updates to residents</div>
-                </div>
-            </div>
-        </main>
+    <div class="redirect-container">
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+        </div>
+        <h1 style="margin: 0 0 1rem 0;">MEMBRO Security</h1>
+        <p>Redirecting to Guard Dashboard...</p>
+        <div class="spinner"></div>
+        <p style="font-size: 0.9rem; opacity: 0.8;">
+            If you're not redirected automatically,
+            <a href="guard-dashboard.html" class="manual-link">click here</a>
+        </p>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <script>
-        function toggleNotifications() {
-            // Placeholder for notification toggle
-            console.log('Notifications toggled');
-        }
-
-        function toggleUserMenu() {
-            // Placeholder for user menu toggle
-            console.log('User menu toggled');
-        }
-
-        // Update stats in real-time (demo)
-        setInterval(() => {
-            const statNumbers = document.querySelectorAll('.stat-number');
-            // Simulate real-time updates (you can replace with actual API calls)
-        }, 30000);
+        // Redirect to guard dashboard after 2 seconds
+        setTimeout(() => {
+            window.location.href = 'guard-dashboard.html';
+        }, 2000);
     </script>
 </body>
 </html> 

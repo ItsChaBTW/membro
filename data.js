@@ -1138,7 +1138,7 @@ MembroData.testSignup = function() {
         return newUser;
     } catch (error) {
         console.error('❌ Signup test failed:', error);
-        return null;
+        return null; 
     }
 };
 
