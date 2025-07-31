@@ -6,6 +6,7 @@
     <title>MEMBRO - Your Home Portal</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="data.js"></script>
 </head>
 <body>
     <div class="container">
@@ -21,8 +22,8 @@
                 </div>
                 <div class="user-info">
                     <div class="user-details">
-                        <span class="user-name">Heriberto Nathan</span>
-                        <span class="user-unit">Unit 802</span>
+                        <span class="user-name" id="currentUserName">Heriberto Nathan</span>
+                        <span class="user-unit" id="currentUserUnit">Unit 802</span>
                     </div>
                     <button class="notification-btn" onclick="toggleNotifications()">
                         <i class="fas fa-bell"></i>
@@ -44,9 +45,9 @@
                                         <i class="fas fa-user"></i>
                                     </div>
                                     <div class="user-menu-details">
-                                        <span class="user-menu-name">Heriberto Nathan</span>
-                                        <span class="user-menu-unit">Unit 802</span>
-                                        <span class="user-menu-email">heriberto.nathan@email.com</span>
+                                        <span class="user-menu-name" id="userMenuName">Heriberto Nathan</span>
+                                        <span class="user-menu-unit" id="userMenuUnit">Unit 802</span>
+                                        <span class="user-menu-email" id="userMenuEmail">heriberto.nathan@email.com</span>
                                     </div>
                                 </div>
                             </div>
@@ -93,105 +94,8 @@
                     <button class="tab-btn" onclick="switchTab('mentions')">Mentions</button>
                 </div>
                 
-                <div class="notification-content">
-                    <div class="notification-item unread" data-type="comment">
-                        <div class="notification-avatar">
-                            <img src="https://ui-avatars.com/api/?name=Frankie+Sullivan&background=3b82f6&color=ffffff&size=40" alt="Frankie Sullivan">
-                        </div>
-                        <div class="notification-body">
-                            <div class="notification-text">
-                                <strong>Frankie Sullivan</strong> commented on your post
-                            </div>
-                            <div class="notification-preview">
-                                This is looking great! Let's get started on it.
-                            </div>
-                            <div class="notification-time">Friday 2:20pm</div>
-                        </div>
-                        <div class="notification-date">Sep 20, 2024</div>
-                        <div class="unread-indicator"></div>
-                    </div>
-                    
-                    <div class="notification-item unread" data-type="follow">
-                        <div class="notification-avatar">
-                            <img src="https://ui-avatars.com/api/?name=Amelie+Laurent&background=10b981&color=ffffff&size=40" alt="Amelie Laurent">
-                        </div>
-                        <div class="notification-body">
-                            <div class="notification-text">
-                                <strong>Amelie Laurent</strong> followed you
-                            </div>
-                            <div class="notification-time">Friday 10:04am</div>
-                        </div>
-                        <div class="notification-date">Sep 20, 2024</div>
-                        <div class="unread-indicator"></div>
-                    </div>
-                    
-                    <div class="notification-item unread" data-type="upload">
-                        <div class="notification-avatar">
-                            <img src="https://ui-avatars.com/api/?name=Mikah+DiStefano&background=f59e0b&color=ffffff&size=40" alt="Mikah DiStefano">
-                        </div>
-                        <div class="notification-body">
-                            <div class="notification-text">
-                                <strong>Mikah DiStefano</strong> uploaded 2 attachments
-                            </div>
-                            <div class="notification-attachments">
-                                <div class="attachment-item">
-                                    <i class="fas fa-file-video"></i>
-                                    <div class="attachment-info">
-                                        <span class="attachment-name">Prototype recording 02.mp4</span>
-                                        <span class="attachment-size">16 MB</span>
-                                    </div>
-                                    <i class="fas fa-download attachment-action"></i>
-                                </div>
-                                <div class="attachment-item">
-                                    <i class="fas fa-file-video"></i>
-                                    <div class="attachment-info">
-                                        <span class="attachment-name">Prototype recording 01.mp4</span>
-                                        <span class="attachment-size">14 MB</span>
-                                    </div>
-                                    <i class="fas fa-download attachment-action"></i>
-                                </div>
-                            </div>
-                            <div class="notification-time">Thursday 2:20pm</div>
-                        </div>
-                        <div class="notification-date">Sep 20, 2024</div>
-                        <div class="unread-indicator"></div>
-                    </div>
-                    
-                    <div class="notification-item" data-type="billing">
-                        <div class="notification-avatar">
-                            <div class="system-avatar">
-                                <i class="fas fa-dollar-sign"></i>
-                            </div>
-                        </div>
-                        <div class="notification-body">
-                            <div class="notification-text">
-                                <strong>Payment Reminder</strong>
-                            </div>
-                            <div class="notification-preview">
-                                Your monthly payment of ₱1,250 is due on March 15th
-                            </div>
-                            <div class="notification-time">2 hours ago</div>
-                        </div>
-                        <div class="notification-date">Today</div>
-                    </div>
-                    
-                    <div class="notification-item" data-type="maintenance">
-                        <div class="notification-avatar">
-                            <div class="system-avatar" style="background: var(--warning);">
-                                <i class="fas fa-wrench"></i>
-                            </div>
-                        </div>
-                        <div class="notification-body">
-                            <div class="notification-text">
-                                <strong>Maintenance Update</strong>
-                            </div>
-                            <div class="notification-preview">
-                                Your service request #2024-156 has been completed
-                            </div>
-                            <div class="notification-time">Yesterday</div>
-                        </div>
-                        <div class="notification-date">Sep 19, 2024</div>
-                    </div>
+                <div class="notification-content" id="notificationContent">
+                    <!-- Notifications will be populated dynamically -->
                 </div>
                 
                 <div class="notification-footer">
@@ -274,7 +178,7 @@
         <main class="main-content">
             <!-- Welcome Header -->
             <div class="page-header">
-                <h2>Welcome Back, Heriberto</h2>
+                <h2 id="welcomeHeader">Welcome Back, Heriberto</h2>
                 <p>Everything you need for your home is right here</p>
             </div>
 
@@ -284,28 +188,28 @@
                     <div class="stat-icon">
                         <i class="fa-solid fa-peso-sign"></i>
                     </div>
-                    <span class="stat-value">₱1,250</span>
+                    <span class="stat-value" id="totalBills">₱1,250</span>
                     <span class="stat-label">Amount Due</span>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon" style="background: var(--warning);">
                         <i class="fas fa-calendar"></i>
                     </div>
-                    <span class="stat-value">Mar 15</span>
+                    <span class="stat-value" id="paymentDue">Mar 15</span>
                     <span class="stat-label">Payment Due</span>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon" style="background: var(--info);">
                         <i class="fas fa-wrench"></i>
                     </div>
-                    <span class="stat-value">2</span>
+                    <span class="stat-value" id="openRequests">2</span>
                     <span class="stat-label">Open Requests</span>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon" style="background: var(--secondary);">
                         <i class="fas fa-bell"></i>
                     </div>
-                    <span class="stat-value">3</span>
+                    <span class="stat-value" id="newUpdates">3</span>
                     <span class="stat-label">New Updates</span>
                 </div>
             </div>
@@ -317,39 +221,8 @@
                     Recent Activity
                 </div>
                 <div class="card-body">
-                    <div class="activity-list">
-                        <div class="activity-item">
-                            <div class="activity-icon" style="background: var(--secondary);">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Payment Received</div>
-                                <div class="activity-date">March 1, 2024</div>
-                            </div>
-                            <div style="color: var(--secondary); font-weight: 600; font-size: 1rem;">
-                                ₱1,250
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon" style="background: var(--info);">
-                                <i class="fas fa-wrench"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Service Request Completed</div>
-                                <div class="activity-date">February 28, 2024</div>
-                            </div>
-                            <span class="status resolved">Completed</span>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon" style="background: var(--warning);">
-                                <i class="fas fa-bullhorn"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Pool Maintenance Notice</div>
-                                <div class="activity-date">February 25, 2024</div>
-                            </div>
-                            <span class="status" style="background: #fef3c7; color: #92400e;">New</span>
-                        </div>
+                    <div class="activity-list" id="recentActivityList">
+                        <!-- Activity items will be populated dynamically -->
                     </div>
                 </div>
             </div>
@@ -456,6 +329,176 @@
     </div>
 
     <script>
+        // Initialize dynamic content when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDynamicContent();
+        });
+
+        function loadDynamicContent() {
+            // Load user data
+            var user = MembroData.getCurrentUser();
+            var stats = MembroData.getDashboardStats();
+            var billing = MembroData.getBilling();
+            var notifications = MembroData.getNotifications();
+            
+            // Update user information
+            document.getElementById('currentUserName').textContent = user.fullName;
+            document.getElementById('currentUserUnit').textContent = 'Unit ' + user.unit;
+            document.getElementById('userMenuName').textContent = user.fullName;
+            document.getElementById('userMenuUnit').textContent = 'Unit ' + user.unit;
+            document.getElementById('userMenuEmail').textContent = user.email;
+            document.getElementById('welcomeHeader').textContent = 'Welcome Back, ' + user.firstName;
+            
+            // Update stats
+            document.getElementById('totalBills').textContent = '₱' + stats.totalBills.toLocaleString();
+            document.getElementById('paymentDue').textContent = formatDate(billing.dueDate);
+            document.getElementById('openRequests').textContent = stats.pendingComplaints;
+            document.getElementById('newUpdates').textContent = stats.unreadNotifications;
+            
+            // Update notification badge
+            var badge = document.querySelector('.notification-badge');
+            if (stats.unreadNotifications > 0) {
+                badge.textContent = stats.unreadNotifications;
+                badge.style.display = 'block';
+            } else {
+                badge.style.display = 'none';
+            }
+            
+            // Load notifications
+            loadNotifications();
+            
+            // Load recent activity
+            loadRecentActivity();
+        }
+
+        function formatDate(dateString) {
+            var date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        function loadNotifications() {
+            var notifications = MembroData.getNotifications();
+            var container = document.getElementById('notificationContent');
+            container.innerHTML = '';
+            
+            notifications.forEach(function(notification) {
+                var notificationHTML = '<div class="notification-item ' + (notification.isRead ? '' : 'unread') + '" data-type="' + notification.type + '">';
+                notificationHTML += '<div class="notification-avatar">';
+                notificationHTML += '<img src="' + notification.avatar + '" alt="Avatar">';
+                notificationHTML += '</div>';
+                notificationHTML += '<div class="notification-body">';
+                notificationHTML += '<div class="notification-text">' + notification.title + '</div>';
+                if (notification.message) {
+                    notificationHTML += '<div class="notification-preview">' + notification.message + '</div>';
+                }
+                if (notification.attachments) {
+                    notificationHTML += '<div class="notification-attachments">';
+                    notification.attachments.forEach(function(attachment) {
+                        notificationHTML += '<div class="attachment-item">';
+                        notificationHTML += '<i class="fas fa-file-' + attachment.type + '"></i>';
+                        notificationHTML += '<div class="attachment-info">';
+                        notificationHTML += '<span class="attachment-name">' + attachment.name + '</span>';
+                        notificationHTML += '<span class="attachment-size">' + attachment.size + '</span>';
+                        notificationHTML += '</div>';
+                        notificationHTML += '<i class="fas fa-download attachment-action"></i>';
+                        notificationHTML += '</div>';
+                    });
+                    notificationHTML += '</div>';
+                }
+                notificationHTML += '<div class="notification-time">' + notification.time + '</div>';
+                notificationHTML += '</div>';
+                notificationHTML += '<div class="notification-date">' + notification.date + '</div>';
+                if (!notification.isRead) {
+                    notificationHTML += '<div class="unread-indicator"></div>';
+                }
+                notificationHTML += '</div>';
+                
+                container.innerHTML += notificationHTML;
+            });
+        }
+
+        function loadRecentActivity() {
+            var billing = MembroData.getBilling();
+            var complaints = MembroData.getComplaints();
+            var announcements = MembroData.getAnnouncements();
+            var container = document.getElementById('recentActivityList');
+            
+            // Create activity array from different sources
+            var activities = [];
+            
+            // Add recent payments
+            billing.paymentHistory.slice(0, 2).forEach(function(payment) {
+                activities.push({
+                    type: 'payment',
+                    title: payment.description,
+                    date: payment.date,
+                    amount: '₱' + payment.amount.toLocaleString(),
+                    icon: 'fas fa-check',
+                    iconColor: 'var(--secondary)'
+                });
+            });
+            
+            // Add completed complaints
+            complaints.filter(function(c) { return c.status === 'resolved'; }).slice(0, 1).forEach(function(complaint) {
+                activities.push({
+                    type: 'service',
+                    title: complaint.title + ' Completed',
+                    date: complaint.dateSubmitted,
+                    status: 'Completed',
+                    icon: 'fas fa-wrench',
+                    iconColor: 'var(--info)'
+                });
+            });
+            
+            // Add recent announcements
+            announcements.slice(0, 1).forEach(function(announcement) {
+                activities.push({
+                    type: 'announcement',
+                    title: announcement.title,
+                    date: announcement.date,
+                    status: 'New',
+                    icon: 'fas fa-bullhorn',
+                    iconColor: 'var(--warning)'
+                });
+            });
+            
+            // Sort by date and display
+            activities.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+            container.innerHTML = '';
+            
+            activities.slice(0, 3).forEach(function(activity) {
+                var activityHTML = '<div class="activity-item">';
+                activityHTML += '<div class="activity-icon" style="background: ' + activity.iconColor + ';">';
+                activityHTML += '<i class="' + activity.icon + '"></i>';
+                activityHTML += '</div>';
+                activityHTML += '<div class="activity-content">';
+                activityHTML += '<div class="activity-title">' + activity.title + '</div>';
+                activityHTML += '<div class="activity-date">' + formatActivityDate(activity.date) + '</div>';
+                activityHTML += '</div>';
+                if (activity.amount) {
+                    activityHTML += '<div style="color: var(--secondary); font-weight: 600; font-size: 1rem;">' + activity.amount + '</div>';
+                } else if (activity.status) {
+                    var statusClass = activity.status === 'Completed' ? 'resolved' : '';
+                    var statusStyle = activity.status === 'New' ? 'background: #fef3c7; color: #92400e;' : '';
+                    activityHTML += '<span class="status ' + statusClass + '" style="' + statusStyle + '">' + activity.status + '</span>';
+                }
+                activityHTML += '</div>';
+                
+                container.innerHTML += activityHTML;
+            });
+        }
+
+        function formatActivityDate(dateString) {
+            var date = new Date(dateString);
+            var now = new Date();
+            var diffTime = Math.abs(now - date);
+            var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 1) return 'Yesterday';
+            if (diffDays <= 7) return diffDays + ' days ago';
+            return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        }
+
         // Notification Modal Functions
         function toggleNotifications() {
             const modal = document.getElementById('notificationModal');
@@ -498,13 +541,21 @@
         }
 
         function markAllAsRead() {
-            // Remove unread class from all notifications
-            document.querySelectorAll('.notification-item.unread').forEach(item => {
-                item.classList.remove('unread');
+            // Mark all notifications as read in data
+            var notifications = MembroData.getNotifications();
+            notifications.forEach(function(notification) {
+                if (!notification.isRead) {
+                    MembroData.markNotificationRead(notification.id);
+                }
             });
             
-            // Update notification badge
-            const badge = document.querySelector('.notification-badge');
+            // Reload notifications display
+            loadNotifications();
+            
+            // Update stats and badge
+            var stats = MembroData.getDashboardStats();
+            document.getElementById('newUpdates').textContent = stats.unreadNotifications;
+            var badge = document.querySelector('.notification-badge');
             badge.textContent = '0';
             badge.style.display = 'none';
             
@@ -651,9 +702,33 @@
 
         // Logout Function
         function logout() {
-            alert('Logging out...');
-            // In a real application, you would redirect to a login page
-            // window.location.href = 'login.html';
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear user session data
+                if (typeof MembroData !== 'undefined') {
+                    MembroData.clearUserSession();
+                }
+                
+                // Clear localStorage and sessionStorage
+                localStorage.removeItem('membroUserData');
+                localStorage.removeItem('membroNotifications');
+                localStorage.removeItem('membroBillingData');
+                localStorage.removeItem('membroHouseholdData');
+                localStorage.removeItem('membroVehiclesData');
+                localStorage.removeItem('membroFacilitiesData');
+                localStorage.removeItem('membroServicesData');
+                localStorage.removeItem('membroComplaintsData');
+                localStorage.removeItem('membroPropertiesData');
+                localStorage.removeItem('membroLotsData');
+                sessionStorage.clear();
+                
+                // Show logout message
+                showToast('Logging out...');
+                
+                // Redirect to login page after a short delay
+                setTimeout(function() {
+                    window.location.href = 'login.html';
+                }, 1000);
+            }
         }
     </script>
 </body>

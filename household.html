@@ -1694,7 +1694,31 @@ ${application.additionalTerms ? `Additional Terms: ${application.additionalTerms
 
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                window.location.href = 'login.html';
+                // Clear user session data
+                if (typeof MembroData !== 'undefined') {
+                    MembroData.clearUserSession();
+                }
+                
+                // Clear localStorage and sessionStorage
+                localStorage.removeItem('membroUserData');
+                localStorage.removeItem('membroNotifications');
+                localStorage.removeItem('membroBillingData');
+                localStorage.removeItem('membroHouseholdData');
+                localStorage.removeItem('membroVehiclesData');
+                localStorage.removeItem('membroFacilitiesData');
+                localStorage.removeItem('membroServicesData');
+                localStorage.removeItem('membroComplaintsData');
+                localStorage.removeItem('membroPropertiesData');
+                localStorage.removeItem('membroLotsData');
+                sessionStorage.clear();
+                
+                // Show logout message
+                showToast('Logging out...');
+                
+                // Redirect to login page after a short delay
+                setTimeout(function() {
+                    window.location.href = 'login.html';
+                }, 1000);
             }
         }
 

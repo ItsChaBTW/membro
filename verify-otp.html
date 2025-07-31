@@ -6,6 +6,8 @@
     <title>Verify Account - MEMBRO</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="data.js"></script>
+    <script src="email-service.js"></script>
     <style>
         .auth-container {
             min-height: 100vh;
@@ -358,7 +360,7 @@
                     <i class="fas fa-envelope-open-text"></i>
                 </div>
                 <h1>Verify Your Email</h1>
-                <p>We've sent a verification code to<br><span class="email-highlight">heriberto.nathan@example.com</span></p>
+                <p>We've sent a verification code to<br><span class="email-highlight" id="emailDisplay">heriberto.nathan@example.com</span></p>
                 </div>
 
             <div class="auth-body">
@@ -471,11 +473,32 @@
             }
         }, 1000);
         
+        // Initialize page with signup data
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get email from URL parameter or session storage
+            var urlParams = new URLSearchParams(window.location.search);
+            var email = urlParams.get('email') || sessionStorage.getItem('verificationEmail');
+            
+            if (email) {
+                document.getElementById('emailDisplay').textContent = email;
+            }
+        });
+        
         // Resend functionality
         resendLink.addEventListener('click', (e) => {
             e.preventDefault();
             
             if (!resendLink.classList.contains('disabled')) {
+                // Generate new verification code
+                var newVerificationCode = generateOTP();
+                sessionStorage.setItem('verificationCode', newVerificationCode);
+                
+                var email = sessionStorage.getItem('verificationEmail');
+                var signupData = JSON.parse(sessionStorage.getItem('signupData') || '{}');
+                
+                // Send new verification email
+                sendVerificationEmail(email, newVerificationCode, signupData.firstName || 'User');
+                
                 timeLeft = 60;
                 timerText.style.display = 'inline';
                 resendLink.style.display = 'none';
@@ -495,7 +518,7 @@
                 }, 1000);
                 
                 // Show success message
-                alert('Verification code sent! Please check your email.');
+                showToast('📧 New verification code sent to ' + email);
             }
         });
         
@@ -503,19 +526,186 @@
         document.getElementById('otpForm').addEventListener('submit', (e) => {
             e.preventDefault();
             
-            const otp = Array.from(otpInputs).map(input => input.value).join('');
+            const enteredOTP = Array.from(otpInputs).map(input => input.value).join('');
+            const storedOTP = sessionStorage.getItem('verificationCode');
             
-            if (otp.length === 6) {
-                // Simulate verification
+            if (enteredOTP.length === 6) {
+                // Show loading state
                 verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
             verifyBtn.disabled = true;
             
             setTimeout(() => {
-                    alert('Account verified successfully!');
-                        window.location.href = 'dashboard.html';
+                    if (enteredOTP === storedOTP) {
+                        // Verification successful
+                        var signupData = JSON.parse(sessionStorage.getItem('signupData') || '{}');
+                        
+                        // Create user account in the system
+                        createUserAccount(signupData);
+                        
+                        // Send welcome email
+                        sendWelcomeEmail(signupData.email, signupData.firstName);
+                        
+                        // Clear session storage
+                        sessionStorage.removeItem('signupData');
+                        sessionStorage.removeItem('verificationCode');
+                        sessionStorage.removeItem('verificationEmail');
+                        
+                        // Show success and redirect to pending approval
+                        showSuccess('Account verified successfully! Your account is now pending admin approval.');
+                        
+                        setTimeout(() => {
+                            window.location.href = 'pending-approval.html';
+                        }, 2000);
+                    } else {
+                        // Verification failed
+                        showError('Invalid verification code. Please try again.');
+                        
+                        // Reset button
+                        verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Verify Account';
+                        verifyBtn.disabled = false;
+                        
+                        // Clear inputs and show error animation
+                        otpInputs.forEach(input => {
+                            input.value = '';
+                            input.classList.remove('filled');
+                            input.style.borderColor = 'var(--danger)';
+                        });
+                        
+                        // Reset border colors after animation
+                        setTimeout(() => {
+                            otpInputs.forEach(input => {
+                                input.style.borderColor = '';
+                            });
+                        }, 2000);
+                        
+                        // Focus first input
+                        otpInputs[0].focus();
+                    }
                     }, 2000);
             }
         });
+
+        function generateOTP() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        function sendVerificationEmail(email, code, firstName) {
+            console.log('📧 VERIFICATION EMAIL RESENT:', {
+                to: email,
+                code: code,
+                firstName: firstName
+            });
+            console.log('🔐 NEW VERIFICATION CODE:', code); // For demo purposes
+            
+            // Send email using MembroEmailService if available
+            if (typeof MembroEmailService !== 'undefined') {
+                MembroEmailService.sendEmail({
+                    type: 'email_verification',
+                    to: email,
+                    data: {
+                        firstName: firstName,
+                        verificationCode: code,
+                        email: email,
+                        timestamp: new Date().toISOString()
+                    }
+                }).then(function(result) {
+                    console.log('✅ Verification email resent successfully:', result);
+                }).catch(function(error) {
+                    console.error('❌ Failed to resend verification email:', error);
+                });
+            }
+        }
+
+        function createUserAccount(userData) {
+            // Register user in the MEMBRO system
+            if (typeof MembroData !== 'undefined') {
+                var newUser = MembroData.registerUser(userData);
+                console.log('✅ User account created in MEMBRO system:', newUser);
+                return newUser;
+            } else {
+                // Fallback for when data.js is not loaded
+                console.log('⚠️ MembroData not available, creating account locally:', {
+                    firstName: userData.firstName,
+                    lastName: userData.lastName,
+                    email: userData.email,
+                    phone: userData.phone,
+                    unit: userData.unit,
+                    status: 'active',
+                    verifiedAt: new Date().toISOString()
+                });
+                return null;
+            }
+        }
+
+        function sendWelcomeEmail(email, firstName) {
+            console.log('📧 WELCOME EMAIL SENT:', {
+                to: email,
+                firstName: firstName
+            });
+            
+            // Send email using MembroEmailService if available
+            if (typeof MembroEmailService !== 'undefined') {
+                MembroEmailService.sendEmail({
+                    type: 'welcome',
+                    to: email,
+                    data: {
+                        firstName: firstName,
+                        email: email,
+                        timestamp: new Date().toISOString()
+                    }
+                }).then(function(result) {
+                    console.log('✅ Welcome email sent successfully:', result);
+                }).catch(function(error) {
+                    console.error('❌ Failed to send welcome email:', error);
+                });
+            }
+            
+            showToast('📧 Welcome email sent to ' + email);
+        }
+
+        function showSuccess(message) {
+            var toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; top: 20px; right: 20px; background: var(--secondary); color: white; padding: 1rem 1.5rem; border-radius: 8px; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.2);';
+            toast.innerHTML = '<i class="fas fa-check-circle"></i> ' + message;
+            document.body.appendChild(toast);
+            
+            setTimeout(function() {
+                if (document.body.contains(toast)) {
+                    document.body.removeChild(toast);
+                }
+            }, 4000);
+        }
+
+        function showError(message) {
+            var toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; top: 20px; right: 20px; background: var(--danger); color: white; padding: 1rem 1.5rem; border-radius: 8px; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.2);';
+            toast.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + message;
+            document.body.appendChild(toast);
+            
+            setTimeout(function() {
+                if (document.body.contains(toast)) {
+                    document.body.removeChild(toast);
+                }
+            }, 4000);
+        }
+
+        function showToast(message) {
+            var toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 12px 24px; border-radius: 8px; z-index: 10000; opacity: 0; transition: opacity 0.3s ease;';
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(function() { toast.style.opacity = '1'; }, 100);
+            setTimeout(function() {
+                toast.style.opacity = '0';
+                setTimeout(function() { 
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast); 
+                    }
+                }, 300);
+            }, 4000);
+        }
         
         // Auto-focus first input
             otpInputs[0].focus();

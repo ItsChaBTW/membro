@@ -6,6 +6,7 @@
     <title>Community News - MEMBRO</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="data.js"></script>
 </head>
 <body>
     <div class="container">
@@ -20,8 +21,8 @@
                 </div>
                 <div class="user-info">
                     <div class="user-details">
-                        <span class="user-name">Heriberto Nathan</span>
-                        <span class="user-unit">Unit 802</span>
+                        <span class="user-name" id="currentUserName">Heriberto Nathan</span>
+                        <span class="user-unit" id="currentUserUnit">Unit 802</span>
                     </div>
                     <button class="notification-btn" onclick="toggleNotifications()">
                         <i class="fas fa-bell"></i>
@@ -239,169 +240,26 @@
                 <div class="card-body">
                     <div style="display: grid; grid-template-columns: 1fr auto; gap: 1rem; margin-bottom: 1rem;">
                         <div class="form-group" style="margin-bottom: 0;">
-                            <input type="search" class="form-control" placeholder="Search announcements..." style="margin-bottom: 0;">
+                            <input type="search" id="searchInput" class="form-control" placeholder="Search announcements..." style="margin-bottom: 0;" oninput="filterAnnouncements()">
                         </div>
-                        <button class="btn btn-primary">
+                        <button class="btn btn-primary" onclick="filterAnnouncements()">
                             <i class="fas fa-search"></i>
                             Search
                         </button>
                     </div>
-                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.5rem 1rem;">All</button>
-                        <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.5rem 1rem;">Maintenance</button>
-                        <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.5rem 1rem;">Events</button>
-                        <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.5rem 1rem;">Policy Changes</button>
-                        <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.5rem 1rem;">Emergency</button>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="categoryFilters">
+                        <button class="btn btn-primary filter-btn active" style="font-size: 0.75rem; padding: 0.5rem 1rem;" onclick="filterByCategory('all')">All</button>
+                        <button class="btn btn-secondary filter-btn" style="font-size: 0.75rem; padding: 0.5rem 1rem;" onclick="filterByCategory('maintenance')">Maintenance</button>
+                        <button class="btn btn-secondary filter-btn" style="font-size: 0.75rem; padding: 0.5rem 1rem;" onclick="filterByCategory('event')">Events</button>
+                        <button class="btn btn-secondary filter-btn" style="font-size: 0.75rem; padding: 0.5rem 1rem;" onclick="filterByCategory('policy')">Policy</button>
+                        <button class="btn btn-secondary filter-btn" style="font-size: 0.75rem; padding: 0.5rem 1rem;" onclick="filterByCategory('emergency')">Emergency</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Latest Announcements -->
-            <div class="card" style="border-left: 4px solid var(--danger);">
-                <div class="card-header" style="background: #fef2f2; color: var(--danger);">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    Important Notice
-                    <span style="float: right; font-size: 0.75rem; background: var(--danger); color: white; padding: 0.25rem 0.75rem; border-radius: var(--radius-lg);">NEW</span>
-                </div>
-                <div class="card-body">
-                    <h3 style="color: var(--gray-900); margin-bottom: 1rem; font-size: 1.25rem; font-weight: 600;">
-                        Scheduled Water Service Interruption
-                    </h3>
-                    <p style="color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
-                        Water service in Building A will be temporarily interrupted on <strong>March 12th from 9:00 AM to 3:00 PM</strong> for scheduled pipe maintenance. Please plan accordingly and store water for essential needs.
-                    </p>
-                    <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.875rem; color: var(--gray-500);">
-                        <span><i class="fas fa-calendar"></i> Posted: March 8, 2024</span>
-                        <span><i class="fas fa-user"></i> Building Management</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-swimmer"></i>
-                    Pool & Recreation
-                    <span style="float: right; font-size: 0.75rem; background: var(--info); color: white; padding: 0.25rem 0.75rem; border-radius: var(--radius-lg);">UPDATE</span>
-                </div>
-                <div class="card-body">
-                    <h3 style="color: var(--gray-900); margin-bottom: 1rem; font-size: 1.25rem; font-weight: 600;">
-                        Pool Maintenance Completed
-                    </h3>
-                    <p style="color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
-                        The swimming pool maintenance has been completed and the pool is now open for regular use. The pool deck has also been cleaned and all equipment is functioning normally. New safety equipment has been installed.
-                    </p>
-                    <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.875rem; color: var(--gray-500);">
-                        <span><i class="fas fa-calendar"></i> Posted: March 6, 2024</span>
-                        <span><i class="fas fa-user"></i> Facilities Team</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-calendar-alt"></i>
-                    Community Events
-                </div>
-                <div class="card-body">
-                    <h3 style="color: var(--gray-900); margin-bottom: 1rem; font-size: 1.25rem; font-weight: 600;">
-                        Monthly Residents Meeting
-                    </h3>
-                    <p style="color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
-                        Join us for our monthly residents meeting on <strong>March 20th at 7:00 PM</strong> in the community room. We'll discuss upcoming improvements, budget updates, and address any resident concerns. Light refreshments will be provided.
-                    </p>
-                    <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.875rem; color: var(--gray-500); margin-bottom: 1rem;">
-                        <span><i class="fas fa-calendar"></i> Posted: March 5, 2024</span>
-                        <span><i class="fas fa-user"></i> HOA Board</span>
-                    </div>
-                    <button class="btn btn-primary">
-                        <i class="fas fa-calendar-check"></i>
-                        Add to Calendar
-                    </button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-tools"></i>
-                    Maintenance Updates
-                </div>
-                <div class="card-body">
-                    <h3 style="color: var(--gray-900); margin-bottom: 1rem; font-size: 1.25rem; font-weight: 600;">
-                        Elevator Inspection Scheduled
-                    </h3>
-                    <p style="color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
-                        Annual elevator inspections will take place on <strong>March 14th from 8:00 AM to 12:00 PM</strong>. During this time, elevators may be temporarily out of service for 15-30 minutes at a time. We apologize for any inconvenience.
-                    </p>
-                    <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.875rem; color: var(--gray-500);">
-                        <span><i class="fas fa-calendar"></i> Posted: March 3, 2024</span>
-                        <span><i class="fas fa-user"></i> Maintenance Team</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-shield-alt"></i>
-                    Security Notice
-                </div>
-                <div class="card-body">
-                    <h3 style="color: var(--gray-900); margin-bottom: 1rem; font-size: 1.25rem; font-weight: 600;">
-                        New Security Measures Implemented
-                    </h3>
-                    <p style="color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
-                        We've enhanced our building security with new key card readers at all entrances and upgraded our camera system. All residents will receive new access cards by March 15th. Please ensure your guest information is up to date.
-                    </p>
-                    <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.875rem; color: var(--gray-500);">
-                        <span><i class="fas fa-calendar"></i> Posted: March 1, 2024</span>
-                        <span><i class="fas fa-user"></i> Security Team</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-leaf"></i>
-                    Green Initiatives
-                </div>
-                <div class="card-body">
-                    <h3 style="color: var(--gray-900); margin-bottom: 1rem; font-size: 1.25rem; font-weight: 600;">
-                        New Recycling Program Launch
-                    </h3>
-                    <p style="color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
-                        We're excited to announce our new comprehensive recycling program starting March 18th. New recycling bins will be placed on each floor, and we'll have weekly collection for paper, plastic, and electronics. Detailed guidelines will be posted soon.
-                    </p>
-                    <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.875rem; color: var(--gray-500);">
-                        <span><i class="fas fa-calendar"></i> Posted: February 28, 2024</span>
-                        <span><i class="fas fa-user"></i> Green Committee</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-car"></i>
-                    Parking Updates
-                </div>
-                <div class="card-body">
-                    <h3 style="color: var(--gray-900); margin-bottom: 1rem; font-size: 1.25rem; font-weight: 600;">
-                        Visitor Parking Changes
-                    </h3>
-                    <p style="color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
-                        Effective March 1st, visitor parking will be limited to 3 hours on weekdays and 6 hours on weekends. Visitors must register at the front desk and display a temporary permit. Long-term visitor parking can be arranged through the management office.
-                    </p>
-                    <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.875rem; color: var(--gray-500);">
-                        <span><i class="fas fa-calendar"></i> Posted: February 26, 2024</span>
-                        <span><i class="fas fa-user"></i> Parking Management</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Load More -->
-            <div style="text-align: center; margin: 2rem 0;">
-                <button class="btn btn-secondary btn-large">
-                    <i class="fas fa-chevron-down"></i>
-                    Load More Announcements
-                </button>
+            <!-- Dynamic Announcements Container -->
+            <div id="announcementsContainer">
+                <!-- Announcements will be populated dynamically -->
             </div>
 
             <!-- Stay Connected -->
@@ -671,6 +529,195 @@
                 }
             }
         });
+
+        // Initialize dynamic content when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDynamicContent();
+        });
+
+        var currentFilter = 'all';
+        var currentSearchTerm = '';
+
+        function loadDynamicContent() {
+            // Load user data
+            var user = MembroData.getCurrentUser();
+            
+            // Update user information
+            document.getElementById('currentUserName').textContent = user.fullName;
+            document.getElementById('currentUserUnit').textContent = 'Unit ' + user.unit;
+            
+            // Load announcements
+            loadAnnouncements();
+        }
+
+        function loadAnnouncements() {
+            var announcements = MembroData.getAnnouncements();
+            var container = document.getElementById('announcementsContainer');
+            
+            // Filter announcements
+            var filteredAnnouncements = announcements.filter(function(announcement) {
+                var matchesCategory = currentFilter === 'all' || announcement.category === currentFilter;
+                var matchesSearch = currentSearchTerm === '' || 
+                    announcement.title.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
+                    announcement.content.toLowerCase().includes(currentSearchTerm.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+            
+            container.innerHTML = '';
+            
+            filteredAnnouncements.forEach(function(announcement) {
+                var cardHTML = createAnnouncementCard(announcement);
+                container.innerHTML += cardHTML;
+            });
+            
+            if (filteredAnnouncements.length === 0) {
+                container.innerHTML = '<div class="card"><div class="card-body" style="text-align: center; padding: 3rem;"><i class="fas fa-search" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem;"></i><h3 style="color: var(--gray-600); margin-bottom: 0.5rem;">No announcements found</h3><p style="color: var(--gray-500);">Try adjusting your search or filter criteria.</p></div></div>';
+            }
+        }
+
+        function createAnnouncementCard(announcement) {
+            var priorityColors = {
+                'high': 'var(--danger)',
+                'medium': 'var(--warning)', 
+                'low': 'var(--info)'
+            };
+            
+            var categoryIcons = {
+                'maintenance': 'fas fa-tools',
+                'event': 'fas fa-calendar-alt',
+                'policy': 'fas fa-shield-alt',
+                'emergency': 'fas fa-exclamation-triangle'
+            };
+            
+            var borderStyle = announcement.priority === 'high' ? 'border-left: 4px solid ' + priorityColors[announcement.priority] + ';' : '';
+            var headerStyle = announcement.priority === 'high' ? 'background: #fef2f2; color: ' + priorityColors[announcement.priority] + ';' : '';
+            var icon = categoryIcons[announcement.category] || 'fas fa-bullhorn';
+            var badge = announcement.isPinned ? '<span style="float: right; font-size: 0.75rem; background: ' + priorityColors[announcement.priority] + '; color: white; padding: 0.25rem 0.75rem; border-radius: var(--radius-lg);">PINNED</span>' : '';
+            
+            return '<div class="card" style="' + borderStyle + '">' +
+                '<div class="card-header" style="' + headerStyle + '">' +
+                    '<i class="' + icon + '"></i> ' +
+                    getCategoryName(announcement.category) +
+                    badge +
+                '</div>' +
+                '<div class="card-body">' +
+                    '<h3 style="color: var(--gray-900); margin-bottom: 1rem; font-size: 1.25rem; font-weight: 600;">' +
+                        announcement.title +
+                    '</h3>' +
+                    '<p style="color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">' +
+                        announcement.content +
+                    '</p>' +
+                    '<div style="display: flex; gap: 1rem; align-items: center; font-size: 0.875rem; color: var(--gray-500); margin-bottom: 1rem;">' +
+                        '<span><i class="fas fa-calendar"></i> Posted: ' + formatDate(announcement.date) + '</span>' +
+                        '<span><i class="fas fa-user"></i> ' + announcement.author + '</span>' +
+                    '</div>' +
+                    '<div style="display: flex; gap: 1rem; align-items: center;">' +
+                        '<button class="btn btn-secondary btn-sm" onclick="toggleLike(\'' + announcement.id + '\')" style="display: flex; align-items: center; gap: 0.5rem;">' +
+                            '<i class="fas fa-heart' + (announcement.isLiked ? '' : '-o') + '" style="color: ' + (announcement.isLiked ? 'var(--danger)' : 'inherit') + ';"></i>' +
+                            '<span id="likes-' + announcement.id + '">' + announcement.likes + '</span>' +
+                        '</button>' +
+                        '<button class="btn btn-secondary btn-sm" style="display: flex; align-items: center; gap: 0.5rem;">' +
+                            '<i class="fas fa-comment"></i>' +
+                            '<span>' + announcement.comments + '</span>' +
+                        '</button>' +
+                        '<button class="btn btn-secondary btn-sm" onclick="shareAnnouncement(\'' + announcement.id + '\')">' +
+                            '<i class="fas fa-share"></i> Share' +
+                        '</button>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+        }
+
+        function getCategoryName(category) {
+            var names = {
+                'maintenance': 'Maintenance Updates',
+                'event': 'Community Events',
+                'policy': 'Policy Updates',
+                'emergency': 'Emergency Notice'
+            };
+            return names[category] || 'General';
+        }
+
+        function formatDate(dateString) {
+            var date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        }
+
+        function filterByCategory(category) {
+            currentFilter = category;
+            
+            // Update filter button styles
+            var filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(function(btn) {
+                btn.classList.remove('btn-primary', 'active');
+                btn.classList.add('btn-secondary');
+            });
+            
+            event.target.classList.remove('btn-secondary');
+            event.target.classList.add('btn-primary', 'active');
+            
+            // Reload announcements with new filter
+            loadAnnouncements();
+        }
+
+        function filterAnnouncements() {
+            currentSearchTerm = document.getElementById('searchInput').value;
+            loadAnnouncements();
+        }
+
+        function toggleLike(announcementId) {
+            MembroData.likeAnnouncement(announcementId);
+            var announcement = MembroData.getAnnouncements().find(function(a) { return a.id === announcementId; });
+            
+            // Update the display
+            var likesElement = document.getElementById('likes-' + announcementId);
+            var heartIcon = likesElement.parentElement.querySelector('i');
+            
+            if (announcement.isLiked) {
+                heartIcon.classList.remove('fa-heart-o');
+                heartIcon.classList.add('fa-heart');
+                heartIcon.style.color = 'var(--danger)';
+            } else {
+                heartIcon.classList.remove('fa-heart');
+                heartIcon.classList.add('fa-heart-o');
+                heartIcon.style.color = 'inherit';
+            }
+            
+            likesElement.textContent = announcement.likes;
+        }
+
+        function shareAnnouncement(announcementId) {
+            var announcement = MembroData.getAnnouncements().find(function(a) { return a.id === announcementId; });
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: announcement.title,
+                    text: announcement.content,
+                    url: window.location.href
+                });
+            } else {
+                // Fallback - copy to clipboard
+                var shareText = announcement.title + '\n\n' + announcement.content + '\n\nFrom: MEMBRO Community Portal';
+                navigator.clipboard.writeText(shareText).then(function() {
+                    showToast('Announcement copied to clipboard!');
+                });
+            }
+        }
+
+        function showToast(message) {
+            var toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            toast.style.cssText = 'position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 12px 24px; border-radius: 8px; z-index: 10000; opacity: 0; transition: opacity 0.3s ease;';
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(function() { toast.style.opacity = '1'; }, 100);
+            setTimeout(function() {
+                toast.style.opacity = '0';
+                setTimeout(function() { document.body.removeChild(toast); }, 300);
+            }, 3000);
+        }
     </script>
 </body>
 </html> 

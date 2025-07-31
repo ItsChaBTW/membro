@@ -6,6 +6,8 @@
     <title>Sign Up - MEMBRO</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="data.js"></script>
+    <script src="email-service.js"></script>
     <style>
         .auth-container {
             min-height: 100vh;
@@ -480,7 +482,7 @@
 
                     <div class="terms-checkbox">
                         <input type="checkbox" id="terms" name="terms" required>
-                        <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                        <label for="terms">I agree to the <a href="#" target="_blank">Terms of Service</a> and <a href="data-privacy.html" target="_blank">Privacy Policy</a></label>
                         </div>
 
                     <button type="submit" class="auth-btn" id="submitBtn" disabled>
@@ -567,14 +569,262 @@
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
+            console.log('🚀 Form submission started');
+            
             if (password.value !== confirmPassword.value) {
-                alert('Passwords do not match');
+                showError('Passwords do not match');
                 return;
             }
             
-            // Simulate account creation
-            alert('Account created successfully! Please check your email for verification.');
-                window.location.href = 'verify-otp.html';
+            // Show loading state
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+            submitBtn.disabled = true;
+            
+            try {
+                // Collect form data
+                var formData = {
+                    firstName: document.getElementById('firstName').value,
+                    lastName: document.getElementById('lastName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    unit: document.getElementById('unitNumber').value, // Corrected to unitNumber
+                    password: password.value
+                };
+                
+                console.log('📝 Form data collected:', formData);
+                
+                // Generate verification code
+                var verificationCode = generateOTP();
+                console.log('🔐 OTP generated:', verificationCode);
+                
+                // Store signup data temporarily
+                sessionStorage.setItem('signupData', JSON.stringify(formData));
+                sessionStorage.setItem('verificationCode', verificationCode);
+                sessionStorage.setItem('verificationEmail', formData.email);
+                console.log('💾 Data stored in sessionStorage');
+                
+                // Send verification email
+                console.log('📧 Sending verification email...');
+                sendVerificationEmail(formData.email, verificationCode, formData.firstName);
+                
+                // Show success and redirect
+                showSuccess('Account created! Please check your email for verification code.');
+                console.log('✅ Success message shown');
+                
+                // Redirect after delay
+                setTimeout(function() {
+                    console.log('🔄 Redirecting to verify-otp page...');
+                    window.location.href = 'verify-otp.html?email=' + encodeURIComponent(formData.email);
+                }, 2000);
+                
+            } catch (error) {
+                console.error('❌ Signup error:', error);
+                showError('An error occurred during signup. Please try again.');
+                
+                // Reset button
+                submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+                submitBtn.disabled = false;
+            }
+        });
+
+        function generateOTP() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        function sendVerificationEmail(email, code, firstName) {
+            console.log('📧 VERIFICATION EMAIL SENT:', {
+                to: email,
+                code: code,
+                firstName: firstName
+            });
+            console.log('🔐 VERIFICATION CODE:', code); // For demo purposes
+            
+            // Show verification code prominently
+            console.log('='.repeat(50));
+            console.log('🔐 VERIFICATION CODE FOR TESTING: ' + code);
+            console.log('📧 Email: ' + email);
+            console.log('='.repeat(50));
+            
+            try {
+                // Send email using MembroEmailService if available
+                if (typeof MembroEmailService !== 'undefined') {
+                    MembroEmailService.sendEmail({
+                        type: 'email_verification',
+                        to: email,
+                        data: {
+                            firstName: firstName,
+                            verificationCode: code,
+                            email: email,
+                            timestamp: new Date().toISOString()
+                        }
+                    }).then(function(result) {
+                        console.log('✅ Verification email sent successfully:', result);
+                    }).catch(function(error) {
+                        console.error('❌ Failed to send verification email:', error);
+                    });
+                } else {
+                    console.log('⚠️ MembroEmailService not available, email simulation only');
+                }
+            } catch (error) {
+                console.error('❌ Email service error:', error);
+            }
+            
+            // Show toast notification (always show this regardless of email service)
+            showToast('📧 Verification email sent to ' + email);
+            
+            // Show verification code in a more prominent way
+            setTimeout(function() {
+                showVerificationCode(code, email);
+            }, 1000);
+        }
+        
+        function showVerificationCode(code, email) {
+            // Create a prominent verification code display
+            var codeDisplay = document.createElement('div');
+            codeDisplay.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                border: 2px solid #10b981;
+                border-radius: 12px;
+                padding: 30px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                z-index: 10001;
+                text-align: center;
+                font-family: Arial, sans-serif;
+                max-width: 400px;
+            `;
+            
+            codeDisplay.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <div style="font-size: 48px; margin-bottom: 10px;">📧</div>
+                    <h3 style="margin: 0; color: #111827;">Verification Code</h3>
+                    <p style="margin: 10px 0 0 0; color: #6b7280;">For testing purposes</p>
+                </div>
+                <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">Email: ${email}</p>
+                    <div style="font-size: 32px; font-weight: bold; color: #111827; letter-spacing: 8px; font-family: monospace; background: white; padding: 15px; border-radius: 8px; border: 2px solid #d1d5db;">${code}</div>
+                </div>
+                <p style="margin: 0; color: #6b7280; font-size: 12px;">This code will be used on the verification page</p>
+                <button onclick="this.parentElement.remove()" style="margin-top: 20px; background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;">Got it!</button>
+            `;
+            
+            document.body.appendChild(codeDisplay);
+            
+            // Auto-remove after 15 seconds
+            setTimeout(function() {
+                if (document.body.contains(codeDisplay)) {
+                    codeDisplay.remove();
+                }
+            }, 15000);
+        }
+
+        function showSuccess(message) {
+            var toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; top: 20px; right: 20px; background: var(--secondary); color: white; padding: 1rem 1.5rem; border-radius: 8px; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.2);';
+            toast.innerHTML = '<i class="fas fa-check-circle"></i> ' + message;
+            document.body.appendChild(toast);
+            
+            setTimeout(function() {
+                if (document.body.contains(toast)) {
+                    document.body.removeChild(toast);
+                }
+            }, 4000);
+        }
+
+        function showError(message) {
+            var toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; top: 20px; right: 20px; background: var(--danger); color: white; padding: 1rem 1.5rem; border-radius: 8px; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.2);';
+            toast.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + message;
+            document.body.appendChild(toast);
+            
+            setTimeout(function() {
+                if (document.body.contains(toast)) {
+                    document.body.removeChild(toast);
+                }
+            }, 4000);
+        }
+
+        function showToast(message) {
+            var toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 12px 24px; border-radius: 8px; z-index: 10000; opacity: 0; transition: opacity 0.3s ease;';
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(function() { toast.style.opacity = '1'; }, 100);
+            setTimeout(function() {
+                toast.style.opacity = '0';
+                setTimeout(function() { 
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast); 
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // Debug function to test signup system
+        function debugSignup() {
+            console.log('🔍 DEBUGGING SIGNUP SYSTEM:');
+            console.log('MembroData available:', typeof MembroData !== 'undefined');
+            console.log('MembroEmailService available:', typeof MembroEmailService !== 'undefined');
+            
+            if (typeof MembroData !== 'undefined') {
+                console.log('Current user:', MembroData.getCurrentUser());
+                console.log('Testing signup functionality...');
+                MembroData.testSignup();
+            }
+        }
+
+        // Test signup function
+        function testSignup() {
+            console.log('🧪 Testing signup process...');
+            
+            var testData = {
+                firstName: 'Test',
+                lastName: 'User',
+                email: 'test@example.com',
+                phone: '+63 912 345 6789',
+                unit: '101'
+            };
+            
+            var testOTP = generateOTP();
+            
+            // Store test data
+            sessionStorage.setItem('signupData', JSON.stringify(testData));
+            sessionStorage.setItem('verificationCode', testOTP);
+            sessionStorage.setItem('verificationEmail', testData.email);
+            
+            console.log('✅ Test data stored:', testData);
+            console.log('🔐 Test OTP:', testOTP);
+            
+            // Send test email
+            sendVerificationEmail(testData.email, testOTP, testData.firstName);
+            
+            // Redirect to verification page
+            setTimeout(function() {
+                window.location.href = 'verify-otp.html?email=' + encodeURIComponent(testData.email);
+            }, 1000);
+        }
+
+        // Add debug function to window for manual testing
+        window.debugSignup = debugSignup;
+        window.testSignup = testSignup;
+        
+        // Auto-run debug on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(debugSignup, 1000);
+            
+            // Add test button for debugging (remove in production)
+            if (window.location.search.includes('debug=true')) {
+                var testBtn = document.createElement('button');
+                testBtn.innerHTML = 'Test Signup';
+                testBtn.style.cssText = 'position: fixed; top: 10px; right: 10px; z-index: 10000; background: var(--warning); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;';
+                testBtn.onclick = testSignup;
+                document.body.appendChild(testBtn);
+            }
         });
     </script>
 </body>

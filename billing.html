@@ -6,6 +6,7 @@
     <title>Bills & Payments - MEMBRO</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="data.js"></script>
 </head>
 <body>
     <div class="container">
@@ -21,8 +22,8 @@
                 </div>
                 <div class="user-info">
                     <div class="user-details">
-                        <span class="user-name">Heriberto Nathan</span>
-                        <span class="user-unit">Unit 802</span>
+                        <span class="user-name" id="currentUserName">Heriberto Nathan</span>
+                        <span class="user-unit" id="currentUserUnit">Unit 802</span>
                     </div>
                     <button class="notification-btn" onclick="toggleNotifications()">
                         <i class="fas fa-bell"></i>
@@ -232,12 +233,12 @@
                 <p>Simple payment management for your home</p>
             </div>
 
-            <!-- Current Balance - Updated with sample data -->
+            <!-- Current Balance - Dynamic -->
             <div class="card" style="text-align: center; padding: 2rem;">
                 <div style="margin-bottom: 1.5rem;">
                     <h3 style="color: var(--gray-600); font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">Current Balance</h3>
-                    <div style="font-size: 3rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">₱15,000</div>
-                    <p style="color: var(--warning); font-weight: 600; margin-bottom: 2rem;">Due: July 30, 2025</p>
+                    <div id="currentBalance" style="font-size: 3rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">₱15,000</div>
+                    <p id="dueDate" style="color: var(--warning); font-weight: 600; margin-bottom: 2rem;">Due: July 30, 2025</p>
                 </div>
                 
                 <!-- Payment Options -->
@@ -263,11 +264,11 @@
                         </button>
                     </div>
                     
-                    <button class="btn btn-primary btn-large btn-block" style="margin-bottom: 1rem;" onclick="processPayment()">
+                    <button id="payNowBtn" class="btn btn-primary btn-large btn-block" style="margin-bottom: 1rem;" onclick="processPayment()">
                         <i class="fas fa-lock"></i>
                         Pay Now - ₱15,000
                     </button>
-                    <button class="btn btn-secondary btn-block">
+                    <button class="btn btn-secondary btn-block" onclick="setupAutoPay()">
                         <i class="fas fa-calendar-alt"></i>
                         Set Up Auto-Pay
                     </button>
@@ -281,36 +282,14 @@
                     Current Bills Breakdown
                 </div>
                 <div class="card-body">
-                    <div style="display: grid; gap: 1rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); border-left: 4px solid var(--primary);">
-                            <div>
-                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">HOA Dues</div>
-                                <div style="color: var(--gray-600); font-size: 0.875rem;">Recurring Monthly</div>
-                                <div style="color: var(--gray-600); font-size: 0.875rem;">June 24 - June 30, 2025</div>
-                            </div>
-                            <div style="text-align: right;">
-                                <div style="font-weight: 600; color: var(--gray-900); font-size: 1.25rem;">₱12,500</div>
-                                <span class="status active">Active</span>
-                            </div>
-                        </div>
-                        
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); border-left: 4px solid var(--secondary);">
-                            <div>
-                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">Maintenance Fee</div>
-                                <div style="color: var(--gray-600); font-size: 0.875rem;">Recurring Monthly</div>
-                                <div style="color: var(--gray-600); font-size: 0.875rem;">July 1 - July 30, 2025</div>
-                            </div>
-                            <div style="text-align: right;">
-                                <div style="font-weight: 600; color: var(--gray-900); font-size: 1.25rem;">₱2,500</div>
-                                <span class="status active">Active</span>
-                            </div>
-                        </div>
+                    <div id="currentBillsList" style="display: grid; gap: 1rem;">
+                        <!-- Bills will be populated dynamically -->
                     </div>
                     
                     <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--gray-200);">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div style="font-size: 1.25rem; font-weight: 700; color: var(--gray-900);">Total Amount Due</div>
-                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">₱15,000</div>
+                            <div id="totalAmountDue" style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">₱15,000</div>
                         </div>
                     </div>
                 </div>
@@ -340,130 +319,7 @@
                     </div>
 
                     <div style="display: grid; gap: 1rem;" id="paymentHistory">
-                        <!-- Current Month Bills Payment -->
-                        <div class="payment-item" data-type="bills" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md);">
-                            <div>
-                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">May 2025 - HOA Dues & Maintenance</div>
-                                <div style="color: var(--gray-600); font-size: 0.875rem;">Paid on May 30, 2025</div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
-                                    <span class="payment-type-badge bills">Monthly Bills</span>
-                                </div>
-                            </div>
-                            <div style="text-align: right;">
-                                <div style="font-weight: 600; color: var(--gray-900);">₱15,000</div>
-                                <span class="status paid">Paid</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Event Hall Booking -->
-                        <div class="payment-item" data-type="bookings" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); border-left: 4px solid var(--secondary);">
-                            <div>
-                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">Event Hall Booking</div>
-                                <div style="color: var(--gray-600); font-size: 0.875rem;">Birthday Party - May 25, 2025 (6 hours)</div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
-                                    <span class="payment-type-badge booking">Facility Booking</span>
-                                    <span style="color: var(--gray-500); font-size: 0.75rem;">₱750/hr × 6hrs</span>
-                                </div>
-                            </div>
-                            <div style="text-align: right;">
-                                <div style="font-weight: 600; color: var(--gray-900);">₱4,500</div>
-                                <span class="status paid">Paid</span>
-                            </div>
-                        </div>
-
-                        <!-- Pool Booking -->
-                        <div class="payment-item" data-type="bookings" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); border-left: 4px solid var(--info);">
-                            <div>
-                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">Swimming Pool Booking</div>
-                                <div style="color: var(--gray-600); font-size: 0.875rem;">Pool Party - May 20, 2025 (4 hours)</div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
-                                    <span class="payment-type-badge booking">Facility Booking</span>
-                                    <span style="color: var(--gray-500); font-size: 0.75rem;">₱100/hr × 4hrs</span>
-                                </div>
-                            </div>
-                            <div style="text-align: right;">
-                                <div style="font-weight: 600; color: var(--gray-900);">₱400</div>
-                                <span class="status paid">Paid</span>
-                            </div>
-                        </div>
-
-                        <!-- Cleaning Service -->
-                        <div class="payment-item" data-type="services" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); border-left: 4px solid var(--warning);">
-                            <div>
-                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">Professional Cleaning Service</div>
-                                <div style="color: var(--gray-600); font-size: 0.875rem;">Unit 802 Deep Cleaning - May 15, 2025</div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
-                                    <span class="payment-type-badge service">Home Service</span>
-                                    <span style="color: var(--gray-500); font-size: 0.75rem;">Standard Rate</span>
-                                </div>
-                            </div>
-                            <div style="text-align: right;">
-                                <div style="font-weight: 600; color: var(--gray-900);">₱600</div>
-                                <span class="status paid">Paid</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Previous Month Bills -->
-                        <div class="payment-item" data-type="bills" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md);">
-                            <div>
-                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">April 2025 - HOA Dues & Maintenance</div>
-                                <div style="color: var(--gray-600); font-size: 0.875rem;">Paid on Apr 30, 2025</div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
-                                    <span class="payment-type-badge bills">Monthly Bills</span>
-                                </div>
-                            </div>
-                            <div style="text-align: right;">
-                                <div style="font-weight: 600; color: var(--gray-900);">₱15,000</div>
-                                <span class="status paid">Paid</span>
-                            </div>
-                        </div>
-
-                        <!-- Gym Membership -->
-                        <div class="payment-item" data-type="bookings" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); border-left: 4px solid #10b981;">
-                            <div>
-                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">Fitness Center Session</div>
-                                <div style="color: var(--gray-600); font-size: 0.875rem;">Personal Training - Apr 28, 2025 (2 hours)</div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
-                                    <span class="payment-type-badge booking">Facility Booking</span>
-                                    <span style="color: var(--gray-500); font-size: 0.75rem;">₱75/hr × 2hrs</span>
-                                </div>
-                            </div>
-                            <div style="text-align: right;">
-                                <div style="font-weight: 600; color: var(--gray-900);">₱150</div>
-                                <span class="status paid">Paid</span>
-                            </div>
-                        </div>
-
-                        <!-- Tennis Court Booking -->
-                        <div class="payment-item" data-type="bookings" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); border-left: 4px solid #f59e0b;">
-                            <div>
-                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">Tennis Court Booking</div>
-                                <div style="color: var(--gray-600); font-size: 0.875rem;">Weekend Match - Apr 20, 2025 (2 hours)</div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
-                                    <span class="payment-type-badge booking">Facility Booking</span>
-                                    <span style="color: var(--gray-500); font-size: 0.75rem;">₱150/hr × 2hrs</span>
-                                </div>
-                            </div>
-                            <div style="text-align: right;">
-                                <div style="font-weight: 600; color: var(--gray-900);">₱300</div>
-                                <span class="status paid">Paid</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Previous Month Bills -->
-                        <div class="payment-item" data-type="bills" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md);">
-                            <div>
-                                <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">March 2025 - HOA Dues & Maintenance</div>
-                                <div style="color: var(--gray-600); font-size: 0.875rem;">Paid on Mar 30, 2025</div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
-                                    <span class="payment-type-badge bills">Monthly Bills</span>
-                                </div>
-                            </div>
-                            <div style="text-align: right;">
-                                <div style="font-weight: 600; color: var(--gray-900);">₱15,000</div>
-                                <span class="status paid">Paid</span>
-                            </div>
-                        </div>
+                        <!-- Payment history will be populated dynamically -->
                     </div>
                     
                     <div style="text-align: center; margin-top: 1.5rem;">
@@ -787,19 +643,7 @@
             }
         }
 
-        // Payment option selection and processing
-        let selectedPaymentMethod = null;
-
-        function selectPaymentOption(element) {
-            // Remove active class from all payment options
-            document.querySelectorAll('.payment-option').forEach(option => {
-                option.classList.remove('active');
-            });
-            
-            // Add active class to selected option
-            element.classList.add('active');
-            selectedPaymentMethod = element.dataset.method;
-        }
+        // Payment option selection and processing (removed duplicate declaration)
 
         function processPayment() {
             if (!selectedPaymentMethod) {
@@ -947,9 +791,248 @@
             console.log(`Updated ${type} payments by $${amount}`);
         }
 
+        // Initialize dynamic content when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDynamicContent();
+        });
+
+        var selectedPaymentMethod = '';
+        var currentFilter = 'all';
+
+        function loadDynamicContent() {
+            // Load user data
+            var user = MembroData.getCurrentUser();
+            var billing = MembroData.getBilling();
+            
+            // Update user information
+            document.getElementById('currentUserName').textContent = user.fullName;
+            document.getElementById('currentUserUnit').textContent = 'Unit ' + user.unit;
+            
+            // Update billing information
+            loadBillingData();
+            loadPaymentHistory();
+        }
+
+        function loadBillingData() {
+            var billing = MembroData.getBilling();
+            
+            // Update current balance and due date
+            document.getElementById('currentBalance').textContent = '₱' + billing.currentBalance.toLocaleString();
+            document.getElementById('dueDate').textContent = 'Due: ' + formatDate(billing.dueDate);
+            document.getElementById('payNowBtn').innerHTML = '<i class="fas fa-lock"></i> Pay Now - ₱' + billing.currentBalance.toLocaleString();
+            document.getElementById('totalAmountDue').textContent = '₱' + billing.currentBalance.toLocaleString();
+            
+            // Load current bills
+            var billsContainer = document.getElementById('currentBillsList');
+            billsContainer.innerHTML = '';
+            
+            billing.bills.forEach(function(bill, index) {
+                var borderColor = index === 0 ? 'var(--primary)' : 'var(--secondary)';
+                var billHTML = '<div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); border-left: 4px solid ' + borderColor + ';">' +
+                    '<div>' +
+                        '<div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">' + bill.type + '</div>' +
+                        '<div style="color: var(--gray-600); font-size: 0.875rem;">' + (bill.recurring ? 'Recurring Monthly' : 'One-time') + '</div>' +
+                        '<div style="color: var(--gray-600); font-size: 0.875rem;">' + bill.period + '</div>' +
+                    '</div>' +
+                    '<div style="text-align: right;">' +
+                        '<div style="font-weight: 600; color: var(--gray-900); font-size: 1.25rem;">₱' + bill.amount.toLocaleString() + '</div>' +
+                        '<span class="status ' + bill.status + '">' + capitalizeFirst(bill.status) + '</span>' +
+                    '</div>' +
+                '</div>';
+                
+                billsContainer.innerHTML += billHTML;
+            });
+        }
+
+        function loadPaymentHistory() {
+            var billing = MembroData.getBilling();
+            var container = document.getElementById('paymentHistory');
+            
+            // Filter payment history
+            var filteredPayments = billing.paymentHistory.filter(function(payment) {
+                return currentFilter === 'all' || payment.type === currentFilter;
+            });
+            
+            container.innerHTML = '';
+            
+            filteredPayments.forEach(function(payment) {
+                var paymentHTML = createPaymentHistoryItem(payment);
+                container.innerHTML += paymentHTML;
+            });
+            
+            if (filteredPayments.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--gray-500);">No payment history found for the selected filter.</div>';
+            }
+        }
+
+        function createPaymentHistoryItem(payment) {
+            var typeColors = {
+                'bills': 'var(--primary)',
+                'services': 'var(--warning)',
+                'bookings': 'var(--secondary)'
+            };
+            
+            var typeBadges = {
+                'bills': 'Monthly Bills',
+                'services': 'Home Service',
+                'bookings': 'Facility Booking'
+            };
+            
+            var borderStyle = payment.type !== 'bills' ? 'border-left: 4px solid ' + typeColors[payment.type] + ';' : '';
+            
+            return '<div class="payment-item" data-type="' + payment.type + '" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); ' + borderStyle + '">' +
+                '<div>' +
+                    '<div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">' + payment.description + '</div>' +
+                    '<div style="color: var(--gray-600); font-size: 0.875rem;">Paid on ' + formatDate(payment.date) + '</div>' +
+                    '<div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">' +
+                        '<span class="payment-type-badge ' + payment.type + '">' + typeBadges[payment.type] + '</span>' +
+                        '<span style="color: var(--gray-500); font-size: 0.75rem;">' + payment.method + '</span>' +
+                    '</div>' +
+                '</div>' +
+                '<div style="text-align: right;">' +
+                    '<div style="font-weight: 600; color: var(--gray-900);">₱' + payment.amount.toLocaleString() + '</div>' +
+                    '<span class="status paid">Paid</span>' +
+                '</div>' +
+            '</div>';
+        }
+
+        function selectPaymentOption(button) {
+            // Remove active class from all payment options
+            var paymentOptions = document.querySelectorAll('.payment-option');
+            paymentOptions.forEach(function(option) {
+                option.classList.remove('selected');
+            });
+            
+            // Add active class to selected option
+            button.classList.add('selected');
+            selectedPaymentMethod = button.getAttribute('data-method');
+        }
+
+        function processPayment() {
+            if (!selectedPaymentMethod) {
+                showToast('Please select a payment method first');
+                return;
+            }
+            
+            var billing = MembroData.getBilling();
+            var amount = billing.currentBalance;
+            
+            // Create payment record
+            var payment = {
+                type: 'bills',
+                description: 'Monthly Bills - ' + new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+                amount: amount,
+                date: new Date().toISOString().split('T')[0],
+                method: getPaymentMethodName(selectedPaymentMethod),
+                status: 'completed'
+            };
+            
+            // Add payment to history
+            MembroData.addPayment(payment);
+            
+            // Clear current balance (simulate payment)
+            billing.currentBalance = 0;
+            billing.bills.forEach(function(bill) {
+                bill.status = 'paid';
+            });
+            MembroData.getBilling().currentBalance = 0;
+            
+            // Reload the page data
+            loadBillingData();
+            loadPaymentHistory();
+            
+            showToast('Payment processed successfully! ₱' + amount.toLocaleString() + ' paid via ' + getPaymentMethodName(selectedPaymentMethod));
+        }
+
+        function getPaymentMethodName(method) {
+            var names = {
+                'gcash': 'GCash',
+                'credit-card': 'Credit Card',
+                'cash': 'Cash',
+                'bank': 'Bank Transfer'
+            };
+            return names[method] || method;
+        }
+
+        function setupAutoPay() {
+            showToast('Auto-pay setup feature coming soon!');
+        }
+
+        function filterPayments(type) {
+            currentFilter = type;
+            
+            // Update filter button styles
+            var filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+            
+            // Reload payment history with filter
+            loadPaymentHistory();
+        }
+
+        function exportPayments() {
+            var billing = MembroData.getBilling();
+            var csvContent = 'Date,Description,Amount,Method,Type\n';
+            
+            billing.paymentHistory.forEach(function(payment) {
+                csvContent += payment.date + ',' + payment.description + ',' + payment.amount + ',' + payment.method + ',' + payment.type + '\n';
+            });
+            
+            // Create and download CSV file
+            var blob = new Blob([csvContent], { type: 'text/csv' });
+            var url = window.URL.createObjectURL(blob);
+            var link = document.createElement('a');
+            link.href = url;
+            link.download = 'payment-history.csv';
+            link.click();
+            window.URL.revokeObjectURL(url);
+            
+            showToast('Payment history exported successfully!');
+        }
+
+        function formatDate(dateString) {
+            var date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        }
+
+        function capitalizeFirst(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function showToast(message) {
+            var toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            toast.style.cssText = 'position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 12px 24px; border-radius: 8px; z-index: 10000; opacity: 0; transition: opacity 0.3s ease;';
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(function() { toast.style.opacity = '1'; }, 100);
+            setTimeout(function() {
+                toast.style.opacity = '0';
+                setTimeout(function() { document.body.removeChild(toast); }, 300);
+            }, 3000);
+        }
+
         // Make functions available globally for integration with other pages
         window.MEMBRO_Billing = {
-            addBookingPayment,
+            addBookingPayment: function(amount, description) {
+                var payment = {
+                    type: 'bookings',
+                    description: description,
+                    amount: amount,
+                    date: new Date().toISOString().split('T')[0],
+                    method: 'Online Payment',
+                    status: 'completed'
+                };
+                MembroData.addPayment(payment);
+                loadPaymentHistory();
+            },
             completeBooking,
             updatePaymentSummary
         };

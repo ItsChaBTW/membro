@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Privacy Policy - MEMBRO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .privacy-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .privacy-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .privacy-header h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .privacy-header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .privacy-content {
+            padding: 2rem;
+        }
+
+        .privacy-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .privacy-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .privacy-section h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .privacy-section h3 {
+            color: var(--gray-800);
+            margin: 1.5rem 0 0.75rem 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .privacy-section p {
+            color: var(--gray-700);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .privacy-section ul {
+            color: var(--gray-700);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+
+        .privacy-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-box {
+            background: var(--gray-50);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .highlight-box h4 {
+            color: var(--primary);
+            margin: 0 0 0.75rem 0;
+            font-weight: 600;
+        }
+
+        .consent-section {
+            background: var(--gray-50);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .consent-options {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .consent-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 2px solid var(--gray-200);
+            transition: all 0.3s ease;
+        }
+
+        .consent-item:hover {
+            border-color: var(--primary-light);
+        }
+
+        .consent-item.required {
+            border-color: var(--warning);
+            background: #fefbf2;
+        }
+
+        .consent-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .consent-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .consent-label {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .consent-title {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .consent-description {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .required-badge {
+            background: var(--warning);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .consent-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled {
+            background: var(--gray-400);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-300);
+        }
+
+        .contact-info {
+            background: var(--info);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .contact-info h4 {
+            margin: 0 0 0.75rem 0;
+        }
+
+        .contact-info p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .privacy-container {
+                margin: 1rem;
+            }
+            
+            .privacy-header,
+            .privacy-content {
+                padding: 1.5rem;
+            }
+            
+            .consent-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="privacy-container">
+        <div class="privacy-header">
+            <h1><i class="fas fa-shield-alt"></i> Data Privacy Policy</h1>
+            <p>Your privacy and data protection rights</p>
+        </div>
+
+        <div class="privacy-content">
+            <div class="privacy-section">
+                <h2><i class="fas fa-info-circle"></i> Introduction</h2>
+                <p>
+                    At MEMBRO, we respect your privacy and are committed to protecting your personal data. This privacy policy explains how we collect, use, and safeguard your information when you use our home portal services.
+                </p>
+                <div class="highlight-box">
+                    <h4>Last Updated: December 2024</h4>
+                    <p>This policy complies with the Data Privacy Act of 2012 (Republic Act No. 10173) and international data protection standards including GDPR.</p>
+                </div>
+            </div>
+
+            <div class="privacy-section">
+                <h2><i class="fas fa-database"></i> Information We Collect</h2>
+                
+                <h3>Personal Information</h3>
+                <ul>
+                    <li><strong>Contact Details:</strong> Name, email address, phone number, unit address</li>
+                    <li><strong>Account Information:</strong> Username, password (encrypted), profile preferences</li>
+                    <li><strong>Property Information:</strong> Unit details, ownership status, household members</li>
+                    <li><strong>Service Usage:</strong> Booking history, payment records, support requests</li>
+                </ul>
+
+                <h3>Automatically Collected Information</h3>
+                <ul>
+                    <li><strong>Technical Data:</strong> IP address, browser type, device information</li>
+                    <li><strong>Usage Data:</strong> Pages visited, features used, session duration</li>
+                    <li><strong>Communication Records:</strong> Support tickets, feedback, correspondence</li>
+                </ul>
+            </div>
+
+            <div class="privacy-section">
+                <h2><i class="fas fa-cogs"></i> How We Use Your Information</h2>
+                <ul>
+                    <li><strong>Service Delivery:</strong> Process bookings, manage accounts, provide support</li>
+                    <li><strong>Communication:</strong> Send notifications, updates, and important announcements</li>
+                    <li><strong>Payment Processing:</strong> Handle billing, payments, and financial transactions</li>
+                    <li><strong>Security:</strong> Protect against fraud, unauthorized access, and security threats</li>
+                    <li><strong>Improvement:</strong> Analyze usage patterns to enhance our services</li>
+                    <li><strong>Legal Compliance:</strong> Meet regulatory requirements and legal obligations</li>
+                </ul>
+            </div>
+
+            <div class="privacy-section">
+                <h2><i class="fas fa-share-alt"></i> Information Sharing</h2>
+                <p>We do not sell your personal information. We may share your data only in these circumstances:</p>
+                <ul>
+                    <li><strong>Service Providers:</strong> Verified vendors for maintenance, cleaning, and other services</li>
+                    <li><strong>Payment Processors:</strong> Secure payment gateways for transaction processing</li>
+                    <li><strong>Legal Requirements:</strong> When required by law or to protect our rights</li>
+                    <li><strong>Emergency Situations:</strong> To protect safety and prevent harm</li>
+                </ul>
+            </div>
+
+            <div class="privacy-section">
+                <h2><i class="fas fa-user-shield"></i> Your Rights</h2>
+                <p>You have the following rights regarding your personal data:</p>
+                <ul>
+                    <li><strong>Access:</strong> Request copies of your personal data</li>
+                    <li><strong>Rectification:</strong> Correct inaccurate or incomplete information</li>
+                    <li><strong>Erasure:</strong> Request deletion of your personal data</li>
+                    <li><strong>Portability:</strong> Transfer your data to another service</li>
+                    <li><strong>Objection:</strong> Object to certain processing activities</li>
+                    <li><strong>Restriction:</strong> Limit how we process your data</li>
+                </ul>
+            </div>
+
+            <div class="privacy-section">
+                <h2><i class="fas fa-lock"></i> Data Security</h2>
+                <p>We implement industry-standard security measures to protect your information:</p>
+                <ul>
+                    <li>End-to-end encryption for sensitive data</li>
+                    <li>Secure servers with regular security updates</li>
+                    <li>Access controls and authentication systems</li>
+                    <li>Regular security audits and monitoring</li>
+                    <li>Staff training on data protection practices</li>
+                </ul>
+            </div>
+
+            <!-- Consent Section -->
+            <div class="consent-section">
+                <h2><i class="fas fa-check-circle"></i> Your Consent</h2>
+                <p>Please review and accept the following to continue using MEMBRO services:</p>
+
+                <div class="consent-options">
+                    <div class="consent-item required">
+                        <div class="consent-checkbox">
+                            <input type="checkbox" id="essential" required>
+                            <label for="essential" class="consent-label">
+                                <div class="consent-title">
+                                    Essential Data Processing 
+                                    <span class="required-badge">REQUIRED</span>
+                                </div>
+                                <div class="consent-description">
+                                    I consent to the processing of my personal data necessary for account management, service delivery, and security purposes. This is required to use MEMBRO services.
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="consent-item">
+                        <div class="consent-checkbox">
+                            <input type="checkbox" id="communications" checked>
+                            <label for="communications" class="consent-label">
+                                <div class="consent-title">Marketing Communications</div>
+                                <div class="consent-description">
+                                    I consent to receive promotional emails, newsletters, and marketing communications about MEMBRO services and community events.
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="consent-item">
+                        <div class="consent-checkbox">
+                            <input type="checkbox" id="analytics" checked>
+                            <label for="analytics" class="consent-label">
+                                <div class="consent-title">Analytics and Improvements</div>
+                                <div class="consent-description">
+                                    I consent to the analysis of my usage data to improve MEMBRO services and user experience.
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="consent-item">
+                        <div class="consent-checkbox">
+                            <input type="checkbox" id="sharing">
+                            <label for="sharing" class="consent-label">
+                                <div class="consent-title">Service Provider Sharing</div>
+                                <div class="consent-description">
+                                    I consent to sharing my contact information with verified service providers for booking confirmations and service delivery.
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="consent-actions">
+                    <button class="btn btn-secondary" onclick="declineConsent()">
+                        <i class="fas fa-times"></i>
+                        Decline
+                    </button>
+                    <button class="btn btn-primary" id="acceptBtn" onclick="acceptConsent()" disabled>
+                        <i class="fas fa-check"></i>
+                        Accept & Continue
+                    </button>
+                </div>
+            </div>
+
+            <div class="contact-info">
+                <h4><i class="fas fa-envelope"></i> Data Protection Contact</h4>
+                <p>
+                    For any privacy concerns or to exercise your rights, contact our Data Protection Officer at:
+                    <br><strong>privacy@membro.com</strong> | <strong>+63 2 8123 4567</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Consent management
+        var consentData = {
+            essential: false,
+            communications: false,
+            analytics: false,
+            sharing: false,
+            timestamp: null,
+            ipAddress: null
+        };
+
+        // Check required consent and enable/disable accept button
+        function validateConsent() {
+            var essentialConsent = document.getElementById('essential').checked;
+            var acceptBtn = document.getElementById('acceptBtn');
+            
+            acceptBtn.disabled = !essentialConsent;
+            
+            if (essentialConsent) {
+                acceptBtn.style.background = 'var(--primary)';
+                acceptBtn.style.cursor = 'pointer';
+            } else {
+                acceptBtn.style.background = 'var(--gray-400)';
+                acceptBtn.style.cursor = 'not-allowed';
+            }
+        }
+
+        // Accept consent
+        function acceptConsent() {
+            // Collect consent data
+            consentData = {
+                essential: document.getElementById('essential').checked,
+                communications: document.getElementById('communications').checked,
+                analytics: document.getElementById('analytics').checked,
+                sharing: document.getElementById('sharing').checked,
+                timestamp: new Date().toISOString(),
+                ipAddress: 'User IP (simulated)',
+                userAgent: navigator.userAgent
+            };
+
+            // Validate required consent
+            if (!consentData.essential) {
+                showError('Essential data processing consent is required to use MEMBRO services.');
+                return;
+            }
+
+            // Save consent to storage
+            localStorage.setItem('membroDataConsent', JSON.stringify(consentData));
+            
+            // Log consent for audit trail
+            console.log('📋 DATA PRIVACY CONSENT ACCEPTED:', consentData);
+            
+            // Send consent record to server (simulated)
+            recordConsent(consentData);
+            
+            // Show success and redirect
+            showSuccess('Thank you! Your privacy preferences have been saved.');
+            
+            setTimeout(function() {
+                // Check if coming from signup flow
+                var urlParams = new URLSearchParams(window.location.search);
+                var returnUrl = urlParams.get('return') || 'dashboard.html';
+                window.location.href = returnUrl;
+            }, 2000);
+        }
+
+        // Decline consent
+        function declineConsent() {
+            var confirmed = confirm('Declining essential data processing will prevent you from using MEMBRO services. Are you sure you want to decline?');
+            
+            if (confirmed) {
+                // Log decline
+                console.log('📋 DATA PRIVACY CONSENT DECLINED');
+                
+                // Clear any stored data
+                localStorage.removeItem('membroDataConsent');
+                localStorage.removeItem('MembroData');
+                
+                // Show message and redirect
+                showError('You have declined data processing consent. Redirecting to homepage...');
+                
+                setTimeout(function() {
+                    window.location.href = 'index.html';
+                }, 3000);
+            }
+        }
+
+        // Record consent on server (simulated)
+        function recordConsent(consent) {
+            // In production, this would send to your privacy compliance system
+            var consentRecord = {
+                userId: 'user_' + Date.now(),
+                consent: consent,
+                recordedAt: new Date().toISOString(),
+                method: 'web_form',
+                version: '1.0'
+            };
+            
+            console.log('📋 CONSENT RECORDED:', consentRecord);
+            
+            // Simulate API call
+            setTimeout(function() {
+                console.log('✅ Consent successfully recorded in compliance system');
+            }, 1000);
+        }
+
+        // Update consent preferences
+        function updateConsentPreferences() {
+            var currentConsent = JSON.parse(localStorage.getItem('membroDataConsent') || '{}');
+            
+            // Show current preferences
+            document.getElementById('essential').checked = currentConsent.essential || false;
+            document.getElementById('communications').checked = currentConsent.communications || false;
+            document.getElementById('analytics').checked = currentConsent.analytics || false;
+            document.getElementById('sharing').checked = currentConsent.sharing || false;
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            var toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; top: 20px; right: 20px; background: var(--secondary); color: white; padding: 1rem 1.5rem; border-radius: 8px; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.2);';
+            toast.innerHTML = '<i class="fas fa-check-circle"></i> ' + message;
+            document.body.appendChild(toast);
+            
+            setTimeout(function() {
+                if (document.body.contains(toast)) {
+                    document.body.removeChild(toast);
+                }
+            }, 4000);
+        }
+
+        // Show error message
+        function showError(message) {
+            var toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; top: 20px; right: 20px; background: var(--danger); color: white; padding: 1rem 1.5rem; border-radius: 8px; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.2);';
+            toast.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + message;
+            document.body.appendChild(toast);
+            
+            setTimeout(function() {
+                if (document.body.contains(toast)) {
+                    document.body.removeChild(toast);
+                }
+            }, 4000);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add event listeners for consent validation
+            document.getElementById('essential').addEventListener('change', validateConsent);
+            
+            // Check if updating existing preferences
+            var urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('mode') === 'update') {
+                updateConsentPreferences();
+                document.querySelector('.privacy-header h1').innerHTML = '<i class="fas fa-cog"></i> Update Privacy Preferences';
+                document.querySelector('.privacy-header p').textContent = 'Manage your data privacy settings';
+            }
+            
+            // Initial validation
+            validateConsent();
+        });
+    </script>
+</body>
+</html> 

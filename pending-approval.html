@@ -6,6 +6,7 @@
     <title>Account Pending Approval - MEMBRO</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="data.js"></script>
     <style>
         body {
             background: linear-gradient(135deg, #fef2f2 0%, #f0fdfa 20%, #fef3c7 40%, #f0f9ff 60%, #faf5ff 80%, #fef2f2 100%);
@@ -856,16 +857,32 @@
             icon.style.animation = 'spin 1s linear infinite';
             button.innerHTML = '<i class="fas fa-sync-alt" style="animation: spin 1s linear infinite;"></i> Checking Status...';
             
-            // Simulate API call
+            // Check actual user status
             setTimeout(() => {
+                var currentUser = null;
+                
+                // Get current user from data system
+                if (typeof MembroData !== 'undefined') {
+                    currentUser = MembroData.getCurrentUser();
+                }
+                
                 // Reset button
                 button.disabled = false;
                 button.style.background = '';
                 icon.style.animation = '';
                 button.innerHTML = originalText;
                 
-                // Show success message
-                showToast('Status updated! Your account is still under review. We\'ll notify you once approved.', 'info');
+                if (currentUser && currentUser.status === 'active') {
+                    // User has been approved
+                    showToast('🎉 Great news! Your account has been approved!', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                } else {
+                    // Still pending
+                    showToast('Status updated! Your account is still under review. We\'ll notify you once approved.', 'info');
+                }
             }, 2500);
         }
         
@@ -928,6 +945,41 @@
                     item.style.transform = 'translateX(0)';
                 }, 800 + (index * 150));
             });
+        });
+        
+        // Add admin approval simulation for testing
+        function simulateApproval() {
+            if (typeof MembroData !== 'undefined') {
+                var result = MembroData.simulateAdminApproval();
+                if (result) {
+                    showToast('🎉 Admin approval simulated! Checking status...', 'success');
+                    setTimeout(checkStatus, 1000);
+                } else {
+                    showToast('⚠️ No pending user to approve', 'warning');
+                }
+            }
+        }
+        
+        // Add test button for admin approval (for testing only)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add debug button if URL contains debug=true
+            if (window.location.search.includes('debug=true')) {
+                var testBtn = document.createElement('button');
+                testBtn.innerHTML = '<i class="fas fa-user-check"></i> Simulate Admin Approval';
+                testBtn.style.cssText = 'position: fixed; top: 10px; right: 10px; z-index: 10000; background: var(--secondary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 12px;';
+                testBtn.onclick = simulateApproval;
+                document.body.appendChild(testBtn);
+            }
+            
+            // Show current user info in console
+            if (typeof MembroData !== 'undefined') {
+                var user = MembroData.getCurrentUser();
+                if (user) {
+                    console.log('👤 Current user:', user);
+                    console.log('📊 User status:', user.status);
+                    console.log('⏳ Approval status:', user.approvalStatus);
+                }
+            }
         });
     </script>
 </body>
