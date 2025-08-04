@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Portal - Dashboard</title>
+    <link rel="stylesheet" href="seller-styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="../logo.png" alt="Membro Logo" class="logo-img">
+                    <span class="logo-text">Seller Portal</span>
+                </div>
+            </div>
+            
+            <div class="nav-menu">
+                <div class="nav-section">
+                    <span class="nav-section-title">Main</span>
+                    <ul class="nav-list">
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link">
+                                <i class="fas fa-home nav-icon"></i>
+                                <span class="nav-text">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="profile.html" class="nav-link">
+                                <i class="fas fa-user nav-icon"></i>
+                                <span class="nav-text">Profile</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="notifications.html" class="nav-link">
+                                <i class="fas fa-bell nav-icon"></i>
+                                <span class="nav-text">Notifications</span>
+                                <span class="notification-count">3</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <span class="nav-section-title">Business</span>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="properties.html" class="nav-link">
+                                <i class="fas fa-building nav-icon"></i>
+                                <span class="nav-text">Properties</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="opportunities.html" class="nav-link">
+                                <i class="fas fa-chart-line nav-icon"></i>
+                                <span class="nav-text">Opportunities</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="change-requests.html" class="nav-link">
+                                <i class="fas fa-edit nav-icon"></i>
+                                <span class="nav-text">Change Requests</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="reservation-agreements.html" class="nav-link">
+                                <i class="fas fa-file-contract nav-icon"></i>
+                                <span class="nav-text">Agreements</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="reports.html" class="nav-link">
+                                <i class="fas fa-chart-bar nav-icon"></i>
+                                <span class="nav-text">Reports</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/40/667eea/ffffff?text=JS" alt="Profile" class="user-avatar">
+                    <div class="user-info">
+                        <span class="user-name">John Seller</span>
+                        <span class="user-role">Sales Agent</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="window.location.href='../login.html'">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">Your sales overview and key metrics</p>
+                </div>
+                <div class="header-right">
+                    <div class="header-actions">
+                        <!-- Notification Bell -->
+                        <div class="notification-wrapper">
+                            <button class="btn btn-icon notification-btn" onclick="window.location.href='notifications.html'" title="Notifications">
+                                <i class="fas fa-bell"></i>
+                                <span class="notification-badge header-badge">3</span>
+                            </button>
+                        </div>
+                        
+                        <div class="time-period-selector">
+                            <select class="period-select">
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month" selected>This Month</option>
+                                <option value="quarter">This Quarter</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="refreshDashboard()">
+                            <i class="fas fa-sync-alt"></i>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Key Metrics Row -->
+                <div class="metrics-row">
+                    <div class="metric-card revenue">
+                        <div class="metric-header">
+                            <div class="metric-icon">
+                                <i class="fas fa-peso-sign"></i>
+                            </div>
+                            <div class="metric-trend positive">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>+18%</span>
+                            </div>
+                        </div>
+                        <div class="metric-content">
+                            <h3 class="metric-value">₱2.5M</h3>
+                            <p class="metric-label">Total Revenue</p>
+                        </div>
+                    </div>
+
+                    <div class="metric-card sales">
+                        <div class="metric-header">
+                            <div class="metric-icon">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                            <div class="metric-trend positive">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>+12%</span>
+                            </div>
+                        </div>
+                        <div class="metric-content">
+                            <h3 class="metric-value">24</h3>
+                            <p class="metric-label">Properties Sold</p>
+                        </div>
+                    </div>
+
+                    <div class="metric-card conversion">
+                        <div class="metric-header">
+                            <div class="metric-icon">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="metric-trend positive">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>+5%</span>
+                            </div>
+                        </div>
+                        <div class="metric-content">
+                            <h3 class="metric-value">78%</h3>
+                            <p class="metric-label">Conversion Rate</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Dashboard Grid -->
+                <div class="dashboard-grid">
+                    <!-- Sales Pipeline -->
+                    <div class="dashboard-card pipeline-card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-funnel-dollar"></i>
+                                Sales Pipeline
+                            </h3>
+                            <span class="pipeline-total">15 Active Leads</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="pipeline-stages">
+                                <div class="pipeline-stage">
+                                    <div class="stage-header">
+                                        <span class="stage-name">Screening</span>
+                                        <span class="stage-count">5</span>
+                                    </div>
+                                    <div class="stage-bar">
+                                        <div class="stage-progress" style="width: 33%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="pipeline-stage">
+                                    <div class="stage-header">
+                                        <span class="stage-name">Reservation</span>
+                                        <span class="stage-count">4</span>
+                                    </div>
+                                    <div class="stage-bar">
+                                        <div class="stage-progress" style="width: 27%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="pipeline-stage">
+                                    <div class="stage-header">
+                                        <span class="stage-name">Requirements</span>
+                                        <span class="stage-count">3</span>
+                                    </div>
+                                    <div class="stage-bar">
+                                        <div class="stage-progress" style="width: 20%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="pipeline-stage">
+                                    <div class="stage-header">
+                                        <span class="stage-name">Closing</span>
+                                        <span class="stage-count">3</span>
+                                    </div>
+                                    <div class="stage-bar">
+                                        <div class="stage-progress" style="width: 20%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activities -->
+                    <div class="dashboard-card activities-card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-clock"></i>
+                                Today's Activities
+                            </h3>
+                            <button class="btn btn-text" onclick="viewAllActivities()">View All</button>
+                        </div>
+                        <div class="card-content">
+                            <div class="activity-timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-time">2:30 PM</div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-icon success">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <div class="timeline-text">
+                                            <strong>RF Payment Received</strong>
+                                            <span>Jane Smith - ₱225,000</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="timeline-item">
+                                    <div class="timeline-time">11:15 AM</div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-icon primary">
+                                            <i class="fas fa-user-plus"></i>
+                                        </div>
+                                        <div class="timeline-text">
+                                            <strong>New Lead Added</strong>
+                                            <span>Mike Johnson - Townhouse</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="timeline-item">
+                                    <div class="timeline-time">9:45 AM</div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-icon warning">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="timeline-text">
+                                            <strong>Follow-up Reminder</strong>
+                                            <span>Sarah Wilson - Call scheduled</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Properties -->
+                    <div class="dashboard-card properties-card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-star"></i>
+                                Top Performing Properties
+                            </h3>
+                            <button class="btn btn-text" onclick="window.location.href='properties.html'">View All</button>
+                        </div>
+                        <div class="card-content">
+                            <div class="property-list">
+                                <div class="property-item">
+                                    <div class="property-image-mini">
+                                        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=60&h=60&fit=crop&crop=center" alt="Property">
+                                    </div>
+                                    <div class="property-info">
+                                        <h4>Luxury Penthouse</h4>
+                                        <p>₱8.5M • BGC</p>
+                                    </div>
+                                    <div class="property-status">
+                                        <span class="status-badge hot">Hot</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="property-item">
+                                    <div class="property-image-mini">
+                                        <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=60&h=60&fit=crop&crop=center" alt="Property">
+                                    </div>
+                                    <div class="property-info">
+                                        <h4>Modern 2BR Condo</h4>
+                                        <p>₱2.5M • Makati</p>
+                                    </div>
+                                    <div class="property-status">
+                                        <span class="status-badge trending">Trending</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="property-item">
+                                    <div class="property-image-mini">
+                                        <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=60&h=60&fit=crop&crop=center" alt="Property">
+                                    </div>
+                                    <div class="property-info">
+                                        <h4>Family House</h4>
+                                        <p>₱4.5M • Quezon City</p>
+                                    </div>
+                                    <div class="property-status">
+                                        <span class="status-badge available">Available</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Performance Insights -->
+                    <div class="dashboard-card insights-card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-chart-pie"></i>
+                                Performance Insights
+                            </h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="insights-grid">
+                                <div class="insight-item">
+                                    <div class="insight-icon success">
+                                        <i class="fas fa-trophy"></i>
+                                    </div>
+                                    <div class="insight-content">
+                                        <h4>Goal Achievement</h4>
+                                        <p>92% of monthly target</p>
+                                        <div class="insight-progress">
+                                            <div class="progress-bar" style="width: 92%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="insight-item">
+                                    <div class="insight-icon info">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="insight-content">
+                                        <h4>Avg. Response Time</h4>
+                                        <p>2.3 hours</p>
+                                        <small class="insight-note">15% faster than last month</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Market Trends -->
+                    <div class="dashboard-card trends-card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-trending-up"></i>
+                                Market Trends
+                            </h3>
+                            <div class="trend-period">This Month</div>
+                        </div>
+                        <div class="card-content">
+                            <div class="trends-list">
+                                <div class="trend-item">
+                                    <div class="trend-indicator up">
+                                        <i class="fas fa-arrow-up"></i>
+                                    </div>
+                                    <div class="trend-content">
+                                        <span class="trend-label">Condo Demand</span>
+                                        <span class="trend-value">+25%</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="trend-item">
+                                    <div class="trend-indicator down">
+                                        <i class="fas fa-arrow-down"></i>
+                                    </div>
+                                    <div class="trend-content">
+                                        <span class="trend-label">House Inventory</span>
+                                        <span class="trend-value">-12%</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="trend-item">
+                                    <div class="trend-indicator up">
+                                        <i class="fas fa-arrow-up"></i>
+                                    </div>
+                                    <div class="trend-content">
+                                        <span class="trend-label">Avg. Sale Price</span>
+                                        <span class="trend-value">+8%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Tasks -->
+                    <div class="dashboard-card tasks-card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-tasks"></i>
+                                Upcoming Tasks
+                            </h3>
+                            <span class="task-count">4 pending</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="task-list">
+                                <div class="task-item urgent">
+                                    <div class="task-priority"></div>
+                                    <div class="task-content">
+                                        <h4>Follow up with Mike Johnson</h4>
+                                        <p>RF deadline approaching - 2 days left</p>
+                                        <span class="task-time">Due: Tomorrow</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="task-item normal">
+                                    <div class="task-priority"></div>
+                                    <div class="task-content">
+                                        <h4>Prepare RA documents</h4>
+                                        <p>Sarah Wilson - Luxury Penthouse</p>
+                                        <span class="task-time">Due: Friday</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="task-item normal">
+                                    <div class="task-priority"></div>
+                                    <div class="task-content">
+                                        <h4>Property viewing appointment</h4>
+                                        <p>New client - Family House tour</p>
+                                        <span class="task-time">Due: Next week</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="seller-portal.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html> 

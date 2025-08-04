@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Seller Portal</title>
+    <link rel="stylesheet" href="seller-styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="../logo.png" alt="Membro Logo" class="logo-img">
+                    <span class="logo-text">Seller Portal</span>
+                </div>
+            </div>
+            
+            <div class="nav-menu">
+                <div class="nav-section">
+                    <span class="nav-section-title">Main</span>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="index.html" class="nav-link">
+                                <i class="fas fa-home nav-icon"></i>
+                                <span class="nav-text">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="profile.html" class="nav-link">
+                                <i class="fas fa-user nav-icon"></i>
+                                <span class="nav-text">Profile</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="notifications.html" class="nav-link">
+                                <i class="fas fa-bell nav-icon"></i>
+                                <span class="nav-text">Notifications</span>
+                                <span class="notification-count">3</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <span class="nav-section-title">Business</span>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="properties.html" class="nav-link">
+                                <i class="fas fa-building nav-icon"></i>
+                                <span class="nav-text">Properties</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="opportunities.html" class="nav-link">
+                                <i class="fas fa-chart-line nav-icon"></i>
+                                <span class="nav-text">Opportunities</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="change-requests.html" class="nav-link">
+                                <i class="fas fa-edit nav-icon"></i>
+                                <span class="nav-text">Change Requests</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="reservation-agreements.html" class="nav-link">
+                                <i class="fas fa-file-contract nav-icon"></i>
+                                <span class="nav-text">Agreements</span>
+                            </a>
+                        </li>
+                        <li class="nav-item active">
+                            <a href="reports.html" class="nav-link">
+                                <i class="fas fa-chart-bar nav-icon"></i>
+                                <span class="nav-text">Reports</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/40/667eea/ffffff?text=JS" alt="Profile" class="user-avatar">
+                    <div class="user-info">
+                        <span class="user-name">John Seller</span>
+                        <span class="user-role">Sales Agent</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="window.location.href='../login.html'">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 class="page-title">Reports</h1>
+                    <p class="page-subtitle">Generate comprehensive reports for your sales activities</p>
+                </div>
+                <div class="header-right">
+                    <div class="header-actions">
+                        <!-- Notification Bell -->
+                        <div class="notification-wrapper">
+                            <button class="btn btn-icon notification-btn" onclick="window.location.href='notifications.html'" title="Notifications">
+                                <i class="fas fa-bell"></i>
+                                <span class="notification-badge header-badge">3</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Reports Content -->
+            <div class="dashboard-content">
+                <!-- Report Types -->
+                <div class="reports-grid">
+                    <!-- Customers with Paid RF Report -->
+                    <div class="dashboard-card report-card">
+                        <div class="card-content">
+                            <div class="report-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="report-content">
+                                <h3>Customers with Paid RF</h3>
+                                <p>Generate a report of customers who have paid their reservation fees within a specific date range.</p>
+                                <div class="report-filters">
+                                    <div class="date-range">
+                                        <label>Date Range:</label>
+                                        <div class="date-inputs">
+                                            <input type="date" id="rfStartDate" class="date-input">
+                                            <span>to</span>
+                                            <input type="date" id="rfEndDate" class="date-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" onclick="generateRfReport()">
+                                    <i class="fas fa-download"></i>
+                                    Generate Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cancelled Opportunities Report -->
+                    <div class="dashboard-card report-card">
+                        <div class="card-content">
+                            <div class="report-icon">
+                                <i class="fas fa-times-circle"></i>
+                            </div>
+                            <div class="report-content">
+                                <h3>Cancelled Opportunities</h3>
+                                <p>View all cancelled opportunities and their reasons within a specific date range.</p>
+                                <div class="report-filters">
+                                    <div class="date-range">
+                                        <label>Date Range:</label>
+                                        <div class="date-inputs">
+                                            <input type="date" id="cancelledStartDate" class="date-input">
+                                            <span>to</span>
+                                            <input type="date" id="cancelledEndDate" class="date-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" onclick="generateCancelledReport()">
+                                    <i class="fas fa-download"></i>
+                                    Generate Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Opportunities with RAs Report -->
+                    <div class="dashboard-card report-card">
+                        <div class="card-content">
+                            <div class="report-icon">
+                                <i class="fas fa-file-contract"></i>
+                            </div>
+                            <div class="report-content">
+                                <h3>Opportunities with RAs</h3>
+                                <p>Generate a report of opportunities that have signed reservation agreements within a date range.</p>
+                                <div class="report-filters">
+                                    <div class="date-range">
+                                        <label>Date Range:</label>
+                                        <div class="date-inputs">
+                                            <input type="date" id="raStartDate" class="date-input">
+                                            <span>to</span>
+                                            <input type="date" id="raEndDate" class="date-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" onclick="generateRaReport()">
+                                    <i class="fas fa-download"></i>
+                                    Generate Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sales Performance Report -->
+                    <div class="dashboard-card report-card">
+                        <div class="card-content">
+                            <div class="report-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="report-content">
+                                <h3>Sales Performance</h3>
+                                <p>Comprehensive sales performance report including conversions, revenue, and trends.</p>
+                                <div class="report-filters">
+                                    <div class="date-range">
+                                        <label>Date Range:</label>
+                                        <div class="date-inputs">
+                                            <input type="date" id="performanceStartDate" class="date-input">
+                                            <span>to</span>
+                                            <input type="date" id="performanceEndDate" class="date-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" onclick="generatePerformanceReport()">
+                                    <i class="fas fa-download"></i>
+                                    Generate Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Property Performance Report -->
+                    <div class="dashboard-card report-card">
+                        <div class="card-content">
+                            <div class="report-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="report-content">
+                                <h3>Property Performance</h3>
+                                <p>Analyze which properties are performing best in terms of reservations and sales.</p>
+                                <div class="report-filters">
+                                    <div class="date-range">
+                                        <label>Date Range:</label>
+                                        <div class="date-inputs">
+                                            <input type="date" id="propertyStartDate" class="date-input">
+                                            <span>to</span>
+                                            <input type="date" id="propertyEndDate" class="date-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" onclick="generatePropertyReport()">
+                                    <i class="fas fa-download"></i>
+                                    Generate Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Change Requests Report -->
+                    <div class="dashboard-card report-card">
+                        <div class="card-content">
+                            <div class="report-icon">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <div class="report-content">
+                                <h3>Change Requests</h3>
+                                <p>Report on all change requests submitted, their status, and approval rates.</p>
+                                <div class="report-filters">
+                                    <div class="date-range">
+                                        <label>Date Range:</label>
+                                        <div class="date-inputs">
+                                            <input type="date" id="changeStartDate" class="date-input">
+                                            <span>to</span>
+                                            <input type="date" id="changeEndDate" class="date-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" onclick="generateChangeReport()">
+                                    <i class="fas fa-download"></i>
+                                    Generate Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Reports -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Reports</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="reports-list" id="reportsList">
+                            <!-- Recent reports will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Report Preview Modal -->
+    <div id="reportPreviewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Report Preview</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="report-preview" id="reportPreview">
+                    <!-- Report preview will be loaded here -->
+                </div>
+                <div class="report-actions">
+                    <button class="btn btn-outline" onclick="closeReportPreview()">Close</button>
+                    <button class="btn btn-primary" onclick="downloadReport()">
+                        <i class="fas fa-download"></i>
+                        Download Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="seller-portal.js"></script>
+    <script src="reports.js"></script>
+</body>
+</html> 

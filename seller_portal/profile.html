@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Seller Portal</title>
+    <link rel="stylesheet" href="seller-styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="../logo.png" alt="Membro Logo" class="logo-img">
+                    <span class="logo-text">Seller Portal</span>
+                </div>
+            </div>
+            
+            <div class="nav-menu">
+                <div class="nav-section">
+                    <span class="nav-section-title">Main</span>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="index.html" class="nav-link">
+                                <i class="fas fa-home nav-icon"></i>
+                                <span class="nav-text">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item active">
+                            <a href="profile.html" class="nav-link">
+                                <i class="fas fa-user nav-icon"></i>
+                                <span class="nav-text">Profile</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="notifications.html" class="nav-link">
+                                <i class="fas fa-bell nav-icon"></i>
+                                <span class="nav-text">Notifications</span>
+                                <span class="notification-count">3</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <span class="nav-section-title">Business</span>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="properties.html" class="nav-link">
+                                <i class="fas fa-building nav-icon"></i>
+                                <span class="nav-text">Properties</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="opportunities.html" class="nav-link">
+                                <i class="fas fa-chart-line nav-icon"></i>
+                                <span class="nav-text">Opportunities</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="change-requests.html" class="nav-link">
+                                <i class="fas fa-edit nav-icon"></i>
+                                <span class="nav-text">Change Requests</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="reservation-agreements.html" class="nav-link">
+                                <i class="fas fa-file-contract nav-icon"></i>
+                                <span class="nav-text">Agreements</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="reports.html" class="nav-link">
+                                <i class="fas fa-chart-bar nav-icon"></i>
+                                <span class="nav-text">Reports</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/40/667eea/ffffff?text=JS" alt="Profile" class="user-avatar">
+                    <div class="user-info">
+                        <span class="user-name">John Seller</span>
+                        <span class="user-role">Sales Agent</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="window.location.href='../login.html'">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 class="page-title">Profile</h1>
+                    <p class="page-subtitle">Manage your account settings and view your performance</p>
+                </div>
+                <div class="header-right">
+                    <div class="header-actions">
+                        <!-- Notification Bell -->
+                        <div class="notification-wrapper">
+                            <button class="btn btn-icon notification-btn" onclick="window.location.href='notifications.html'" title="Notifications">
+                                <i class="fas fa-bell"></i>
+                                <span class="notification-badge header-badge">3</span>
+                            </button>
+                        </div>
+                        
+                        <button class="btn btn-outline" onclick="exportProfile()">
+                            <i class="fas fa-download"></i>
+                            Export Data
+                        </button>
+                        <button class="btn btn-primary" onclick="printProfile()">
+                            <i class="fas fa-print"></i>
+                            Print Profile
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Profile Content -->
+            <div class="dashboard-content">
+                <!-- Performance Overview -->
+                <div class="stats-grid">
+                    <div class="stat-card primary">
+                        <div class="stat-content">
+                            <div class="stat-header">
+                                <h3 class="stat-title">Total Sales</h3>
+                                <i class="fas fa-chart-line stat-icon"></i>
+                            </div>
+                            <div class="stat-value">₱12.5M</div>
+                            <div class="stat-footer">
+                                <span class="stat-change positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    +18% this month
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card success">
+                        <div class="stat-content">
+                            <div class="stat-header">
+                                <h3 class="stat-title">Properties Sold</h3>
+                                <i class="fas fa-building stat-icon"></i>
+                            </div>
+                            <div class="stat-value">24</div>
+                            <div class="stat-footer">
+                                <span class="stat-change positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    +3 this month
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card info">
+                        <div class="stat-content">
+                            <div class="stat-header">
+                                <h3 class="stat-title">Conversion Rate</h3>
+                                <i class="fas fa-percentage stat-icon"></i>
+                            </div>
+                            <div class="stat-value">78%</div>
+                            <div class="stat-footer">
+                                <span class="stat-change positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    +5% from last month
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card warning">
+                        <div class="stat-content">
+                            <div class="stat-header">
+                                <h3 class="stat-title">Active Leads</h3>
+                                <i class="fas fa-users stat-icon"></i>
+                            </div>
+                            <div class="stat-value">15</div>
+                            <div class="stat-footer">
+                                <span class="stat-change negative">
+                                    <i class="fas fa-arrow-down"></i>
+                                    -2 from last week
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-layout">
+                    <!-- Profile Card -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Personal Information</h3>
+                            <button class="btn btn-text" onclick="editProfile()">
+                                <i class="fas fa-edit"></i>
+                                Edit
+                            </button>
+                        </div>
+                        <div class="card-content">
+                            <div class="profile-section">
+                                <div class="profile-avatar-section">
+                                    <img src="https://via.placeholder.com/120/667eea/ffffff?text=JS" alt="Profile" class="profile-avatar">
+                                    <div class="avatar-actions">
+                                        <button class="btn btn-outline btn-sm">
+                                            <i class="fas fa-camera"></i>
+                                            Change Photo
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <form id="profileForm" class="profile-form">
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="firstName">First Name</label>
+                                            <input type="text" id="firstName" name="firstName" value="John" readonly>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="lastName">Last Name</label>
+                                            <input type="text" id="lastName" name="lastName" value="Seller" readonly>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="email">Email Address</label>
+                                            <input type="email" id="email" name="email" value="john.seller@membro.com" readonly>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="phone">Phone Number</label>
+                                            <input type="tel" id="phone" name="phone" value="+63 912 345 6789" readonly>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="department">Department</label>
+                                            <input type="text" id="department" name="department" value="Sales Department" readonly>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="reportsTo">Reports To</label>
+                                            <input type="text" id="reportsTo" name="reportsTo" value="Sales Manager" readonly>
+                                        </div>
+                                        
+                                        <div class="form-group full-width">
+                                            <label for="address">Address</label>
+                                            <textarea id="address" name="address" rows="3" readonly>123 Business District, Makati City, Metro Manila</textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-actions" id="profileActions" style="display: none;">
+                                        <button type="button" class="btn btn-outline" onclick="cancelEdit()">Cancel</button>
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Details Card -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Contact Information</h3>
+                            <button class="btn btn-text" onclick="editContact()">
+                                <i class="fas fa-edit"></i>
+                                Edit
+                            </button>
+                        </div>
+                        <div class="card-content">
+                            <form id="contactForm" class="contact-form">
+                                <div class="contact-grid">
+                                    <div class="contact-item">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <div class="contact-details">
+                                            <label>Primary Email</label>
+                                            <input type="email" id="primaryEmail" name="primaryEmail" value="john.seller@membro.com" readonly>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="contact-item">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-phone"></i>
+                                        </div>
+                                        <div class="contact-details">
+                                            <label>Mobile Number</label>
+                                            <input type="tel" id="mobileNumber" name="mobileNumber" value="+63 912 345 6789" readonly>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="contact-item">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-phone-alt"></i>
+                                        </div>
+                                        <div class="contact-details">
+                                            <label>Office Number</label>
+                                            <input type="tel" id="officeNumber" name="officeNumber" value="+63 2 8123 4567" readonly>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="contact-item">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-envelope-open"></i>
+                                        </div>
+                                        <div class="contact-details">
+                                            <label>Secondary Email</label>
+                                            <input type="email" id="secondaryEmail" name="secondaryEmail" value="john.seller.backup@membro.com" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions" id="contactActions" style="display: none;">
+                                    <button type="button" class="btn btn-outline" onclick="cancelContactEdit()">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Password Change Card -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Security Settings</h3>
+                        </div>
+                        <div class="card-content">
+                            <form id="passwordForm" class="password-form">
+                                <div class="form-group">
+                                    <label for="currentPassword">Current Password</label>
+                                    <div class="password-input">
+                                        <input type="password" id="currentPassword" name="currentPassword" required>
+                                        <button type="button" class="password-toggle" onclick="togglePassword('currentPassword')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="newPassword">New Password</label>
+                                    <div class="password-input">
+                                        <input type="password" id="newPassword" name="newPassword" required>
+                                        <button type="button" class="password-toggle" onclick="togglePassword('newPassword')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <div class="password-requirements">
+                                        <small>Password must be at least 8 characters with uppercase, lowercase, and numbers</small>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="confirmPassword">Confirm New Password</label>
+                                    <div class="password-input">
+                                        <input type="password" id="confirmPassword" name="confirmPassword" required>
+                                        <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">Update Password</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Activity</h3>
+                            <button class="btn btn-text">View All</button>
+                        </div>
+                        <div class="card-content">
+                            <div class="activity-list">
+                                <div class="activity-item">
+                                    <div class="activity-icon success">
+                                        <i class="fas fa-handshake"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <h4>Property Sold</h4>
+                                        <p>Modern 2BR Condo - ₱2.5M</p>
+                                        <span class="activity-time">2 hours ago</span>
+                                    </div>
+                                    <div class="activity-status">
+                                        <span class="status-badge success">Completed</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="activity-item">
+                                    <div class="activity-icon primary">
+                                        <i class="fas fa-user-plus"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <h4>New Lead Created</h4>
+                                        <p>Sarah Wilson - Luxury Penthouse</p>
+                                        <span class="activity-time">1 day ago</span>
+                                    </div>
+                                    <div class="activity-status">
+                                        <span class="status-badge primary">Active</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="activity-item">
+                                    <div class="activity-icon warning">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <h4>Requirements Submitted</h4>
+                                        <p>Mike Johnson - Townhouse Unit</p>
+                                        <span class="activity-time">2 days ago</span>
+                                    </div>
+                                    <div class="activity-status">
+                                        <span class="status-badge warning">Pending</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="activity-item">
+                                    <div class="activity-icon info">
+                                        <i class="fas fa-edit"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <h4>Change Request Approved</h4>
+                                        <p>Jane Smith - Payment Term Extension</p>
+                                        <span class="activity-time">3 days ago</span>
+                                    </div>
+                                    <div class="activity-status">
+                                        <span class="status-badge success">Approved</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Performance Metrics -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Performance Metrics</h3>
+                            <div class="card-actions">
+                                <select class="select-filter">
+                                    <option>This Month</option>
+                                    <option>Last Month</option>
+                                    <option>Last 3 Months</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="performance-metrics">
+                                <div class="metric-item">
+                                    <span class="metric-label">Sales Target Achievement</span>
+                                    <span class="metric-value">92%</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-progress" style="width: 92%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="metric-item">
+                                    <span class="metric-label">Customer Satisfaction</span>
+                                    <span class="metric-value">4.8/5</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-progress" style="width: 96%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="metric-item">
+                                    <span class="metric-label">Response Time</span>
+                                    <span class="metric-value">2.3 hrs</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-progress" style="width: 85%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="metric-item">
+                                    <span class="metric-label">Lead Conversion</span>
+                                    <span class="metric-value">78%</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-progress" style="width: 78%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="seller-portal.js"></script>
+    <script src="profile.js"></script>
+</body>
+</html> 

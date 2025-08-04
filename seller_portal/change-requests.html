@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Requests - Seller Portal</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="seller-styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="../logo.png" alt="Membro Logo" class="logo-img">
+                    <span class="logo-text">Seller Portal</span>
+                </div>
+            </div>
+            
+            <div class="nav-menu">
+                <div class="nav-section">
+                    <span class="nav-section-title">Main</span>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="index.html" class="nav-link">
+                                <i class="fas fa-home nav-icon"></i>
+                                <span class="nav-text">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="profile.html" class="nav-link">
+                                <i class="fas fa-user nav-icon"></i>
+                                <span class="nav-text">Profile</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="notifications.html" class="nav-link">
+                                <i class="fas fa-bell nav-icon"></i>
+                                <span class="nav-text">Notifications</span>
+                                <span class="notification-count">3</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <span class="nav-section-title">Business</span>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="properties.html" class="nav-link">
+                                <i class="fas fa-building nav-icon"></i>
+                                <span class="nav-text">Properties</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="opportunities.html" class="nav-link">
+                                <i class="fas fa-chart-line nav-icon"></i>
+                                <span class="nav-text">Opportunities</span>
+                            </a>
+                        </li>
+                        <li class="nav-item active">
+                            <a href="change-requests.html" class="nav-link">
+                                <i class="fas fa-edit nav-icon"></i>
+                                <span class="nav-text">Change Requests</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="reservation-agreements.html" class="nav-link">
+                                <i class="fas fa-file-contract nav-icon"></i>
+                                <span class="nav-text">Agreements</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="reports.html" class="nav-link">
+                                <i class="fas fa-chart-bar nav-icon"></i>
+                                <span class="nav-text">Reports</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/40/667eea/ffffff?text=JS" alt="Profile" class="user-avatar">
+                    <div class="user-info">
+                        <span class="user-name">John Seller</span>
+                        <span class="user-role">Sales Agent</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="window.location.href='../login.html'">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 class="page-title">Change Requests</h1>
+                    <p class="page-subtitle">Manage customer change requests for deadlines, payments, and properties</p>
+                </div>
+                <div class="header-right">
+                    <div class="header-actions">
+                        <!-- Notification Bell -->
+                        <div class="notification-wrapper">
+                            <button class="btn btn-icon notification-btn" onclick="window.location.href='notifications.html'" title="Notifications">
+                                <i class="fas fa-bell"></i>
+                                <span class="notification-badge header-badge">3</span>
+                            </button>
+                        </div>
+                        
+                        <button class="btn btn-primary" onclick="openNewRequestModal()">
+                            <i class="fas fa-plus"></i>
+                            New Change Request
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Change Requests Content -->
+            <div class="dashboard-content">
+                <!-- Filters -->
+                <div class="dashboard-card">
+                    <div class="card-content">
+                        <div class="filters">
+                            <select id="requestTypeFilter" class="filter-select">
+                                <option value="">All Types</option>
+                                <option value="deadline">Deadline Extension</option>
+                                <option value="payment">Payment Details</option>
+                                <option value="property">Property Change</option>
+                            </select>
+                            <select id="statusFilter" class="filter-select">
+                                <option value="">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                            <button class="btn btn-outline filter-btn" onclick="filterRequests()">
+                                <i class="fas fa-filter"></i>
+                                Filter
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Change Requests List -->
+                <div class="requests-container" id="requestsContainer">
+                    <!-- Change requests will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Change Request Modal -->
+    <div id="newRequestModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>New Change Request</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="changeRequestForm" class="change-request-form">
+                    <div class="form-group">
+                        <label for="opportunitySelect">Select Opportunity *</label>
+                        <select id="opportunitySelect" name="opportunityId" required>
+                            <option value="">Choose an opportunity...</option>
+                            <!-- Opportunities will be loaded here -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="requestType">Request Type *</label>
+                        <select id="requestType" name="requestType" required onchange="toggleRequestFields()">
+                            <option value="">Select request type...</option>
+                            <option value="deadline">Deadline Extension</option>
+                            <option value="payment">Payment Details Change</option>
+                            <option value="property">Property Change (Upgrade/Downgrade)</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Deadline Extension Fields -->
+                    <div id="deadlineFields" class="request-fields" style="display: none;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="currentDeadline">Current Deadline</label>
+                                <input type="date" id="currentDeadline" name="currentDeadline" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="newDeadline">New Deadline *</label>
+                                <input type="date" id="newDeadline" name="newDeadline">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="deadlineReason">Reason for Extension *</label>
+                            <textarea id="deadlineReason" name="deadlineReason" rows="3"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment Details Fields -->
+                    <div id="paymentFields" class="request-fields" style="display: none;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="currentPaymentYears">Current Payment Years</label>
+                                <input type="number" id="currentPaymentYears" name="currentPaymentYears" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="newPaymentYears">New Payment Years *</label>
+                                <input type="number" id="newPaymentYears" name="newPaymentYears" min="1" max="30">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="currentPaymentTerm">Current Payment Term</label>
+                                <input type="text" id="currentPaymentTerm" name="currentPaymentTerm" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="newPaymentTerm">New Payment Term *</label>
+                                <select id="newPaymentTerm" name="newPaymentTerm">
+                                    <option value="">Select payment term...</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="semi-annually">Semi-Annually</option>
+                                    <option value="annually">Annually</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentReason">Reason for Change *</label>
+                            <textarea id="paymentReason" name="paymentReason" rows="3"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Property Change Fields -->
+                    <div id="propertyFields" class="request-fields" style="display: none;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="currentProperty">Current Property</label>
+                                <input type="text" id="currentProperty" name="currentProperty" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="newProperty">New Property *</label>
+                                <select id="newProperty" name="newProperty">
+                                    <option value="">Select new property...</option>
+                                    <!-- Available properties will be loaded here -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="propertyReason">Reason for Change *</label>
+                            <textarea id="propertyReason" name="propertyReason" rows="3"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customerProof">Customer Proof/Signature *</label>
+                        <input type="file" id="customerProof" name="customerProof" accept=".pdf,.jpg,.jpeg,.png" required>
+                        <small>Upload customer's signed request or proof of consent</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="additionalNotes">Additional Notes</label>
+                        <textarea id="additionalNotes" name="additionalNotes" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="closeNewRequestModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Details Modal -->
+    <div id="requestDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Change Request Details</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="request-details" id="requestDetails">
+                    <!-- Request details will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="seller-portal.js"></script>
+    <script src="change-requests.js"></script>
+</body>
+</html> 
