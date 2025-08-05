@@ -155,6 +155,20 @@
             <div class="modal-body">
                 <div class="agreement-summary">
                     <div class="summary-section">
+                        <h4>Opportunity Information</h4>
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <label>Opportunity ID:</label>
+                                <span id="modalOpportunityId"></span>
+                            </div>
+                            <div class="summary-item">
+                                <label>Opportunity Name:</label>
+                                <span id="modalOpportunityName"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-section">
                         <h4>Customer Information</h4>
                         <div class="summary-grid">
                             <div class="summary-item">
@@ -205,27 +219,62 @@
                                 <label>Payment Terms:</label>
                                 <span id="modalPaymentTerms"></span>
                             </div>
+                            <div class="summary-item">
+                                <label>Status:</label>
+                                <span id="modalStatus"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="payment-schedule">
-                    <h4>Payment Schedule</h4>
-                    <div class="schedule-table-container">
-                        <table class="schedule-table" id="scheduleTable">
-                            <thead>
-                                <tr>
-                                    <th>Payment #</th>
-                                    <th>Due Date</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                    <th>Payment Date</th>
-                                </tr>
-                            </thead>
-                            <tbody id="scheduleTableBody">
-                                <!-- Payment schedule will be loaded here -->
-                            </tbody>
-                        </table>
+                <div class="payment-sections">
+                    <div class="payment-section">
+                        <h4>
+                            <i class="fas fa-hand-holding-usd"></i>
+                            Downpayment Schedule
+                        </h4>
+                        <div class="schedule-table-container">
+                            <table class="schedule-table" id="downpaymentTable">
+                                <thead>
+                                    <tr>
+                                        <th>Payment #</th>
+                                        <th>Due Date</th>
+                                        <th>Description</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Payment Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="downpaymentTableBody">
+                                    <!-- Downpayment schedule will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-section">
+                        <h4>
+                            <i class="fas fa-calendar-alt"></i>
+                            Amortization Schedule (Sample - First 12 months)
+                        </h4>
+                        <div class="schedule-table-container">
+                            <table class="schedule-table" id="amortizationTable">
+                                <thead>
+                                    <tr>
+                                        <th>Payment #</th>
+                                        <th>Due Date</th>
+                                        <th>Payment Amount</th>
+                                        <th>Principal</th>
+                                        <th>Interest</th>
+                                        <th>Balance</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="amortizationTableBody">
+                                    <!-- Amortization schedule will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 
@@ -233,6 +282,10 @@
                     <button class="btn btn-outline" onclick="printAgreement()">
                         <i class="fas fa-print"></i>
                         Print Agreement
+                    </button>
+                    <button class="btn btn-outline" onclick="viewOpportunity()">
+                        <i class="fas fa-external-link-alt"></i>
+                        View Opportunity
                     </button>
                     <button class="btn btn-primary" onclick="downloadAgreement()">
                         <i class="fas fa-download"></i>

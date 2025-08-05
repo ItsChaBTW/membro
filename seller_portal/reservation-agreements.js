@@ -1,9 +1,11 @@
 // Reservation Agreements Page JavaScript
 
-// Sample reservation agreements data
+// Sample reservation agreements data with enhanced fields
 const reservationAgreements = [
     {
         id: 1,
+        opportunityId: 1,
+        opportunityName: "Modern 2BR Condo - John Doe",
         customerName: "John Doe",
         customerEmail: "john.doe@email.com",
         customerPhone: "+63 912 345 6789",
@@ -12,18 +14,27 @@ const reservationAgreements = [
         propertyLocation: "Makati City",
         agreementDate: "2024-01-15",
         totalAmount: 2500000,
-        paymentTerms: "20 years, Monthly",
+        paymentTerms: "15 years, Monthly",
         status: "active",
-        paymentSchedule: [
-            { number: 1, dueDate: "2024-02-15", amount: 125000, status: "paid", paymentDate: "2024-02-10" },
-            { number: 2, dueDate: "2024-03-15", amount: 125000, status: "paid", paymentDate: "2024-03-12" },
-            { number: 3, dueDate: "2024-04-15", amount: 125000, status: "paid", paymentDate: "2024-04-14" },
-            { number: 4, dueDate: "2024-05-15", amount: 125000, status: "pending", paymentDate: null },
-            { number: 5, dueDate: "2024-06-15", amount: 125000, status: "pending", paymentDate: null }
+        downpaymentSchedule: [
+            { number: 1, dueDate: "2024-02-15", amount: 125000, description: "Reservation Fee", status: "paid", paymentDate: "2024-02-10" },
+            { number: 2, dueDate: "2024-03-15", amount: 125000, description: "1st Monthly DP", status: "paid", paymentDate: "2024-03-12" },
+            { number: 3, dueDate: "2024-04-15", amount: 125000, description: "2nd Monthly DP", status: "paid", paymentDate: "2024-04-14" },
+            { number: 4, dueDate: "2024-05-15", amount: 125000, description: "3rd Monthly DP", status: "pending", paymentDate: null },
+            { number: 5, dueDate: "2024-06-15", amount: 125000, description: "4th Monthly DP", status: "pending", paymentDate: null }
+        ],
+        amortizationSchedule: [
+            { number: 1, dueDate: "2024-07-15", amount: 18500, principal: 12000, interest: 6500, balance: 1875000, status: "pending" },
+            { number: 2, dueDate: "2024-08-15", amount: 18500, principal: 12050, interest: 6450, balance: 1862950, status: "pending" },
+            { number: 3, dueDate: "2024-09-15", amount: 18500, principal: 12100, interest: 6400, balance: 1850850, status: "pending" },
+            { number: 4, dueDate: "2024-10-15", amount: 18500, principal: 12150, interest: 6350, balance: 1838700, status: "pending" },
+            { number: 5, dueDate: "2024-11-15", amount: 18500, principal: 12200, interest: 6300, balance: 1826500, status: "pending" }
         ]
     },
     {
         id: 2,
+        opportunityId: 2,
+        opportunityName: "Family House - Jane Smith",
         customerName: "Jane Smith",
         customerEmail: "jane.smith@email.com",
         customerPhone: "+63 923 456 7890",
@@ -32,17 +43,27 @@ const reservationAgreements = [
         propertyLocation: "Quezon City",
         agreementDate: "2024-01-10",
         totalAmount: 4500000,
-        paymentTerms: "25 years, Quarterly",
+        paymentTerms: "20 years, Monthly",
         status: "active",
-        paymentSchedule: [
-            { number: 1, dueDate: "2024-04-10", amount: 450000, status: "paid", paymentDate: "2024-04-05" },
-            { number: 2, dueDate: "2024-07-10", amount: 450000, status: "pending", paymentDate: null },
-            { number: 3, dueDate: "2024-10-10", amount: 450000, status: "pending", paymentDate: null },
-            { number: 4, dueDate: "2025-01-10", amount: 450000, status: "pending", paymentDate: null }
+        downpaymentSchedule: [
+            { number: 1, dueDate: "2024-02-10", amount: 225000, description: "Reservation Fee", status: "paid", paymentDate: "2024-02-05" },
+            { number: 2, dueDate: "2024-03-10", amount: 225000, description: "1st Monthly DP", status: "paid", paymentDate: "2024-03-08" },
+            { number: 3, dueDate: "2024-04-10", amount: 225000, description: "2nd Monthly DP", status: "paid", paymentDate: "2024-04-09" },
+            { number: 4, dueDate: "2024-05-10", amount: 225000, description: "3rd Monthly DP", status: "paid", paymentDate: "2024-05-08" },
+            { number: 5, dueDate: "2024-06-10", amount: 225000, description: "4th Monthly DP", status: "pending", paymentDate: null }
+        ],
+        amortizationSchedule: [
+            { number: 1, dueDate: "2024-07-10", amount: 29500, principal: 15000, interest: 14500, balance: 3375000, status: "pending" },
+            { number: 2, dueDate: "2024-08-10", amount: 29500, principal: 15075, interest: 14425, balance: 3359925, status: "pending" },
+            { number: 3, dueDate: "2024-09-10", amount: 29500, principal: 15150, interest: 14350, balance: 3344775, status: "pending" },
+            { number: 4, dueDate: "2024-10-10", amount: 29500, principal: 15225, interest: 14275, balance: 3329550, status: "pending" },
+            { number: 5, dueDate: "2024-11-10", amount: 29500, principal: 15300, interest: 14200, balance: 3314250, status: "pending" }
         ]
     },
     {
         id: 3,
+        opportunityId: 4,
+        opportunityName: "Luxury Penthouse - Sarah Wilson",
         customerName: "Sarah Wilson",
         customerEmail: "sarah.wilson@email.com",
         customerPhone: "+63 945 678 9012",
@@ -51,18 +72,28 @@ const reservationAgreements = [
         propertyLocation: "Bonifacio Global City",
         agreementDate: "2024-01-05",
         totalAmount: 8500000,
-        paymentTerms: "30 years, Monthly",
+        paymentTerms: "10 years, Monthly",
         status: "active",
-        paymentSchedule: [
-            { number: 1, dueDate: "2024-02-05", amount: 283333, status: "paid", paymentDate: "2024-02-01" },
-            { number: 2, dueDate: "2024-03-05", amount: 283333, status: "paid", paymentDate: "2024-03-03" },
-            { number: 3, dueDate: "2024-04-05", amount: 283333, status: "paid", paymentDate: "2024-04-04" },
-            { number: 4, dueDate: "2024-05-05", amount: 283333, status: "pending", paymentDate: null },
-            { number: 5, dueDate: "2024-06-05", amount: 283333, status: "pending", paymentDate: null }
+        downpaymentSchedule: [
+            { number: 1, dueDate: "2024-02-05", amount: 425000, description: "Reservation Fee", status: "paid", paymentDate: "2024-02-01" },
+            { number: 2, dueDate: "2024-03-05", amount: 425000, description: "1st Monthly DP", status: "paid", paymentDate: "2024-03-03" },
+            { number: 3, dueDate: "2024-04-05", amount: 425000, description: "2nd Monthly DP", status: "paid", paymentDate: "2024-04-04" },
+            { number: 4, dueDate: "2024-05-05", amount: 425000, description: "3rd Monthly DP", status: "paid", paymentDate: "2024-05-03" },
+            { number: 5, dueDate: "2024-06-05", amount: 425000, description: "4th Monthly DP", status: "paid", paymentDate: "2024-06-02" },
+            { number: 6, dueDate: "2024-07-05", amount: 425000, description: "5th Monthly DP", status: "pending", paymentDate: null }
+        ],
+        amortizationSchedule: [
+            { number: 1, dueDate: "2024-08-05", amount: 65000, principal: 32000, interest: 33000, balance: 5525000, status: "pending" },
+            { number: 2, dueDate: "2024-09-05", amount: 65000, principal: 32150, interest: 32850, balance: 5492850, status: "pending" },
+            { number: 3, dueDate: "2024-10-05", amount: 65000, principal: 32300, interest: 32700, balance: 5460550, status: "pending" },
+            { number: 4, dueDate: "2024-11-05", amount: 65000, principal: 32450, interest: 32550, balance: 5428100, status: "pending" },
+            { number: 5, dueDate: "2024-12-05", amount: 65000, principal: 32600, interest: 32400, balance: 5395500, status: "pending" }
         ]
     },
     {
         id: 4,
+        opportunityId: 3,
+        opportunityName: "Townhouse Unit - Mike Johnson",
         customerName: "Mike Johnson",
         customerEmail: "mike.johnson@email.com",
         customerPhone: "+63 934 567 8901",
@@ -71,12 +102,17 @@ const reservationAgreements = [
         propertyLocation: "Taguig City",
         agreementDate: "2024-01-20",
         totalAmount: 3200000,
-        paymentTerms: "15 years, Monthly",
+        paymentTerms: "25 years, Monthly",
         status: "completed",
-        paymentSchedule: [
-            { number: 1, dueDate: "2024-02-20", amount: 213333, status: "paid", paymentDate: "2024-02-18" },
-            { number: 2, dueDate: "2024-03-20", amount: 213333, status: "paid", paymentDate: "2024-03-19" },
-            { number: 3, dueDate: "2024-04-20", amount: 213333, status: "paid", paymentDate: "2024-04-20" }
+        downpaymentSchedule: [
+            { number: 1, dueDate: "2024-02-20", amount: 160000, description: "Reservation Fee", status: "paid", paymentDate: "2024-02-18" },
+            { number: 2, dueDate: "2024-03-20", amount: 160000, description: "1st Monthly DP", status: "paid", paymentDate: "2024-03-19" },
+            { number: 3, dueDate: "2024-04-20", amount: 160000, description: "Final DP", status: "paid", paymentDate: "2024-04-20" }
+        ],
+        amortizationSchedule: [
+            { number: 1, dueDate: "2024-05-20", amount: 22000, principal: 8000, interest: 14000, balance: 2720000, status: "pending" },
+            { number: 2, dueDate: "2024-06-20", amount: 22000, principal: 8050, interest: 13950, balance: 2711950, status: "pending" },
+            { number: 3, dueDate: "2024-07-20", amount: 22000, principal: 8100, interest: 13900, balance: 2703850, status: "pending" }
         ]
     }
 ];
@@ -141,8 +177,8 @@ function displayAgreements(agreementsToShow) {
 // Create agreement list item
 function createAgreementListItem(agreement) {
     const nextPayment = getNextPayment(agreement);
-    const paidPayments = agreement.paymentSchedule.filter(payment => payment.status === 'paid').length;
-    const totalPayments = agreement.paymentSchedule.length;
+    const paidPayments = agreement.downpaymentSchedule.filter(payment => payment.status === 'paid').length;
+    const totalPayments = agreement.downpaymentSchedule.length;
     
     return `
         <div class="agreement-item" onclick="viewAgreementDetails(${agreement.id})">
@@ -154,6 +190,10 @@ function createAgreementListItem(agreement) {
                     <div class="customer-info">
                         <h4>${agreement.customerName}</h4>
                         <p>${agreement.customerEmail}</p>
+                        <p class="opportunity-link">
+                            <i class="fas fa-link"></i>
+                            Opportunity: ${agreement.opportunityName}
+                        </p>
                     </div>
             </div>
             <div class="agreement-status">
@@ -183,7 +223,7 @@ function createAgreementListItem(agreement) {
                     <div class="detail-value">${new Date(agreement.agreementDate).toLocaleDateString()}</div>
                 </div>
                 <div class="detail-group">
-                    <div class="detail-label">Progress</div>
+                    <div class="detail-label">DP Progress</div>
                     <div class="detail-value">${paidPayments}/${totalPayments} payments completed</div>
             </div>
                 ${nextPayment ? `
@@ -199,6 +239,10 @@ function createAgreementListItem(agreement) {
                 <i class="fas fa-print"></i>
                     Print
             </button>
+                <button class="action-btn outline" onclick="event.stopPropagation(); viewOpportunity(${agreement.opportunityId})">
+                    <i class="fas fa-external-link-alt"></i>
+                    View Opportunity
+            </button>
                 <button class="action-btn outline" onclick="event.stopPropagation(); downloadAgreement(${agreement.id})">
                 <i class="fas fa-download"></i>
                     Download
@@ -212,13 +256,15 @@ function createAgreementListItem(agreement) {
     `;
 }
 
-// Get next payment
+// Get next payment from downpayment schedule
 function getNextPayment(agreement) {
-    const nextPayment = agreement.paymentSchedule.find(p => p.status === 'pending');
+    const nextPayment = agreement.downpaymentSchedule.find(p => p.status === 'pending');
     if (nextPayment) {
         return nextPayment;
     }
-    return null;
+    // If downpayment is complete, check amortization schedule
+    const nextAmortization = agreement.amortizationSchedule.find(p => p.status === 'pending');
+    return nextAmortization || null;
 }
 
 // Filter agreements
@@ -244,103 +290,81 @@ function closeModal() {
 
 // View agreement details
 function viewAgreementDetails(agreementId) {
-    const agreement = reservationAgreements.find(a => a.id === agreementId);
-    if (!agreement) {
-        console.error('Agreement not found:', agreementId);
-        return;
-    }
-    
-    // Populate modal with agreement details
-    const modalBody = agreementModal.querySelector('.modal-body');
-    modalBody.innerHTML = `
-        <div class="agreement-summary">
-            <div class="summary-section">
-                <h4>Customer Information</h4>
-                <div class="detail-grid">
-                    <div class="detail-item">
-                        <label>Name:</label>
-                        <span>${agreement.customerName}</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Email:</label>
-                        <span>${agreement.customerEmail}</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Phone:</label>
-                        <span>${agreement.customerPhone}</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="summary-section">
-                <h4>Property Information</h4>
-                <div class="detail-grid">
-                    <div class="detail-item">
-                        <label>Property:</label>
-                        <span>${agreement.propertyName}</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Location:</label>
-                        <span>${agreement.propertyLocation}</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Price:</label>
-                        <span>₱${agreement.propertyPrice.toLocaleString()}</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="summary-section">
-                <h4>Agreement Details</h4>
-                <div class="detail-grid">
-                    <div class="detail-item">
-                        <label>Agreement Date:</label>
-                        <span>${new Date(agreement.agreementDate).toLocaleDateString()}</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Total Amount:</label>
-                        <span>₱${agreement.totalAmount.toLocaleString()}</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Payment Terms:</label>
-                        <span>${agreement.paymentTerms}</span>
-                    </div>
-                    <div class="detail-item">
-                        <label>Status:</label>
-                        <span class="status-badge ${agreement.status}">${agreement.status.charAt(0).toUpperCase() + agreement.status.slice(1)}</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="summary-section">
-                <h4>Payment Schedule</h4>
-                <div class="payment-schedule">
-                    ${displayPaymentSchedule(agreement.paymentSchedule)}
-                </div>
-            </div>
-        </div>
-    `;
-    
-    agreementModal.style.display = 'block';
+    // Navigate to the agreement details page
+    window.location.href = `agreement-details.html?id=${agreementId}`;
 }
 
-// Display payment schedule
-function displayPaymentSchedule(schedule) {
-    const scheduleTableBody = document.getElementById('scheduleTableBody');
+// Display downpayment schedule
+function displayDownpaymentSchedule(schedule) {
+    const tableBody = document.getElementById('downpaymentTableBody');
+    if (!tableBody) return;
     
-    scheduleTableBody.innerHTML = schedule.map(payment => `
+    tableBody.innerHTML = schedule.map(payment => `
         <tr class="${payment.status}">
             <td>${payment.number}</td>
             <td>${formatDate(payment.dueDate)}</td>
+            <td>${payment.description}</td>
             <td>${formatCurrency(payment.amount)}</td>
             <td>
                 <span class="payment-status ${payment.status}">
-                    ${payment.status}
+                    ${payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
                 </span>
             </td>
             <td>${payment.paymentDate ? formatDate(payment.paymentDate) : '-'}</td>
         </tr>
     `).join('');
+}
+
+// Display amortization schedule
+function displayAmortizationSchedule(schedule) {
+    const tableBody = document.getElementById('amortizationTableBody');
+    if (!tableBody) return;
+    
+    // Show only first 12 months or all if less than 12
+    const displaySchedule = schedule.slice(0, 12);
+    
+    tableBody.innerHTML = displaySchedule.map(payment => `
+        <tr class="${payment.status}">
+            <td>${payment.number}</td>
+            <td>${formatDate(payment.dueDate)}</td>
+            <td>${formatCurrency(payment.amount)}</td>
+            <td>${formatCurrency(payment.principal)}</td>
+            <td>${formatCurrency(payment.interest)}</td>
+            <td>${formatCurrency(payment.balance)}</td>
+            <td>
+                <span class="payment-status ${payment.status}">
+                    ${payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
+                </span>
+            </td>
+        </tr>
+    `).join('');
+}
+
+// View related opportunity
+function viewOpportunity(opportunityId) {
+    if (opportunityId) {
+        // In a real application, this would navigate to the opportunities page
+        // and open the specific opportunity
+        window.location.href = `opportunities.html?id=${opportunityId}`;
+    }
+}
+
+// Format currency
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('en-PH', {
+        style: 'currency',
+        currency: 'PHP',
+        minimumFractionDigits: 0
+    }).format(amount);
+}
+
+// Format date
+function formatDate(dateString) {
+    return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
 }
 
 // Print agreement
@@ -479,7 +503,7 @@ const additionalStyles = `
     
     .filter-btn {
         padding: 0.5rem 1rem;
-        background: #667eea;
+        background: #B91C1C;
         color: white;
         border: none;
         border-radius: 6px;
@@ -527,232 +551,107 @@ const additionalStyles = `
         margin-bottom: 1rem;
     }
     
-    .agreement-info h3 {
-        margin: 0 0 0.5rem 0;
-        color: #333;
-        font-size: 1.1rem;
-    }
-    
-    .property-name {
-        color: #666;
-        font-size: 0.9rem;
-        margin: 0 0 0.25rem 0;
-    }
-    
-    .agreement-date {
-        color: #999;
-        font-size: 0.8rem;
-        margin: 0;
-    }
-    
-    .status-badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 500;
-    }
-    
-    .status-badge.active {
-        background: #d4edda;
-        color: #155724;
-    }
-    
-    .status-badge.completed {
-        background: #cce5ff;
-        color: #004085;
-    }
-    
-    .status-badge.cancelled {
-        background: #f8d7da;
-        color: #721c24;
-    }
-    
-    .agreement-details {
-        margin-bottom: 1rem;
-    }
-    
-    .detail-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        margin-bottom: 1rem;
-    }
-    
-    .detail-item {
+    .opportunity-link {
+        color: #B91C1C !important;
+        font-size: 0.85rem;
+        margin: 0.25rem 0 0 0;
         display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-    }
-    
-    .detail-item label {
-        font-weight: 500;
-        color: #666;
-        font-size: 0.9rem;
-    }
-    
-    .detail-item span {
-        color: #333;
-        font-weight: 500;
-    }
-    
-    .payment-progress {
-        margin-bottom: 1rem;
-    }
-    
-    .progress-header {
-        display: flex;
-        justify-content: space-between;
         align-items: center;
-        margin-bottom: 0.5rem;
-        font-size: 0.9rem;
-        color: #666;
-    }
-    
-    .progress-bar {
-        width: 100%;
-        height: 8px;
-        background: #f0f0f0;
-        border-radius: 4px;
-        overflow: hidden;
-    }
-    
-    .progress-fill {
-        height: 100%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        transition: width 0.3s ease;
-    }
-    
-    .next-payment {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.75rem;
-        background: #f8f9fa;
-        border-radius: 6px;
-        font-size: 0.9rem;
-    }
-    
-    .next-payment label {
-        font-weight: 500;
-        color: #666;
-    }
-    
-    .next-payment span {
-        color: #333;
-        font-weight: 500;
-    }
-    
-    .agreement-actions {
-        display: flex;
         gap: 0.5rem;
-        justify-content: flex-end;
+        font-weight: 500;
     }
     
-    .btn-icon {
-        width: 32px;
-        height: 32px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-        background: #f8f9fa;
-        color: #666;
+    .opportunity-link i {
+        font-size: 0.75rem;
     }
     
-    .btn-icon:hover {
-        background: #667eea;
-        color: white;
+    .payment-sections {
+        margin-top: 2rem;
     }
     
-    .no-agreements {
-        grid-column: 1 / -1;
-        text-align: center;
-        padding: 3rem;
-        color: #666;
-    }
-    
-    .no-agreements i {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        color: #ddd;
-    }
-    
-    .no-agreements h3 {
-        margin: 0 0 0.5rem 0;
-        color: #333;
-    }
-    
-    .no-agreements p {
-        margin: 0;
-        color: #666;
-    }
-    
-    /* Modal Styles */
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.5);
-    }
-    
-    .modal-content {
-        background-color: white;
-        margin: 5% auto;
-        padding: 0;
-        border-radius: 12px;
-        width: 90%;
-        max-width: 1000px;
-        max-height: 90vh;
-        overflow-y: auto;
-    }
-    
-    .modal-header {
-        padding: 1.5rem;
-        border-bottom: 1px solid #eee;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    .modal-header h3 {
-        margin: 0;
-        color: #333;
-    }
-    
-    .close {
-        color: #aaa;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-    
-    .close:hover {
-        color: #333;
-    }
-    
-    .modal-body {
-        padding: 1.5rem;
-    }
-    
-    .agreement-summary {
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
+    .payment-section {
         margin-bottom: 2rem;
     }
     
-    .summary-section h4 {
+    .payment-section h4 {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
         margin: 0 0 1rem 0;
         color: #333;
         font-size: 1.1rem;
         font-weight: 600;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #B91C1C;
+    }
+    
+    .payment-section h4 i {
+        color: #B91C1C;
+    }
+    
+    .schedule-table-container {
+        background: #f8f9fa;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .schedule-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+    }
+    
+    .schedule-table th,
+    .schedule-table td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    .schedule-table th {
+        background: #B91C1C;
+        color: white;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+    }
+    
+    .schedule-table tbody tr:hover {
+        background: #f1f3f5;
+    }
+    
+    .schedule-table tr.paid {
+        background: rgba(40, 167, 69, 0.1);
+    }
+    
+    .schedule-table tr.pending {
+        background: rgba(255, 193, 7, 0.1);
+    }
+    
+    .payment-status {
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .payment-status.paid {
+        background: #28a745;
+        color: white;
+    }
+    
+    .payment-status.pending {
+        background: #ffc107;
+        color: #212529;
+    }
+    
+    .payment-status.overdue {
+        background: #dc3545;
+        color: white;
     }
     
     .summary-grid {
@@ -778,102 +677,47 @@ const additionalStyles = `
         font-weight: 500;
     }
     
-    .payment-schedule h4 {
-        margin: 0 0 1rem 0;
-        color: #333;
-        font-size: 1.1rem;
-        font-weight: 600;
-    }
-    
-    .schedule-table-container {
-        background: #f8f9fa;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-    
-    .schedule-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    
-    .schedule-table th,
-    .schedule-table td {
-        padding: 0.75rem;
-        text-align: left;
-        border-bottom: 1px solid #eee;
-    }
-    
-    .schedule-table th {
-        background: #e9ecef;
-        font-weight: 600;
-        color: #333;
-    }
-    
-    .schedule-table tr.paid {
-        background: #d4edda;
-    }
-    
-    .schedule-table tr.pending {
-        background: #fff3cd;
-    }
-    
-    .payment-status {
-        padding: 0.25rem 0.5rem;
-        border-radius: 12px;
-        font-size: 0.8rem;
-        font-weight: 500;
-    }
-    
-    .payment-status.paid {
-        background: #28a745;
-        color: white;
-    }
-    
-    .payment-status.pending {
-        background: #ffc107;
-        color: #212529;
-    }
-    
+    /* Enhanced agreement actions */
     .agreement-actions {
         display: flex;
-        gap: 1rem;
+        gap: 0.5rem;
         justify-content: flex-end;
-        margin-top: 2rem;
-        padding-top: 1rem;
-        border-top: 1px solid #eee;
+        flex-wrap: wrap;
     }
     
-    .btn-primary,
-    .btn-secondary {
-        padding: 0.75rem 1.5rem;
+    .action-btn {
+        padding: 0.5rem 1rem;
         border: none;
         border-radius: 6px;
         cursor: pointer;
+        font-size: 0.85rem;
         font-weight: 500;
         display: flex;
         align-items: center;
         gap: 0.5rem;
         transition: all 0.3s ease;
+        text-decoration: none;
     }
     
-    .btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    .action-btn.outline {
+        background: #f8f9fa;
+        color: #666;
+        border: 1px solid #dee2e6;
+    }
+    
+    .action-btn.outline:hover {
+        background: #e9ecef;
+        border-color: #adb5bd;
+    }
+    
+    .action-btn.primary {
+        background: #B91C1C;
         color: white;
     }
     
-    .btn-secondary {
-        background: #f8f9fa;
-        color: #666;
-        border: 1px solid #ddd;
-    }
-    
-    .btn-primary:hover {
+    .action-btn.primary:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    }
-    
-    .btn-secondary:hover {
-        background: #e9ecef;
     }
     
     /* Responsive Design */

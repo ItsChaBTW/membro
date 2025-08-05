@@ -1,6 +1,6 @@
 // Properties Page JavaScript
 
-// Sample property data
+// Sample property data with enhanced fields
 const properties = [
     {
         id: 1,
@@ -8,7 +8,14 @@ const properties = [
         type: "condo",
         price: 2500000,
         location: "Makati City",
-        image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=250&fit=crop&crop=center",
+        project: "Makati 288 Condo",
+        area: "65.5",
+        rfAmount: 125000,
+        images: [
+            "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=250&fit=crop&crop=center",
+            "https://images.unsplash.com/photo-1560448075-bb485b067938?w=400&h=250&fit=crop&crop=center",
+            "https://images.unsplash.com/photo-1560448076-0242-4b5c-bced-4765b1b3e3e7?w=400&h=250&fit=crop&crop=center"
+        ],
         description: "Beautiful 2-bedroom condo with modern amenities",
         features: ["2 Bedrooms", "2 Bathrooms", "Balcony", "Parking"],
         status: "available"
@@ -19,20 +26,31 @@ const properties = [
         type: "house",
         price: 4500000,
         location: "Quezon City",
-        image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&h=250&fit=crop&crop=center",
+        project: "Quezon Hills Subdivision",
+        area: "120.0",
+        rfAmount: 225000,
+        images: [
+            "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&h=250&fit=crop&crop=center",
+            "https://images.unsplash.com/photo-1570129477535-48c-45c003edd2be?w=400&h=250&fit=crop&crop=center"
+        ],
         description: "Spacious family house with garden",
         features: ["3 Bedrooms", "2 Bathrooms", "Garden", "2 Car Garage"],
         status: "available"
     },
     {
         id: 3,
-        name: "Townhouse Unit",
-        type: "townhouse",
+        name: "Commercial Lot",
+        type: "lot",
         price: 3200000,
         location: "Taguig City",
-        image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=250&fit=crop&crop=center",
-        description: "Elegant townhouse with modern design",
-        features: ["3 Bedrooms", "2.5 Bathrooms", "Terrace", "Security"],
+        project: "BGC Commercial District",
+        area: "200.0",
+        rfAmount: 160000,
+        images: [
+            "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=250&fit=crop&crop=center"
+        ],
+        description: "Prime commercial lot in BGC area",
+        features: ["Commercial Use", "Main Road Access", "Utilities Ready", "Corner Lot"],
         status: "available"
     },
     {
@@ -41,31 +59,49 @@ const properties = [
         type: "condo",
         price: 8500000,
         location: "Bonifacio Global City",
-        image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=250&fit=crop&crop=center",
+        project: "BGC Grand Tower",
+        area: "150.0",
+        rfAmount: 425000,
+        images: [
+            "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=250&fit=crop&crop=center",
+            "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=400&h=250&fit=crop&crop=center",
+            "https://images.unsplash.com/photo-1600607687914-4e2a09cf159d?w=400&h=250&fit=crop&crop=center",
+            "https://images.unsplash.com/photo-1600607687908-4e2a09cf159d?w=400&h=250&fit=crop&crop=center"
+        ],
         description: "Exclusive penthouse with city views",
         features: ["4 Bedrooms", "3 Bathrooms", "City View", "Private Pool"],
         status: "available"
     },
     {
         id: 5,
-        name: "Suburban House",
-        type: "house",
+        name: "Commercial Space",
+        type: "commercial",
         price: 3800000,
-        location: "Cavite",
-        image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=400&h=250&fit=crop&crop=center",
-        description: "Peaceful suburban house with large lot",
-        features: ["4 Bedrooms", "3 Bathrooms", "Large Lot", "Garden"],
+        location: "Ortigas Center",
+        project: "Ortigas Business Hub",
+        area: "85.0",
+        rfAmount: 190000,
+        images: [
+            "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=400&h=250&fit=crop&crop=center"
+        ],
+        description: "Prime commercial space in business district",
+        features: ["Ground Floor", "High Ceiling", "Parking Slots", "Security"],
         status: "available"
     },
     {
         id: 6,
-        name: "Studio Condo",
-        type: "condo",
+        name: "Residential Lot",
+        type: "lot",
         price: 1200000,
-        location: "Manila",
-        image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=250&fit=crop&crop=center",
-        description: "Affordable studio condo for young professionals",
-        features: ["Studio", "1 Bathroom", "Balcony", "Security"],
+        location: "Antipolo",
+        project: "Antipolo Heights",
+        area: "300.0",
+        rfAmount: 60000,
+        images: [
+            "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=250&fit=crop&crop=center"
+        ],
+        description: "Spacious residential lot with mountain view",
+        features: ["Mountain View", "Clean Title", "Gated Community", "Underground Utilities"],
         status: "available"
     }
 ];
@@ -73,6 +109,7 @@ const properties = [
 // DOM Elements
 const propertiesGrid = document.getElementById('propertiesGrid');
 const propertyTypeFilter = document.getElementById('propertyType');
+const projectFilter = document.getElementById('projectFilter');
 const priceRangeFilter = document.getElementById('priceRange');
 const propertySearch = document.getElementById('propertySearch');
 const searchClear = document.getElementById('searchClear');
@@ -81,11 +118,55 @@ const closeModalBtn = document.querySelector('.close');
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Properties page loaded, displaying properties...');
     displayProperties(properties);
+    populateProjectFilter();
     setupEventListeners();
     injectPropertyStyles();
+    initializePaymentCalculator(); // Initialize the payment calculator
 });
+
+// Initialize payment calculator
+function initializePaymentCalculator() {
+    // Add event listeners to input fields
+    const inputFields = [
+        'calcTotalSellingPrice',
+        'calcRF',
+        'calcDPPercentage',
+        'calcNoOfSplits',
+        'calcDiscountPercent',
+        'calcPromoDiscount',
+        'calcNoOfYearsToPay'
+    ];
+    
+    inputFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('input', calculatePayment);
+        }
+    });
+    
+    // Add event listener for payment term dropdown
+    const paymentTermField = document.getElementById('calcPaymentTerm');
+    if (paymentTermField) {
+        paymentTermField.addEventListener('change', updatePaymentTermFields);
+    }
+}
+
+// Populate project filter
+function populateProjectFilter() {
+    const projects = [...new Set(properties.map(p => p.project))].sort();
+    const projectSelect = document.getElementById('projectFilter');
+    
+    // Clear existing options except the first one
+    projectSelect.innerHTML = '<option value="">All Projects</option>';
+    
+    projects.forEach(project => {
+        const option = document.createElement('option');
+        option.value = project;
+        option.textContent = project;
+        projectSelect.appendChild(option);
+    });
+}
 
 // Setup event listeners
 function setupEventListeners() {
@@ -147,22 +228,60 @@ function createPropertyCard(property) {
         minimumFractionDigits: 0
     }).format(property.price);
     
+    const formattedRfAmount = new Intl.NumberFormat('en-PH', {
+        style: 'currency',
+        currency: 'PHP',
+        minimumFractionDigits: 0
+    }).format(property.rfAmount);
+    
     card.innerHTML = `
         <div class="property-image">
-            <img src="${property.image}" alt="${property.name}">
+            <div class="image-slider">
+                ${property.images.map((img, index) => `
+                    <img src="${img}" alt="${property.name}" class="slider-image ${index === 0 ? 'active' : ''}" style="display: ${index === 0 ? 'block' : 'none'}">
+                `).join('')}
+                ${property.images.length > 1 ? `
+                    <button class="slider-btn prev" onclick="changeImage(event, ${property.id}, -1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="slider-btn next" onclick="changeImage(event, ${property.id}, 1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <div class="image-indicators">
+                        ${property.images.map((_, index) => `
+                            <div class="indicator ${index === 0 ? 'active' : ''}" onclick="goToImage(event, ${property.id}, ${index})"></div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+            </div>
             <div class="property-status ${property.status}">${property.status}</div>
+            <div class="property-type">${property.type.toUpperCase()}</div>
         </div>
         <div class="property-content">
             <h3>${property.name}</h3>
             <p class="property-location"><i class="fas fa-map-marker-alt"></i> ${property.location}</p>
-            <p class="property-price">${formattedPrice}</p>
+            <p class="property-project"><i class="fas fa-building"></i> ${property.project}</p>
+            <div class="property-details-grid">
+                <div class="detail-item">
+                    <span class="detail-label">Price</span>
+                    <span class="detail-value">${formattedPrice}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Area</span>
+                    <span class="detail-value">${property.area} sqm</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">RF Amount</span>
+                    <span class="detail-value">${formattedRfAmount}</span>
+                </div>
+            </div>
             <p class="property-description">${property.description}</p>
             <div class="property-features">
                 ${property.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
             </div>
-            <button class="reserve-btn" onclick="openReservationModal(${property.id})">
-                <i class="fas fa-handshake"></i>
-                Reserve Property
+            <button class="reserve-btn" onclick="viewPropertyDetails(${property.id})">
+                <i class="fas fa-eye"></i>
+                View Details
             </button>
         </div>
     `;
@@ -170,9 +289,60 @@ function createPropertyCard(property) {
     return card;
 }
 
+// Change image in slider
+function changeImage(event, propertyId, direction) {
+    event.stopPropagation();
+    const property = properties.find(p => p.id === propertyId);
+    const card = event.target.closest('.property-card');
+    const images = card.querySelectorAll('.slider-image');
+    const indicators = card.querySelectorAll('.indicator');
+    
+    let currentIndex = Array.from(images).findIndex(img => img.classList.contains('active'));
+    let newIndex = currentIndex + direction;
+    
+    if (newIndex >= property.images.length) newIndex = 0;
+    if (newIndex < 0) newIndex = property.images.length - 1;
+    
+    // Update images
+    images[currentIndex].classList.remove('active');
+    images[currentIndex].style.display = 'none';
+    images[newIndex].classList.add('active');
+    images[newIndex].style.display = 'block';
+    
+    // Update indicators
+    if (indicators.length > 0) {
+        indicators[currentIndex].classList.remove('active');
+        indicators[newIndex].classList.add('active');
+    }
+}
+
+// Go to specific image
+function goToImage(event, propertyId, index) {
+    event.stopPropagation();
+    const card = event.target.closest('.property-card');
+    const images = card.querySelectorAll('.slider-image');
+    const indicators = card.querySelectorAll('.indicator');
+    
+    const currentActive = card.querySelector('.slider-image.active');
+    const currentIndicator = card.querySelector('.indicator.active');
+    
+    if (currentActive) {
+        currentActive.classList.remove('active');
+        currentActive.style.display = 'none';
+    }
+    if (currentIndicator) {
+        currentIndicator.classList.remove('active');
+    }
+    
+    images[index].classList.add('active');
+    images[index].style.display = 'block';
+    indicators[index].classList.add('active');
+}
+
 // Filter properties
 function filterProperties() {
     const typeFilter = propertyTypeFilter.value;
+    const projectFilterValue = projectFilter.value;
     const priceFilter = priceRangeFilter.value;
     
     let filteredProperties = properties;
@@ -180,6 +350,11 @@ function filterProperties() {
     // Filter by type
     if (typeFilter) {
         filteredProperties = filteredProperties.filter(property => property.type === typeFilter);
+    }
+    
+    // Filter by project
+    if (projectFilterValue) {
+        filteredProperties = filteredProperties.filter(property => property.project === projectFilterValue);
     }
     
     // Filter by price range
@@ -229,7 +404,7 @@ function openReservationModal(propertyId) {
     if (!property) return;
     
     // Populate modal with property details
-    document.getElementById('modalPropertyImage').src = property.image;
+    document.getElementById('modalPropertyImage').src = property.images[0]; // Use the first image for modal
     document.getElementById('modalPropertyName').textContent = property.name;
     document.getElementById('modalPropertyPrice').textContent = new Intl.NumberFormat('en-PH', {
         style: 'currency',
@@ -237,9 +412,20 @@ function openReservationModal(propertyId) {
         minimumFractionDigits: 0
     }).format(property.price);
     document.getElementById('modalPropertyLocation').textContent = property.location;
+    document.getElementById('modalPropertyProject').textContent = property.project;
+    document.getElementById('modalPropertyArea').textContent = `${property.area} sqm`;
+    
+    // Populate readonly fields
+    document.getElementById('modalLotArea').value = `${property.area} sqm`;
+    document.getElementById('modalProjectReadonly').value = property.project;
+    document.getElementById('modalTotalPrice').value = new Intl.NumberFormat('en-PH', {
+        style: 'currency',
+        currency: 'PHP',
+        minimumFractionDigits: 0
+    }).format(property.price);
     
     // Set default reservation fee
-    document.getElementById('reservationFee').value = Math.round(property.price * 0.05); // 5% of property price
+    document.getElementById('reservationFee').value = property.rfAmount;
     
     // Set default date to today
     document.getElementById('reservationDate').value = new Date().toISOString().split('T')[0];
@@ -250,10 +436,219 @@ function openReservationModal(propertyId) {
     reservationModal.style.display = 'block';
 }
 
-// Close modal
-function closeModal() {
-    reservationModal.style.display = 'none';
-    document.getElementById('reservationForm').reset();
+// View property details
+function viewPropertyDetails(propertyId) {
+    // Navigate to the property details page
+    window.location.href = `property-details.html?id=${propertyId}`;
+}
+
+// Open payment calculator modal
+function openPaymentCalculator() {
+    if (currentProperty) {
+        document.getElementById('calcTotalSellingPrice').value = currentProperty.price;
+        document.getElementById('calcRF').value = currentProperty.rfAmount;
+    }
+    
+    // Set default dates
+    const today = new Date();
+    const fullDPDate = new Date(today);
+    fullDPDate.setMonth(fullDPDate.getMonth() + 1);
+    
+    const startSplitDP = new Date(fullDPDate);
+    
+    document.getElementById('calcFullDPDate').value = fullDPDate.toISOString().split('T')[0];
+    document.getElementById('calcStartSplitDP').value = startSplitDP.toISOString().split('T')[0];
+    
+    document.getElementById('paymentCalculatorModal').style.display = 'block';
+}
+
+// Update payment term fields based on selection
+function updatePaymentTermFields() {
+    const paymentTerm = document.getElementById('calcPaymentTerm').value;
+    const dpPercentageField = document.getElementById('calcDPPercentage');
+    const noOfSplitsField = document.getElementById('calcNoOfSplits');
+    
+    // Enable/disable fields based on payment term
+    switch(paymentTerm) {
+        case 'full_cash':
+            dpPercentageField.value = 100;
+            dpPercentageField.disabled = true;
+            noOfSplitsField.disabled = true;
+            break;
+        case 'full_dp':
+            dpPercentageField.disabled = false;
+            noOfSplitsField.value = 1;
+            noOfSplitsField.disabled = true;
+            break;
+        case 'split_dp':
+        case 'split_cash':
+            dpPercentageField.disabled = false;
+            noOfSplitsField.disabled = false;
+            break;
+        default:
+            dpPercentageField.disabled = false;
+            noOfSplitsField.disabled = false;
+    }
+}
+
+// Close payment calculator modal
+function closePaymentCalculator() {
+    document.getElementById('paymentCalculatorModal').style.display = 'none';
+    document.getElementById('calculatorResults').style.display = 'none';
+}
+
+// Calculate payment
+function calculatePayment() {
+    // Get input values
+    const totalSellingPrice = parseFloat(document.getElementById('calcTotalSellingPrice').value) || 0;
+    const rf = parseFloat(document.getElementById('calcRF').value) || 0;
+    const paymentTerm = document.getElementById('calcPaymentTerm').value;
+    const dpPercentage = parseFloat(document.getElementById('calcDPPercentage').value) || 0;
+    const noOfSplits = parseInt(document.getElementById('calcNoOfSplits').value) || 1;
+    const discountPercent = parseFloat(document.getElementById('calcDiscountPercent').value) || 0;
+    const promoDiscount = parseFloat(document.getElementById('calcPromoDiscount').value) || 0;
+    const noOfYearsToPay = parseInt(document.getElementById('calcNoOfYearsToPay').value) || 20;
+    const fullDPDate = document.getElementById('calcFullDPDate').value;
+    const startSplitDP = document.getElementById('calcStartSplitDP').value;
+    
+    if (totalSellingPrice <= 0) {
+        alert('Please enter a valid total selling price.');
+        return;
+    }
+    
+    // Calculate discount amount
+    const totalDiscountPercent = discountPercent + promoDiscount;
+    const discountAmount = totalSellingPrice * (totalDiscountPercent / 100);
+    
+    // Calculate net selling price
+    const netSellingPrice = totalSellingPrice - discountAmount;
+    
+    // Calculate VAT (usually 0 for residential properties in PH, but can be configurable)
+    const vatAmount = 0; // Set to 0 as per Philippine residential property standards
+    const nspWithVAT = netSellingPrice + vatAmount;
+    
+    // Calculate DP
+    const dp = nspWithVAT * (dpPercentage / 100);
+    const dpLessRF = dp - rf;
+    
+    // Calculate monthly DP split (if applicable)
+    let moDPSplit = 0;
+    if (paymentTerm === 'split_dp' && noOfSplits > 0) {
+        moDPSplit = dpLessRF / noOfSplits;
+    }
+    
+    // Calculate balance for amortization
+    let balanceForAmortization = 0;
+    if (paymentTerm !== 'full_cash') {
+        balanceForAmortization = nspWithVAT - dp;
+    }
+    
+    // Calculate monthly amortization and factor rate
+    let moAmortization = 0;
+    let factorRate = 0;
+    
+    if (balanceForAmortization > 0 && noOfYearsToPay > 0) {
+        // Standard interest rate for residential properties in PH (can be configurable)
+        const annualInterestRate = 0.06; // 6% default
+        const monthlyInterestRate = annualInterestRate / 12;
+        const totalMonths = noOfYearsToPay * 12;
+        
+        // Calculate factor rate (monthly payment factor)
+        if (monthlyInterestRate > 0) {
+            factorRate = monthlyInterestRate * Math.pow(1 + monthlyInterestRate, totalMonths) / 
+                        (Math.pow(1 + monthlyInterestRate, totalMonths) - 1);
+            moAmortization = balanceForAmortization * factorRate;
+        } else {
+            factorRate = 1 / totalMonths;
+            moAmortization = balanceForAmortization / totalMonths;
+        }
+    }
+    
+    // Calculate dates
+    let endSplitDP = '';
+    let startAmortization = '';
+    let endAmortization = '';
+    
+    if (startSplitDP) {
+        const startDate = new Date(startSplitDP);
+        
+        // End of Split DP (add number of split months)
+        const endDate = new Date(startDate);
+        endDate.setMonth(endDate.getMonth() + noOfSplits - 1);
+        endSplitDP = endDate.toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'});
+        
+        // Start of Amortization (month after end of split DP)
+        const amortStartDate = new Date(endDate);
+        amortStartDate.setMonth(amortStartDate.getMonth() + 1);
+        startAmortization = amortStartDate.toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'});
+        
+        // End of Amortization
+        const amortEndDate = new Date(amortStartDate);
+        amortEndDate.setMonth(amortEndDate.getMonth() + (noOfYearsToPay * 12) - 1);
+        endAmortization = amortEndDate.toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'});
+    }
+    
+    // Display results
+    const formatCurrency = (amount) => new Intl.NumberFormat('en-PH', {
+        style: 'currency',
+        currency: 'PHP',
+        minimumFractionDigits: 0
+    }).format(amount);
+    
+    document.getElementById('resultDiscountAmount').textContent = formatCurrency(discountAmount);
+    document.getElementById('resultNetSellingPrice').textContent = formatCurrency(netSellingPrice);
+    document.getElementById('resultVATAmount').textContent = formatCurrency(vatAmount);
+    document.getElementById('resultNSPWithVAT').textContent = formatCurrency(nspWithVAT);
+    document.getElementById('resultDP').textContent = formatCurrency(dp);
+    document.getElementById('resultDPLessRF').textContent = formatCurrency(dpLessRF);
+    document.getElementById('resultMoDPSplit').textContent = formatCurrency(moDPSplit);
+    document.getElementById('resultBalanceAmortization').textContent = formatCurrency(balanceForAmortization);
+    document.getElementById('resultMoAmortization').textContent = formatCurrency(moAmortization);
+    document.getElementById('resultFactorRate').textContent = factorRate.toFixed(9);
+    
+    // Display dates
+    document.getElementById('resultFullDPDate').textContent = fullDPDate ? new Date(fullDPDate).toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'}) : '-';
+    document.getElementById('resultStartSplitDP').textContent = startSplitDP ? new Date(startSplitDP).toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'}) : '-';
+    document.getElementById('resultEndSplitDP').textContent = endSplitDP || '-';
+    document.getElementById('resultStartAmortization').textContent = startAmortization || '-';
+    document.getElementById('resultEndAmortization').textContent = endAmortization || '-';
+    
+    // Generate amortization schedule (first 12 months)
+    if (balanceForAmortization > 0) {
+        generateAmortizationSchedule(balanceForAmortization, monthlyInterestRate, moAmortization, 12);
+    }
+    
+    document.getElementById('calculatorResults').style.display = 'block';
+}
+
+// Generate amortization schedule
+function generateAmortizationSchedule(loanAmount, periodInterestRate, periodicPayment, months) {
+    const tableBody = document.getElementById('amortizationTableBody');
+    tableBody.innerHTML = '';
+    
+    const formatCurrency = (amount) => new Intl.NumberFormat('en-PH', {
+        style: 'currency',
+        currency: 'PHP',
+        minimumFractionDigits: 0
+    }).format(amount);
+    
+    let balance = loanAmount;
+    
+    for (let month = 1; month <= months && balance > 0; month++) {
+        const interestPayment = balance * periodInterestRate;
+        const principalPayment = periodicPayment - interestPayment;
+        balance = Math.max(0, balance - principalPayment);
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${month}</td>
+            <td>${formatCurrency(periodicPayment)}</td>
+            <td>${formatCurrency(principalPayment)}</td>
+            <td>${formatCurrency(interestPayment)}</td>
+            <td>${formatCurrency(balance)}</td>
+        `;
+        tableBody.appendChild(row);
+    }
 }
 
 // Handle reservation form submission
@@ -264,11 +659,21 @@ function handleReservationSubmit(e) {
     const propertyId = this.dataset.propertyId;
     const property = properties.find(p => p.id === parseInt(propertyId));
     
+    // Build customer name from separate fields
+    const firstName = formData.get('firstName') || '';
+    const middleName = formData.get('middleName') || '';
+    const lastName = formData.get('lastName') || '';
+    const customerName = `${firstName} ${middleName} ${lastName}`.replace(/\s+/g, ' ').trim();
+    
     // Create reservation object
     const reservation = {
         propertyId: propertyId,
         propertyName: property.name,
-        customerName: formData.get('customerName'),
+        customerType: formData.get('customerType'),
+        customerName: customerName,
+        firstName: firstName,
+        middleName: middleName,
+        lastName: lastName,
         customerEmail: formData.get('customerEmail'),
         customerPhone: formData.get('customerPhone'),
         customerAddress: formData.get('customerAddress'),
@@ -349,7 +754,7 @@ function injectPropertyStyles() {
     
     .filter-btn {
         padding: 0.5rem 1rem;
-        background: #667eea;
+        background: #B91C1C;
         color: white;
         border: none;
         border-radius: 6px;
@@ -385,18 +790,85 @@ function injectPropertyStyles() {
         height: 220px;
         overflow: hidden;
         border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #B91C1C;
     }
     
-    .property-image img {
+    .image-slider {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .slider-image {
         width: 100%;
         height: 100%;
         object-fit: cover;
         transition: transform 0.3s ease;
+        position: absolute;
+        top: 0;
+        left: 0;
     }
     
-    .property-card:hover .property-image img {
+    .property-card:hover .slider-image {
         transform: scale(1.05);
+    }
+    
+    .slider-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0,0,0,0.5);
+        color: white;
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 2;
+    }
+    
+    .property-card:hover .slider-btn {
+        opacity: 1;
+    }
+    
+    .slider-btn.prev {
+        left: 10px;
+    }
+    
+    .slider-btn.next {
+        right: 10px;
+    }
+    
+    .slider-btn:hover {
+        background: rgba(0,0,0,0.7);
+    }
+    
+    .image-indicators {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 5px;
+        z-index: 2;
+    }
+    
+    .indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.5);
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+    
+    .indicator.active {
+        background: white;
     }
     
     .property-status {
@@ -408,11 +880,26 @@ function injectPropertyStyles() {
         font-size: 0.8rem;
         font-weight: 500;
         text-transform: uppercase;
+        z-index: 2;
     }
     
     .property-status.available {
         background: #28a745;
         color: white;
+    }
+    
+    .property-type {
+        position: absolute;
+        bottom: 1rem;
+        left: 1rem;
+        padding: 0.5rem 1rem;
+        background: rgba(0,0,0,0.6);
+        color: white;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        z-index: 2;
     }
     
     .property-content {
@@ -429,6 +916,16 @@ function injectPropertyStyles() {
     }
     
     .property-location {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        margin: 0 0 0.75rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+    }
+    
+    .property-project {
         color: var(--text-secondary);
         font-size: 0.875rem;
         margin: 0 0 0.75rem 0;
@@ -623,7 +1120,7 @@ function injectPropertyStyles() {
     .form-group textarea:focus,
     .form-group select:focus {
         outline: none;
-        border-color: #667eea;
+        border-color: #B91C1C;
     }
     
     .form-actions {
@@ -644,7 +1141,7 @@ function injectPropertyStyles() {
     }
     
     .btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #B91C1C;
         color: white;
     }
     
@@ -707,13 +1204,23 @@ function injectPropertyStyles() {
         
         .filters {
             justify-content: center;
+            flex-wrap: wrap;
         }
         
         .properties-grid {
             grid-template-columns: 1fr;
         }
         
+        .property-details-grid {
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+        
         .form-row {
+            grid-template-columns: 1fr;
+        }
+        
+        #nameFields.form-row {
             grid-template-columns: 1fr;
         }
         
@@ -721,7 +1228,423 @@ function injectPropertyStyles() {
             width: 95%;
             margin: 10% auto;
         }
+        
+        .calculator-content {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        .calculator-modal {
+            max-width: 95%;
+        }
+        
+        .slider-btn {
+            width: 25px;
+            height: 25px;
+        }
+        
+        .property-type {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+        }
     }
+
+    .property-details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background: rgba(102, 126, 234, 0.05);
+        border-radius: 8px;
+        border: 1px solid rgba(102, 126, 234, 0.1);
+    }
+    
+    .detail-item {
+        text-align: center;
+    }
+    
+    .detail-label {
+        display: block;
+        font-size: 0.75rem;
+        color: #666;
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .detail-value {
+        display: block;
+        font-size: 0.9rem;
+        color: #333;
+        font-weight: 600;
+    }
+    
+    .property-details-readonly input {
+        background: #f8f9fa !important;
+        cursor: not-allowed;
+    }
+    
+    .reservation-form h5 {
+        margin: 1.5rem 0 1rem 0;
+        color: #333;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-bottom: 2px solid #B91C1C;
+        padding-bottom: 0.5rem;
+    }
+    
+    .reservation-form h5:first-child {
+        margin-top: 0;
+    }
+    
+    #nameFields.form-row {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+    
+    /* Payment Calculator Modal Styles */
+    .calculator-modal {
+        max-width: 900px;
+        max-height: 95vh;
+    }
+    
+    .calculator-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+    
+    .calculator-inputs h5,
+    .calculator-results h5 {
+        margin: 0 0 1rem 0;
+        color: #333;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-bottom: 2px solid #B91C1C;
+        padding-bottom: 0.5rem;
+    }
+    
+    .results-grid {
+        display: grid;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+    }
+    
+    .result-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        background: #f8f9fa;
+        border-radius: 6px;
+        border-left: 3px solid transparent;
+    }
+    
+    .result-item.highlight {
+        background: #e3f2fd;
+        border-left-color: #2196f3;
+        font-weight: 600;
+    }
+    
+    .result-item label {
+        font-weight: 500;
+        color: #666;
+    }
+    
+    .result-item span {
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .amortization-preview h6 {
+        margin: 0 0 1rem 0;
+        color: #333;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+    
+    .amortization-table {
+        max-height: 300px;
+        overflow-y: auto;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+    }
+    
+    #amortizationTable {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+    
+    #amortizationTable th,
+    #amortizationTable td {
+        padding: 0.5rem;
+        text-align: right;
+        border-bottom: 1px solid #eee;
+    }
+    
+    #amortizationTable th {
+        background: #f8f9fa;
+        font-weight: 600;
+        color: #333;
+        position: sticky;
+        top: 0;
+    }
+    
+    #amortizationTable th:first-child,
+    #amortizationTable td:first-child {
+        text-align: center;
+    }
+
+        /* Header Styles - Professional Layout */
+        .top-header {
+            background: white;
+            padding: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 2rem;
+            align-items: start;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .page-title-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .page-title {
+            color: #111827;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.2;
+        }
+        
+        .page-subtitle {
+            color: #6b7280;
+            font-size: 1rem;
+            margin: 0;
+            line-height: 1.5;
+        }
+        
+        .search-filters-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            min-width: 600px;
+        }
+        
+        .search-container {
+            width: 100%;
+        }
+        
+        .search-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.25rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            background: #f9fafb;
+            transition: all 0.2s ease;
+            color: #374151;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #B91C1C;
+            background: white;
+            box-shadow: 0 0 0 2px rgba(185, 28, 28, 0.1);
+        }
+        
+        .search-input::placeholder {
+            color: #9ca3af;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+        
+        .search-clear {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            font-size: 0.75rem;
+        }
+        
+        .search-clear:hover {
+            background: #e5e7eb;
+            color: #6b7280;
+        }
+        
+        .filters-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .filter-select {
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background: white;
+            font-size: 0.875rem;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 140px;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: #B91C1C;
+            box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1);
+        }
+        
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            background: #B91C1C;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+        
+        .filter-btn:hover {
+            background: #991B1B;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(185, 28, 28, 0.3);
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .notification-wrapper {
+            position: relative;
+        }
+        
+        .notification-btn {
+            padding: 0.75rem;
+            background: transparent;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .notification-btn:hover {
+            background: #B91C1C;
+            color: white;
+            border-color: #B91C1C;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #B91C1C;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        /* Responsive Design for Header */
+        @media (max-width: 1200px) {
+            .header-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .search-filters-section {
+                min-width: auto;
+                width: 100%;
+            }
+            
+            .filters-row {
+                flex-wrap: wrap;
+            }
+            
+            .filter-select {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .top-header {
+                padding: 1.5rem;
+            }
+            
+            .page-title {
+                font-size: 1.75rem;
+            }
+            
+            .search-filters-section {
+                gap: 0.75rem;
+            }
+            
+            .filters-row {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .filter-select {
+                width: 100%;
+                min-width: auto;
+            }
+            
+            .filter-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .header-actions {
+                justify-content: center;
+                margin-top: 1rem;
+            }
+        }
 `;
 
     // Add styles to document

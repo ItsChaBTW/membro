@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Properties - Seller Portal</title>
+    <title>Property Details - Seller Portal</title>
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="seller-styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -101,94 +101,147 @@
         <main class="main-content">
             <!-- Top Header -->
             <header class="top-header">
-                <div class="header-content">
-                    <!-- Page Title Section -->
-                    <div class="page-title-section">
-                        <h1 class="page-title">Properties</h1>
-                        <p class="page-subtitle">Browse and reserve available properties for your customers</p>
+                <div class="header-left">
+                    <div class="breadcrumb">
+                        <a href="properties.html" class="breadcrumb-link">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Properties
+                        </a>
                     </div>
-                    
-                    <!-- Search and Filters Section -->
-                    <div class="search-filters-section">
-                        <!-- Search Bar -->
-                        <div class="search-container">
-                            <div class="search-input-wrapper">
-                                <i class="fas fa-search search-icon"></i>
-                                <input type="text" id="propertySearch" class="search-input" placeholder="Search properties by name...">
-                                <button class="search-clear" id="searchClear" style="display: none;">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Filters Row -->
-                        <div class="filters-row">
-                            <select id="propertyType" class="filter-select">
-                                <option value="">All Types</option>
-                                <option value="house">House</option>
-                                <option value="condo">Condo</option>
-                                <option value="lot">Lot</option>
-                                <option value="commercial">Commercial</option>
-                            </select>
-                            <select id="projectFilter" class="filter-select">
-                                <option value="">All Projects</option>
-                                <!-- Options will be populated dynamically -->
-                            </select>
-                            <select id="priceRange" class="filter-select">
-                                <option value="">All Prices</option>
-                                <option value="0-500000">Under ₱500,000</option>
-                                <option value="500000-1000000">₱500,000 - ₱1,000,000</option>
-                                <option value="1000000-2000000">₱1,000,000 - ₱2,000,000</option>
-                                <option value="2000000+">Above ₱2,000,000</option>
-                            </select>
-                            <button class="btn btn-primary filter-btn">
-                                <i class="fas fa-filter"></i>
-                                Filter
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Header Actions -->
+                    <h1 class="page-title" id="propertyTitle">Property Details</h1>
+                    <p class="page-subtitle">Complete property information and reservation details</p>
+                </div>
+                <div class="header-right">
                     <div class="header-actions">
+                        <!-- Notification Bell -->
                         <div class="notification-wrapper">
                             <button class="btn btn-icon notification-btn" onclick="window.location.href='notifications.html'" title="Notifications">
                                 <i class="fas fa-bell"></i>
                                 <span class="notification-badge header-badge">3</span>
                             </button>
                         </div>
+                        
+                        <button class="btn btn-outline" onclick="openPaymentCalculator()">
+                            <i class="fas fa-calculator"></i>
+                            Payment Calculator
+                        </button>
+                        <button class="btn btn-primary" onclick="openReservationForm()">
+                            <i class="fas fa-handshake"></i>
+                            Reserve Property
+                        </button>
                     </div>
                 </div>
             </header>
 
-            <!-- Properties Content -->
+            <!-- Property Details Content -->
             <div class="dashboard-content">
-                <!-- Properties Grid -->
-                <div class="properties-grid" id="propertiesGrid">
-                    <!-- Property cards will be dynamically loaded here -->
+                <div class="property-form-container">
+                    <!-- Property Images Section -->
+                    <div class="images-section">
+                        <div class="main-image-container">
+                            <div class="main-image" id="mainImage">
+                                <!-- Main image will be loaded here -->
+                            </div>
+                            <div class="image-controls">
+                                <button class="image-nav-btn prev" onclick="previousImage()">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button class="image-nav-btn next" onclick="nextImage()">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="image-thumbnails" id="imageThumbnails">
+                            <!-- Thumbnails will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Status Bar -->
+                    <div class="status-bar">
+                        <div class="property-status">
+                            <span class="status-badge" id="propertyStatus">Available</span>
+                            <span class="type-badge" id="propertyType">Condo</span>
+                        </div>
+                    </div>
+
+                    <!-- Form Sections -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h2>Property Information</h2>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label>Property Name</label>
+                                <div class="field-value" id="propertyName">-</div>
+                            </div>
+                            <div class="form-field">
+                                <label>Project</label>
+                                <div class="field-value" id="project">-</div>
+                            </div>
+                            <div class="form-field">
+                                <label>Location</label>
+                                <div class="field-value" id="location">-</div>
+                            </div>
+                            <div class="form-field">
+                                <label>Property Type</label>
+                                <div class="field-value" id="type">-</div>
+                            </div>
+                            <div class="form-field">
+                                <label>Floor Area</label>
+                                <div class="field-value" id="area">-</div>
+                            </div>
+                            <div class="form-field">
+                                <label>Status</label>
+                                <div class="field-value status" id="status">-</div>
+                            </div>
+                            <div class="form-field full-width">
+                                <label>Description</label>
+                                <div class="field-value" id="description">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h2>Pricing Information</h2>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label>Total Selling Price</label>
+                                <div class="field-value amount" id="price">-</div>
+                            </div>
+                            <div class="form-field">
+                                <label>Reservation Fee</label>
+                                <div class="field-value amount" id="rfAmount">-</div>
+                            </div>
+                            <div class="form-field">
+                                <label>Price per SQM</label>
+                                <div class="field-value amount" id="pricePerSqm">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h2>Property Features</h2>
+                        </div>
+                        <div class="features-container" id="featuresContainer">
+                            <!-- Features will be loaded here -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Reservation Modal -->
+    <!-- Reservation Form Modal -->
     <div id="reservationModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Reserve Property</h3>
-                <span class="close">&times;</span>
+                <span class="close" onclick="closeReservationForm()">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="property-summary">
-                    <img id="modalPropertyImage" src="" alt="Property">
-                    <div class="property-details">
-                        <h4 id="modalPropertyName"></h4>
-                        <p id="modalPropertyPrice"></p>
-                        <p id="modalPropertyLocation"></p>
-                        <p><strong>Project:</strong> <span id="modalPropertyProject"></span></p>
-                        <p><strong>Area:</strong> <span id="modalPropertyArea"></span></p>
-                    </div>
-                </div>
-                
                 <form id="reservationForm" class="reservation-form">
                     <h5>Customer Information</h5>
                     
@@ -217,40 +270,18 @@
                         </div>
                     </div>
                     
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="customerEmail">Email *</label>
-                            <input type="email" id="customerEmail" name="customerEmail" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="customerPhone">Phone *</label>
-                            <input type="tel" id="customerPhone" name="customerPhone" required>
-                        </div>
+                    <div class="form-group">
+                        <label for="customerEmail">Email *</label>
+                        <input type="email" id="customerEmail" name="customerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerPhone">Phone *</label>
+                        <input type="tel" id="customerPhone" name="customerPhone" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="customerAddress">Address</label>
                         <textarea id="customerAddress" name="customerAddress" rows="3"></textarea>
-                    </div>
-                    
-                    <h5>Property Details</h5>
-                    <div class="property-details-readonly">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Lot Area</label>
-                                <input type="text" id="modalLotArea" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label>Project</label>
-                                <input type="text" id="modalProjectReadonly" readonly>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Total Selling Price</label>
-                                <input type="text" id="modalTotalPrice" readonly>
-                            </div>
-                        </div>
                     </div>
                     
                     <h5>Reservation Information</h5>
@@ -271,12 +302,8 @@
                     </div>
                     
                     <div class="form-actions">
-                        <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                        <button type="button" class="btn btn-outline" onclick="closeReservationForm()">Cancel</button>
                         <button type="submit" class="btn btn-primary">Reserve Property</button>
-                        <button type="button" class="btn btn-secondary" onclick="openPaymentCalculator()">
-                            <i class="fas fa-calculator"></i>
-                            Payment Calculator
-                        </button>
                     </div>
                 </form>
             </div>
@@ -368,74 +395,74 @@
                         </button>
                     </div>
                     
-                                            <div class="calculator-results" id="calculatorResults" style="display: none;">
-                            <h5>Calculated Results</h5>
-                            <div class="results-grid">
-                                <div class="result-item">
-                                    <label>Discount Amount:</label>
-                                    <span id="resultDiscountAmount">₱0</span>
-                                </div>
-                                <div class="result-item">
-                                    <label>Net Selling Price:</label>
-                                    <span id="resultNetSellingPrice">₱0</span>
-                                </div>
-                                <div class="result-item">
-                                    <label>VAT Amount:</label>
-                                    <span id="resultVATAmount">₱0</span>
-                                </div>
-                                <div class="result-item">
-                                    <label>NSP with VAT:</label>
-                                    <span id="resultNSPWithVAT">₱0</span>
-                                </div>
-                                <div class="result-item">
-                                    <label>DP:</label>
-                                    <span id="resultDP">₱0</span>
-                                </div>
-                                <div class="result-item">
-                                    <label>DP Less RF:</label>
-                                    <span id="resultDPLessRF">₱0</span>
-                                </div>
-                                <div class="result-item highlight">
-                                    <label>Mo. DP Split:</label>
-                                    <span id="resultMoDPSplit">₱0</span>
-                                </div>
-                                <div class="result-item">
-                                    <label>Balance for Amortization:</label>
-                                    <span id="resultBalanceAmortization">₱0</span>
-                                </div>
-                                <div class="result-item highlight">
-                                    <label>Mo. Amortization:</label>
-                                    <span id="resultMoAmortization">₱0</span>
-                                </div>
-                                <div class="result-item">
-                                    <label>Factor Rate:</label>
-                                    <span id="resultFactorRate">0</span>
-                                </div>
+                    <div class="calculator-results" id="calculatorResults" style="display: none;">
+                        <h5>Calculated Results</h5>
+                        <div class="results-grid">
+                            <div class="result-item">
+                                <label>Discount Amount:</label>
+                                <span id="resultDiscountAmount">₱0</span>
                             </div>
-                            
-                            <h5>Payment Schedule Dates</h5>
-                            <div class="results-grid">
-                                <div class="result-item">
-                                    <label>Full DP Date:</label>
-                                    <span id="resultFullDPDate">-</span>
-                                </div>
-                                <div class="result-item">
-                                    <label>Start of Split DP:</label>
-                                    <span id="resultStartSplitDP">-</span>
-                                </div>
-                                <div class="result-item">
-                                    <label>End of Split DP:</label>
-                                    <span id="resultEndSplitDP">-</span>
-                                </div>
-                                <div class="result-item">
-                                    <label>Start of Amortization:</label>
-                                    <span id="resultStartAmortization">-</span>
-                                </div>
-                                <div class="result-item">
-                                    <label>End of Amortization:</label>
-                                    <span id="resultEndAmortization">-</span>
-                                </div>
+                            <div class="result-item">
+                                <label>Net Selling Price:</label>
+                                <span id="resultNetSellingPrice">₱0</span>
                             </div>
+                            <div class="result-item">
+                                <label>VAT Amount:</label>
+                                <span id="resultVATAmount">₱0</span>
+                            </div>
+                            <div class="result-item">
+                                <label>NSP with VAT:</label>
+                                <span id="resultNSPWithVAT">₱0</span>
+                            </div>
+                            <div class="result-item">
+                                <label>DP:</label>
+                                <span id="resultDP">₱0</span>
+                            </div>
+                            <div class="result-item">
+                                <label>DP Less RF:</label>
+                                <span id="resultDPLessRF">₱0</span>
+                            </div>
+                            <div class="result-item highlight">
+                                <label>Mo. DP Split:</label>
+                                <span id="resultMoDPSplit">₱0</span>
+                            </div>
+                            <div class="result-item">
+                                <label>Balance for Amortization:</label>
+                                <span id="resultBalanceAmortization">₱0</span>
+                            </div>
+                            <div class="result-item highlight">
+                                <label>Mo. Amortization:</label>
+                                <span id="resultMoAmortization">₱0</span>
+                            </div>
+                            <div class="result-item">
+                                <label>Factor Rate:</label>
+                                <span id="resultFactorRate">0</span>
+                            </div>
+                        </div>
+                        
+                        <h5>Payment Schedule Dates</h5>
+                        <div class="results-grid">
+                            <div class="result-item">
+                                <label>Full DP Date:</label>
+                                <span id="resultFullDPDate">-</span>
+                            </div>
+                            <div class="result-item">
+                                <label>Start of Split DP:</label>
+                                <span id="resultStartSplitDP">-</span>
+                            </div>
+                            <div class="result-item">
+                                <label>End of Split DP:</label>
+                                <span id="resultEndSplitDP">-</span>
+                            </div>
+                            <div class="result-item">
+                                <label>Start of Amortization:</label>
+                                <span id="resultStartAmortization">-</span>
+                            </div>
+                            <div class="result-item">
+                                <label>End of Amortization:</label>
+                                <span id="resultEndAmortization">-</span>
+                            </div>
+                        </div>
                         
                         <div class="amortization-preview">
                             <h6>Sample Amortization Schedule (First 12 months)</h6>
@@ -463,6 +490,6 @@
     </div>
 
     <script src="seller-portal.js"></script>
-    <script src="properties.js"></script>
+    <script src="property-details.js"></script>
 </body>
 </html> 
