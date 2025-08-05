@@ -298,198 +298,19 @@ function handleReservationSubmit() {
 
 // Payment calculator functions
 function openPaymentCalculator() {
+    // Redirect to payment calculator page with current property data
     if (currentProperty) {
-        document.getElementById('calcTotalSellingPrice').value = currentProperty.price;
-        document.getElementById('calcRF').value = currentProperty.rfAmount;
-    }
-    
-    // Set default dates
-    const today = new Date();
-    const fullDPDate = new Date(today);
-    fullDPDate.setMonth(fullDPDate.getMonth() + 1);
-    
-    const startSplitDP = new Date(fullDPDate);
-    
-    document.getElementById('calcFullDPDate').value = fullDPDate.toISOString().split('T')[0];
-    document.getElementById('calcStartSplitDP').value = startSplitDP.toISOString().split('T')[0];
-    
-    document.getElementById('paymentCalculatorModal').style.display = 'block';
-}
-
-function closePaymentCalculator() {
-    document.getElementById('paymentCalculatorModal').style.display = 'none';
-    document.getElementById('calculatorResults').style.display = 'none';
-}
-
-// Update payment term fields based on selection
-function updatePaymentTermFields() {
-    const paymentTerm = document.getElementById('calcPaymentTerm').value;
-    const dpPercentageField = document.getElementById('calcDPPercentage');
-    const noOfSplitsField = document.getElementById('calcNoOfSplits');
-    
-    // Enable/disable fields based on payment term
-    switch(paymentTerm) {
-        case 'full_cash':
-            dpPercentageField.value = 100;
-            dpPercentageField.disabled = true;
-            noOfSplitsField.disabled = true;
-            break;
-        case 'full_dp':
-            dpPercentageField.disabled = false;
-            noOfSplitsField.value = 1;
-            noOfSplitsField.disabled = true;
-            break;
-        case 'split_dp':
-        case 'split_cash':
-            dpPercentageField.disabled = false;
-            noOfSplitsField.disabled = false;
-            break;
-        default:
-            dpPercentageField.disabled = false;
-            noOfSplitsField.disabled = false;
-    }
-}
-
-function calculatePayment() {
-    // Get input values
-    const totalSellingPrice = parseFloat(document.getElementById('calcTotalSellingPrice').value) || 0;
-    const rf = parseFloat(document.getElementById('calcRF').value) || 0;
-    const paymentTerm = document.getElementById('calcPaymentTerm').value;
-    const dpPercentage = parseFloat(document.getElementById('calcDPPercentage').value) || 0;
-    const noOfSplits = parseInt(document.getElementById('calcNoOfSplits').value) || 1;
-    const discountPercent = parseFloat(document.getElementById('calcDiscountPercent').value) || 0;
-    const promoDiscount = parseFloat(document.getElementById('calcPromoDiscount').value) || 0;
-    const noOfYearsToPay = parseInt(document.getElementById('calcNoOfYearsToPay').value) || 20;
-    const fullDPDate = document.getElementById('calcFullDPDate').value;
-    const startSplitDP = document.getElementById('calcStartSplitDP').value;
-    
-    if (totalSellingPrice <= 0) {
-        alert('Please enter a valid total selling price.');
-        return;
-    }
-    
-    // Calculate discount amount
-    const totalDiscountPercent = discountPercent + promoDiscount;
-    const discountAmount = totalSellingPrice * (totalDiscountPercent / 100);
-    
-    // Calculate net selling price
-    const netSellingPrice = totalSellingPrice - discountAmount;
-    
-    // Calculate VAT (usually 0 for residential properties in PH, but can be configured)
-    const vatAmount = 0; // Set to 0 as per Philippine residential property standards
-    const nspWithVAT = netSellingPrice + vatAmount;
-    
-    // Calculate DP
-    const dp = nspWithVAT * (dpPercentage / 100);
-    const dpLessRF = dp - rf;
-    
-    // Calculate monthly DP split (if applicable)
-    let moDPSplit = 0;
-    if (paymentTerm === 'split_dp' && noOfSplits > 0) {
-        moDPSplit = dpLessRF / noOfSplits;
-    }
-    
-    // Calculate balance for amortization
-    let balanceForAmortization = 0;
-    if (paymentTerm !== 'full_cash') {
-        balanceForAmortization = nspWithVAT - dp;
-    }
-    
-    // Calculate monthly amortization and factor rate
-    let moAmortization = 0;
-    let factorRate = 0;
-    let monthlyInterestRate = 0; // Declare outside the if block
-    
-    if (balanceForAmortization > 0 && noOfYearsToPay > 0) {
-        // Standard interest rate for residential properties in PH (can be configurable)
-        const annualInterestRate = 0.06; // 6% default
-        monthlyInterestRate = annualInterestRate / 12; // Assign value here
-        const totalMonths = noOfYearsToPay * 12;
-        
-        // Calculate factor rate (monthly payment factor)
-        if (monthlyInterestRate > 0) {
-            factorRate = monthlyInterestRate * Math.pow(1 + monthlyInterestRate, totalMonths) / 
-                        (Math.pow(1 + monthlyInterestRate, totalMonths) - 1);
-            moAmortization = balanceForAmortization * factorRate;
+        window.open(`payment-calculator.html?propertyId=${currentProperty.id}`, '_blank');
         } else {
-            factorRate = 1 / totalMonths;
-            moAmortization = balanceForAmortization / totalMonths;
-        }
+        window.open('payment-calculator.html', '_blank');
     }
-    
-    // Calculate dates
-    let endSplitDP = '';
-    let startAmortization = '';
-    let endAmortization = '';
-    
-    if (startSplitDP) {
-        const startDate = new Date(startSplitDP);
-        
-        // End of Split DP (add number of split months)
-        const endDate = new Date(startDate);
-        endDate.setMonth(endDate.getMonth() + noOfSplits - 1);
-        endSplitDP = endDate.toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'});
-        
-        // Start of Amortization (month after end of split DP)
-        const amortStartDate = new Date(endDate);
-        amortStartDate.setMonth(amortStartDate.getMonth() + 1);
-        startAmortization = amortStartDate.toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'});
-        
-        // End of Amortization
-        const amortEndDate = new Date(amortStartDate);
-        amortEndDate.setMonth(amortEndDate.getMonth() + (noOfYearsToPay * 12) - 1);
-        endAmortization = amortEndDate.toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'});
-    }
-    
-    // Display results
-    document.getElementById('resultDiscountAmount').textContent = formatCurrency(discountAmount);
-    document.getElementById('resultNetSellingPrice').textContent = formatCurrency(netSellingPrice);
-    document.getElementById('resultVATAmount').textContent = formatCurrency(vatAmount);
-    document.getElementById('resultNSPWithVAT').textContent = formatCurrency(nspWithVAT);
-    document.getElementById('resultDP').textContent = formatCurrency(dp);
-    document.getElementById('resultDPLessRF').textContent = formatCurrency(dpLessRF);
-    document.getElementById('resultMoDPSplit').textContent = formatCurrency(moDPSplit);
-    document.getElementById('resultBalanceAmortization').textContent = formatCurrency(balanceForAmortization);
-    document.getElementById('resultMoAmortization').textContent = formatCurrency(moAmortization);
-    document.getElementById('resultFactorRate').textContent = factorRate.toFixed(9);
-    
-    // Display dates
-    document.getElementById('resultFullDPDate').textContent = fullDPDate ? new Date(fullDPDate).toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'}) : '-';
-    document.getElementById('resultStartSplitDP').textContent = startSplitDP ? new Date(startSplitDP).toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'}) : '-';
-    document.getElementById('resultEndSplitDP').textContent = endSplitDP || '-';
-    document.getElementById('resultStartAmortization').textContent = startAmortization || '-';
-    document.getElementById('resultEndAmortization').textContent = endAmortization || '-';
-    
-    // Generate amortization schedule (first 12 months)
-    if (balanceForAmortization > 0) {
-        generateAmortizationSchedule(balanceForAmortization, monthlyInterestRate, moAmortization, 12);
-    }
-    
-    document.getElementById('calculatorResults').style.display = 'block';
 }
 
-function generateAmortizationSchedule(loanAmount, periodInterestRate, periodicPayment, months) {
-    const tableBody = document.getElementById('amortizationTableBody');
-    tableBody.innerHTML = '';
-    
-    let balance = loanAmount;
-    
-    for (let month = 1; month <= months && balance > 0; month++) {
-        const interestPayment = balance * periodInterestRate;
-        const principalPayment = periodicPayment - interestPayment;
-        balance = Math.max(0, balance - principalPayment);
-        
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${month}</td>
-            <td>${formatCurrency(periodicPayment)}</td>
-            <td>${formatCurrency(principalPayment)}</td>
-            <td>${formatCurrency(interestPayment)}</td>
-            <td>${formatCurrency(balance)}</td>
-        `;
-        tableBody.appendChild(row);
-    }
-}
+
+
+
+
+
 
 // Utility functions
 function formatCurrency(amount) {
@@ -549,9 +370,9 @@ function injectPropertyDetailStyles() {
         
         .dashboard-content {
             flex: 1;
-            padding: 2rem;
+            padding: 1rem;
             max-width: 100%;
-            margin: 0 auto;
+            margin: 0;
         }
         
         .breadcrumb {
@@ -573,8 +394,8 @@ function injectPropertyDetailStyles() {
         }
         
         .property-form-container {
-            max-width: 1200px;
-            margin: 0 auto;
+            max-width: 100%;
+            margin: 0;
             background: white;
             border-radius: 12px;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
@@ -584,7 +405,7 @@ function injectPropertyDetailStyles() {
         }
         
         .images-section {
-            padding: 2rem;
+            padding: 1rem;
             border-bottom: 1px solid #e5e7eb;
             background: #f9fafb;
         }
@@ -714,7 +535,7 @@ function injectPropertyDetailStyles() {
         }
         
         .form-section {
-            padding: 2rem;
+            padding: 1rem;
         }
         
         .section-header {
@@ -769,7 +590,7 @@ function injectPropertyDetailStyles() {
         }
         
         .features-section {
-            padding: 2rem;
+            padding: 1rem;
             border-top: 1px solid #e5e7eb;
         }
         
@@ -802,7 +623,7 @@ function injectPropertyDetailStyles() {
         /* Header Styles */
         .top-header {
             background: white;
-            padding: 1.5rem 2rem;
+            padding: 1rem;
             border-bottom: 1px solid #e5e7eb;
             display: flex;
             justify-content: space-between;

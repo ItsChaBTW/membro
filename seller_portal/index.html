@@ -55,6 +55,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="property-map.html" class="nav-link">
+                                <i class="fas fa-map nav-icon"></i>
+                                <span class="nav-text">Property Map</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="opportunities.html" class="nav-link">
                                 <i class="fas fa-chart-line nav-icon"></i>
                                 <span class="nav-text">Opportunities</span>
@@ -179,6 +185,22 @@
                         <div class="metric-content">
                             <h3 class="metric-value">78%</h3>
                             <p class="metric-label">Conversion Rate</p>
+                        </div>
+                    </div>
+
+                    <div class="metric-card reservations">
+                        <div class="metric-header">
+                            <div class="metric-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="metric-trend" id="reservationTrend">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>Active</span>
+                            </div>
+                        </div>
+                        <div class="metric-content">
+                            <h3 class="metric-value" id="activeReservations">0</h3>
+                            <p class="metric-label">Active Reservations</p>
                         </div>
                     </div>
                 </div>
@@ -426,39 +448,54 @@
                         </div>
                     </div>
 
-                    <!-- Upcoming Tasks -->
-                    <div class="dashboard-card tasks-card">
+                    <!-- Reservation Alerts -->
+                    <div class="dashboard-card reservation-alerts-card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fas fa-tasks"></i>
-                                Upcoming Tasks
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Reservation Alerts
                             </h3>
-                            <span class="task-count">4 pending</span>
+                            <span class="alert-count" id="alertCount">0 alerts</span>
                         </div>
                         <div class="card-content">
-                            <div class="task-list">
-                                <div class="task-item urgent">
-                                    <div class="task-priority"></div>
-                                    <div class="task-content">
-                                        <h4>Follow up with Mike Johnson</h4>
-                                        <p>RF deadline approaching - 2 days left</p>
-                                        <span class="task-time">Due: Tomorrow</span>
-                                    </div>
+                            <div id="reservationAlertsList" class="alert-list">
+                                <div class="no-alerts" id="noAlertsMessage">
+                                    <i class="fas fa-check-circle"></i>
+                                    <p>No reservation alerts at this time</p>
                                 </div>
-                                
-                                <div class="task-item normal">
-                                    <div class="task-priority"></div>
-                                    <div class="task-content">
-                                        <h4>Prepare RA documents</h4>
-                                        <p>Sarah Wilson - Luxury Penthouse</p>
-                                        <span class="task-time">Due: Friday</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="task-item normal">
-                                    <div class="task-priority"></div>
-                                    <div class="task-content">
-                                        <h4>Property viewing appointment</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="dashboard-card quick-actions-card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-bolt"></i>
+                                Quick Actions
+                            </h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="quick-actions-grid">
+                                <button class="quick-action-btn" onclick="window.location.href='property-map.html'">
+                                    <i class="fas fa-map"></i>
+                                    <span>Property Map</span>
+                                </button>
+                                <button class="quick-action-btn" onclick="window.location.href='properties.html'">
+                                    <i class="fas fa-plus"></i>
+                                    <span>New Reservation</span>
+                                </button>
+                                <button class="quick-action-btn" onclick="refreshReservations()">
+                                    <i class="fas fa-sync-alt"></i>
+                                    <span>Refresh Data</span>
+                                </button>
+                                <button class="quick-action-btn" onclick="window.location.href='reports.html'">
+                                    <i class="fas fa-chart-bar"></i>
+                                    <span>View Reports</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                                         <p>New client - Family House tour</p>
                                         <span class="task-time">Due: Next week</span>
                                     </div>

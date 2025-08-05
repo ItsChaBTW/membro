@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Map - Seller Portal</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="seller-styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin=""/>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+    <style>
+        .property-map-container {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .map-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .map-legend {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.875rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            border: 2px solid var(--white);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .legend-available { background: #22c55e; }
+        .legend-reserved { background: #f59e0b; }
+        .legend-sold { background: #ef4444; }
+        .legend-not-available { background: #6b7280; }
+
+        .property-map {
+            position: relative;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 16px;
+            min-height: 500px;
+            border: 2px solid var(--gray-200);
+            overflow: hidden;
+        }
+
+        .block-section {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            border: 2px solid var(--gray-300);
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .block-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--gray-700);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+        }
+
+        .property-unit {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--white);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .property-unit:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+
+        .property-unit.available {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+
+        .property-unit.reserved {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            animation: pulse-reserved 2s infinite;
+        }
+
+        .property-unit.sold {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .property-unit.not-available {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+        }
+
+        @keyframes pulse-reserved {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .property-unit .expiry-indicator {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            background: #ff0000;
+            border-radius: 50%;
+            border: 1px solid white;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Modal Styles */
+        .property-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .property-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-500);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .property-details {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--gray-50);
+            border-radius: 10px;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: var(--gray-600);
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .reservation-info {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .reservation-info h4 {
+            color: #92400e;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .countdown-timer {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #dc2626;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--gray-700);
+            border: 2px solid var(--gray-300);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            border: 1px solid var(--gray-200);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.25rem;
+        }
+
+        .stat-content h3 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin: 0;
+        }
+
+        .stat-content p {
+            color: var(--gray-600);
+            margin: 0;
+            font-size: 0.875rem;
+        }
+
+        .reservation-form {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .form-group {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: var(--gray-700);
+            font-size: 0.875rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 0.75rem;
+            border: 2px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Map Toggle Styles */
+        .view-toggle {
+            display: flex;
+            background: var(--gray-100);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--gray-600);
+        }
+
+        .toggle-btn.active {
+            background: var(--white);
+            color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .toggle-btn:hover {
+            color: var(--primary);
+        }
+
+        /* Real Map Styles */
+        .real-map-container {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .real-map-container.active {
+            display: block;
+        }
+
+        #realMap {
+            height: 600px;
+            width: 100%;
+            border-radius: 16px;
+            border: 2px solid var(--gray-200);
+        }
+
+        /* Leaflet custom marker styles */
+        .property-marker {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: white;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .property-marker:hover {
+            transform: scale(1.1);
+            z-index: 1000;
+        }
+
+        .property-marker.available {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+
+        .property-marker.reserved {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            animation: pulse-marker 2s infinite;
+        }
+
+        .property-marker.sold {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .property-marker.not-available {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+        }
+
+        @keyframes pulse-marker {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(0.95); }
+        }
+
+        /* Custom Leaflet popup styles */
+        .custom-popup {
+            min-width: 320px;
+            max-width: 400px;
+        }
+
+        .popup-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1.25rem;
+            margin: -1rem -1rem 1.5rem -1rem;
+            border-radius: 12px 12px 0 0;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .popup-content {
+            padding: 0.75rem 0;
+        }
+
+        .popup-detail {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .popup-detail:last-of-type {
+            border-bottom: none;
+        }
+
+        .popup-detail strong {
+            color: var(--gray-700);
+            font-weight: 600;
+        }
+
+        .popup-detail span {
+            color: var(--gray-900);
+            font-weight: 500;
+        }
+
+        .popup-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--gray-100);
+        }
+
+        .popup-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .popup-btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .popup-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+        }
+
+        .popup-btn-secondary {
+            background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
+            color: var(--gray-700);
+            border: 2px solid var(--gray-300);
+        }
+
+        .popup-btn-secondary:hover {
+            background: linear-gradient(135deg, var(--gray-200) 0%, var(--gray-300) 100%);
+            transform: translateY(-1px);
+            border-color: var(--gray-400);
+        }
+
+        .popup-btn-success {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        }
+
+        .popup-btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+        }
+
+        .popup-btn-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .popup-btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Reservation info in popup */
+        .popup-reservation-info {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+        }
+
+        .popup-reservation-info h4 {
+            color: #92400e;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .popup-countdown {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #dc2626;
+            text-align: center;
+            margin: 0.75rem 0;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+        }
+
+        /* Enhanced modal for map context */
+        .property-modal {
+            z-index: 10000;
+        }
+
+        .property-modal.active {
+            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 0;
+            max-width: 600px;
+            width: 95%;
+            max-height: 90vh;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--gray-200);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2rem;
+            margin: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .close-modal {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 1.5rem;
+            padding: 0.75rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: rotate(90deg);
+        }
+
+        .modal-content-body {
+            padding: 2rem;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        /* Map controls */
+        .map-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .map-control-btn {
+            background: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--gray-700);
+        }
+
+        .map-control-btn:hover {
+            background: var(--gray-50);
+            transform: translateY(-1px);
+        }
+
+        /* Additional styles for Leaflet popup */
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+            padding: 0;
+        }
+
+        .leaflet-popup-content {
+            margin: 0;
+            padding: 0;
+        }
+
+        .status-badge {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            margin-left: 0.5rem;
+            display: inline-block;
+        }
+
+        .status-badge.available {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-badge.reserved {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-badge.sold {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-badge.not-available {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .view-toggle {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .toggle-btn {
+                padding: 1rem;
+            }
+
+            #realMap {
+                height: 400px;
+            }
+
+            .map-controls {
+                top: 10px;
+                right: 10px;
+            }
+
+            .property-marker {
+                width: 35px;
+                height: 35px;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Map pin indicator */
+        .map-pin-indicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+            z-index: 9999;
+            font-weight: 600;
+            animation: bounceIn 0.5s ease;
+        }
+
+        .pin-indicator-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1rem;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: translate(-50%, -50%) scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.05);
+            }
+            70% {
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* Custom scrollbar for modal content */
+        .modal-content-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content-body::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: 4px;
+        }
+
+        .modal-content-body::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        .modal-content-body::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Enhanced leaflet popup size for larger screens */
+        @media (min-width: 1024px) {
+            .custom-popup {
+                min-width: 380px;
+                max-width: 450px;
+            }
+            
+            .popup-header {
+                font-size: 1.2rem;
+                padding: 1.5rem;
+            }
+            
+            .popup-btn {
+                padding: 1rem 1.25rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="../logo.png" alt="Membro Logo" class="logo-img">
+                    <span class="logo-text">Seller Portal</span>
+                </div>
+            </div>
+            
+            <div class="nav-menu">
+                <div class="nav-section">
+                    <span class="nav-section-title">Main</span>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="index.html" class="nav-link">
+                                <i class="fas fa-home nav-icon"></i>
+                                <span class="nav-text">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="profile.html" class="nav-link">
+                                <i class="fas fa-user nav-icon"></i>
+                                <span class="nav-text">Profile</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="notifications.html" class="nav-link">
+                                <i class="fas fa-bell nav-icon"></i>
+                                <span class="nav-text">Notifications</span>
+                                <span class="notification-count">3</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <span class="nav-section-title">Business</span>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="properties.html" class="nav-link">
+                                <i class="fas fa-building nav-icon"></i>
+                                <span class="nav-text">Properties</span>
+                            </a>
+                        </li>
+                        <li class="nav-item active">
+                            <a href="property-map.html" class="nav-link">
+                                <i class="fas fa-map nav-icon"></i>
+                                <span class="nav-text">Property Map</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="opportunities.html" class="nav-link">
+                                <i class="fas fa-chart-line nav-icon"></i>
+                                <span class="nav-text">Opportunities</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="change-requests.html" class="nav-link">
+                                <i class="fas fa-edit nav-icon"></i>
+                                <span class="nav-text">Change Requests</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="reservation-agreements.html" class="nav-link">
+                                <i class="fas fa-file-contract nav-icon"></i>
+                                <span class="nav-text">Agreements</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="reports.html" class="nav-link">
+                                <i class="fas fa-chart-bar nav-icon"></i>
+                                <span class="nav-text">Reports</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/40/667eea/ffffff?text=JS" alt="Profile" class="user-avatar">
+                    <div class="user-info">
+                        <span class="user-name">John Seller</span>
+                        <span class="user-role">Sales Agent</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="window.location.href='../login.html'">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1>Property Map View</h1>
+                    <p>Interactive map showing all property units with real-time availability status</p>
+                </div>
+                <button class="btn btn-primary" onclick="refreshMap()">
+                    <i class="fas fa-sync-alt"></i>
+                    Refresh Map
+                </button>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="availableCount">0</h3>
+                            <p>Available Units</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="reservedCount">0</h3>
+                            <p>Reserved Units</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="soldCount">0</h3>
+                            <p>Sold Units</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #6b7280, #4b5563);">
+                            <i class="fas fa-ban"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="notAvailableCount">0</h3>
+                            <p>Not Available</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Toggle -->
+            <div class="view-toggle">
+                <button class="toggle-btn active" id="gridViewBtn" onclick="switchToGridView()">
+                    <i class="fas fa-th"></i>
+                    Grid View
+                </button>
+                <button class="toggle-btn" id="mapViewBtn" onclick="switchToMapView()">
+                    <i class="fas fa-map-marked-alt"></i>
+                    Real Map View
+                </button>
+            </div>
+
+            <!-- Grid-based Property Map -->
+            <div class="property-map-container" id="gridMapContainer">
+                <div class="map-header">
+                    <div class="map-title">Tandatangan Golf Residences - Phase 4A (Grid Layout)</div>
+                    <div class="map-legend">
+                        <div class="legend-item">
+                            <div class="legend-color legend-available"></div>
+                            <span>Available</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color legend-reserved"></div>
+                            <span>Reserved</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color legend-sold"></div>
+                            <span>Sold</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color legend-not-available"></div>
+                            <span>Not Available</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="property-map" id="propertyMap">
+                    <!-- Map content will be dynamically generated -->
+                </div>
+            </div>
+
+            <!-- Real Map View -->
+            <div class="real-map-container" id="realMapContainer">
+                <div class="map-header">
+                    <div class="map-title">Tandatangan Golf Residences - Phase 4A (Satellite View)</div>
+                    <div class="map-legend">
+                        <div class="legend-item">
+                            <div class="legend-color legend-available"></div>
+                            <span>Available</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color legend-reserved"></div>
+                            <span>Reserved</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color legend-sold"></div>
+                            <span>Sold</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color legend-not-available"></div>
+                            <span>Not Available</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="realMap">
+                    <!-- Leaflet map will be initialized here -->
+                </div>
+                
+                <!-- Map Controls -->
+                <div class="map-controls">
+                    <button class="map-control-btn" onclick="centerMap()" title="Center Map">
+                        <i class="fas fa-crosshairs"></i>
+                    </button>
+                    <button class="map-control-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                    <button class="map-control-btn" onclick="refreshMapView()" title="Refresh Map">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Property Details Modal -->
+    <div class="property-modal" id="propertyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Property Details</h3>
+                <button class="close-modal" onclick="closePropertyModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-content-body">
+                <div id="modalContent">
+                    <!-- Content will be dynamically populated -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Map Pin Indicator (shows when map marker is clicked) -->
+    <div class="map-pin-indicator" id="mapPinIndicator" style="display: none;">
+        <div class="pin-indicator-content">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Click for detailed view</span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../data.js"></script>
+    <script src="property-map.js"></script>
+</body>
+</html>

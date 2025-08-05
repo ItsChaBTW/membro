@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Calculator - Seller Portal</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="seller-styles.css">
+    <link rel="stylesheet" href="payment-calculator.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="../logo.png" alt="Membro Logo" class="logo-img">
+                    <span class="logo-text">Seller Portal</span>
+                </div>
+            </div>
+            
+            <div class="nav-menu">
+                <div class="nav-section">
+                    <span class="nav-section-title">Main</span>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="index.html" class="nav-link">
+                                <i class="fas fa-home nav-icon"></i>
+                                <span class="nav-text">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="profile.html" class="nav-link">
+                                <i class="fas fa-user nav-icon"></i>
+                                <span class="nav-text">Profile</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="notifications.html" class="nav-link">
+                                <i class="fas fa-bell nav-icon"></i>
+                                <span class="nav-text">Notifications</span>
+                                <span class="notification-count">3</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <span class="nav-section-title">Business</span>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="properties.html" class="nav-link">
+                                <i class="fas fa-building nav-icon"></i>
+                                <span class="nav-text">Properties</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="property-map.html" class="nav-link">
+                                <i class="fas fa-map nav-icon"></i>
+                                <span class="nav-text">Property Map</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="opportunities.html" class="nav-link">
+                                <i class="fas fa-chart-line nav-icon"></i>
+                                <span class="nav-text">Opportunities</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="change-requests.html" class="nav-link">
+                                <i class="fas fa-edit nav-icon"></i>
+                                <span class="nav-text">Change Requests</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="reservation-agreements.html" class="nav-link">
+                                <i class="fas fa-file-contract nav-icon"></i>
+                                <span class="nav-text">Agreements</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="reports.html" class="nav-link">
+                                <i class="fas fa-chart-bar nav-icon"></i>
+                                <span class="nav-text">Reports</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <span class="nav-section-title">Tools</span>
+                    <ul class="nav-list">
+                        <li class="nav-item active">
+                            <a href="payment-calculator.html" class="nav-link">
+                                <i class="fas fa-calculator nav-icon"></i>
+                                <span class="nav-text">Payment Calculator</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/40/667eea/ffffff?text=JS" alt="Profile" class="user-avatar">
+                    <div class="user-info">
+                        <span class="user-name">John Seller</span>
+                        <span class="user-role">Sales Agent</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="window.location.href='../login.html'">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation -->
+            <div class="top-nav">
+                <div class="nav-left">
+                    <button class="nav-toggle" id="navToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="breadcrumb">
+                        <a href="index.html">Dashboard</a>
+                        <i class="fas fa-chevron-right"></i>
+                        <span>Payment Calculator</span>
+                    </div>
+                </div>
+                <div class="nav-right">
+                    <button class="nav-btn" onclick="history.back()">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Go Back</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Calculator Header -->
+            <div class="calculator-header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <div class="calculator-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <div class="header-text">
+                            <h1 class="calculator-title">Payment Calculator</h1>
+                            <p class="calculator-subtitle">Calculate payment terms and amortization schedules for your properties</p>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-outline calculator-action-btn" onclick="resetCalculator()">
+                            <i class="fas fa-redo-alt"></i>
+                            Reset
+                        </button>
+                        <button class="btn btn-outline calculator-action-btn" onclick="saveCalculation()">
+                            <i class="fas fa-save"></i>
+                            Save
+                        </button>
+                        <button class="btn btn-primary calculator-action-btn" onclick="printResults()">
+                            <i class="fas fa-print"></i>
+                            Print
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Selected Property Section -->
+            <div class="selected-property-section" id="selectedPropertySection" style="display: none;">
+                <div class="property-card-compact">
+                    <div class="property-image-compact">
+                        <img id="selectedPropertyImage" src="" alt="Property Image">
+                        <div class="property-status-badge" id="selectedPropertyStatus">Available</div>
+                    </div>
+                    <div class="property-details-compact">
+                        <h3 id="selectedPropertyName">Property Name</h3>
+                        <div class="property-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span id="selectedPropertyLocation">Location</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-building"></i>
+                                <span id="selectedPropertyProject">Project</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-ruler-combined"></i>
+                                <span id="selectedPropertyArea">Area</span>
+                            </div>
+                        </div>
+                        <div class="property-pricing-compact">
+                            <div class="price-main">
+                                <span class="price-label">Total Price</span>
+                                <span class="price-value" id="selectedPropertyPrice">₱0</span>
+                            </div>
+                            <div class="price-rf">
+                                <span class="rf-label">RF Amount</span>
+                                <span class="rf-value" id="selectedPropertyRF">₱0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="change-property-btn" onclick="selectDifferentProperty()">
+                        <i class="fas fa-exchange-alt"></i>
+                        Change Property
+                    </button>
+                </div>
+            </div>
+
+            <!-- Calculator Content -->
+            <div class="calculator-layout">
+                <!-- Input Section -->
+                <div class="calculator-inputs-section">
+                    <div class="inputs-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-cog"></i> Payment Terms Configuration</h3>
+                            <div class="header-actions-mini">
+                                <button class="btn-mini" onclick="loadPreset('residential')" title="Load Residential Preset">
+                                    <i class="fas fa-home"></i>
+                                </button>
+                                <button class="btn-mini" onclick="loadPreset('commercial')" title="Load Commercial Preset">
+                                    <i class="fas fa-building"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="inputs-grid">
+                            <div class="input-section">
+                                <h4><i class="fas fa-peso-sign"></i> Basic Information</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="calcTotalSellingPrice">Total Selling Price</label>
+                                        <div class="input-with-currency">
+                                            <span class="currency-symbol">₱</span>
+                                            <input type="number" id="calcTotalSellingPrice" min="0" step="1000" placeholder="Enter total price">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="calcRF">Reservation Fee (RF)</label>
+                                        <div class="input-with-currency">
+                                            <span class="currency-symbol">₱</span>
+                                            <input type="number" id="calcRF" min="0" step="1000" value="20000" placeholder="Enter RF amount">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-section">
+                                <h4><i class="fas fa-percentage"></i> Payment Structure</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="calcPaymentTerm">Payment Term</label>
+                                        <select id="calcPaymentTerm" onchange="updatePaymentTermFields()">
+                                            <option value="split_dp">Split Down Payment</option>
+                                            <option value="full_cash">Full Cash Payment</option>
+                                            <option value="full_dp">Full Down Payment</option>
+                                            <option value="split_cash">Split Cash Payment</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="calcDPPercentage">Down Payment Percentage</label>
+                                        <div class="input-with-unit">
+                                            <input type="number" id="calcDPPercentage" min="0" max="100" step="1" value="30" placeholder="Enter percentage">
+                                            <span class="unit-symbol">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="calcNoOfSplits">Number of Splits</label>
+                                        <input type="number" id="calcNoOfSplits" min="1" max="24" step="1" value="3" placeholder="Number of splits">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="calcNoOfYearsToPay">Loan Term</label>
+                                        <select id="calcNoOfYearsToPay">
+                                            <option value="5">5 Years</option>
+                                            <option value="10">10 Years</option>
+                                            <option value="15">15 Years</option>
+                                            <option value="20" selected>20 Years</option>
+                                            <option value="25">25 Years</option>
+                                            <option value="30">30 Years</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-section">
+                                <h4><i class="fas fa-tags"></i> Discounts & Promotions</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="calcDiscountPercent">Standard Discount</label>
+                                        <div class="input-with-unit">
+                                            <input type="number" id="calcDiscountPercent" min="0" max="50" step="0.1" value="0" placeholder="Enter discount">
+                                            <span class="unit-symbol">%</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="calcPromoDiscount">Promotional Discount</label>
+                                        <div class="input-with-unit">
+                                            <input type="number" id="calcPromoDiscount" min="0" max="50" step="0.1" value="5" placeholder="Enter promo discount">
+                                            <span class="unit-symbol">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-section">
+                                <h4><i class="fas fa-calendar-alt"></i> Schedule Dates</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="calcFullDPDate">Full DP Due Date</label>
+                                        <input type="date" id="calcFullDPDate">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="calcStartSplitDP">Split DP Start Date</label>
+                                        <input type="date" id="calcStartSplitDP">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="calculate-actions">
+                            <button class="btn btn-primary btn-calculate" onclick="calculatePayment()" id="calculateButton">
+                                <i class="fas fa-calculator"></i>
+                                Calculate Payment Terms
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="calculator-results-section" id="calculatorResults" style="display: none;">
+                    <div class="results-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-line"></i> Payment Calculation Results</h3>
+                            <div class="results-timestamp" id="calculationTime"></div>
+                        </div>
+
+                        <!-- Summary Cards -->
+                        <div class="results-summary">
+                            <div class="summary-card primary">
+                                <div class="summary-icon">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-label">Monthly DP Split</div>
+                                    <div class="summary-value" id="summaryMoDPSplit">₱0</div>
+                                </div>
+                            </div>
+                            <div class="summary-card secondary">
+                                <div class="summary-icon">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-label">Monthly Amortization</div>
+                                    <div class="summary-value" id="summaryMoAmortization">₱0</div>
+                                </div>
+                            </div>
+                            <div class="summary-card success">
+                                <div class="summary-icon">
+                                    <i class="fas fa-percentage"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <div class="summary-label">Total Savings</div>
+                                    <div class="summary-value" id="summaryTotalSavings">₱0</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detailed Results -->
+                        <div class="results-detailed">
+                            <div class="results-section">
+                                <h4><i class="fas fa-receipt"></i> Financial Breakdown</h4>
+                                <div class="results-grid">
+                                    <div class="result-item">
+                                        <label>Discount Amount:</label>
+                                        <span id="resultDiscountAmount">₱0</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <label>Net Selling Price:</label>
+                                        <span id="resultNetSellingPrice">₱0</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <label>VAT Amount:</label>
+                                        <span id="resultVATAmount">₱0</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <label>NSP with VAT:</label>
+                                        <span id="resultNSPWithVAT">₱0</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <label>Down Payment:</label>
+                                        <span id="resultDP">₱0</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <label>DP Less RF:</label>
+                                        <span id="resultDPLessRF">₱0</span>
+                                    </div>
+                                    <div class="result-item highlight">
+                                        <label>Monthly DP Split:</label>
+                                        <span id="resultMoDPSplit">₱0</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <label>Balance for Amortization:</label>
+                                        <span id="resultBalanceAmortization">₱0</span>
+                                    </div>
+                                    <div class="result-item highlight">
+                                        <label>Monthly Amortization:</label>
+                                        <span id="resultMoAmortization">₱0</span>
+                                    </div>
+                                    <div class="result-item">
+                                        <label>Factor Rate:</label>
+                                        <span id="resultFactorRate">0</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="results-section">
+                                <h4><i class="fas fa-calendar"></i> Payment Schedule</h4>
+                                <div class="schedule-timeline">
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker start"></div>
+                                        <div class="timeline-content">
+                                            <label>Full DP Date:</label>
+                                            <span id="resultFullDPDate">-</span>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker"></div>
+                                        <div class="timeline-content">
+                                            <label>Start of Split DP:</label>
+                                            <span id="resultStartSplitDP">-</span>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker"></div>
+                                        <div class="timeline-content">
+                                            <label>End of Split DP:</label>
+                                            <span id="resultEndSplitDP">-</span>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker"></div>
+                                        <div class="timeline-content">
+                                            <label>Start of Amortization:</label>
+                                            <span id="resultStartAmortization">-</span>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker end"></div>
+                                        <div class="timeline-content">
+                                            <label>End of Amortization:</label>
+                                            <span id="resultEndAmortization">-</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Amortization Schedule -->
+                        <div class="amortization-section">
+                            <div class="section-header">
+                                <h4><i class="fas fa-table"></i> Amortization Schedule Preview</h4>
+                                <div class="section-actions">
+                                    <button class="btn btn-sm btn-outline" onclick="exportAmortizationSchedule()">
+                                        <i class="fas fa-download"></i>
+                                        Export
+                                    </button>
+                                    <button class="btn btn-sm btn-outline" onclick="toggleAmortizationView()">
+                                        <i class="fas fa-expand"></i>
+                                        Full View
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="amortization-table-container">
+                                <table class="amortization-table" id="amortizationTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Month</th>
+                                            <th>Payment</th>
+                                            <th>Principal</th>
+                                            <th>Interest</th>
+                                            <th>Balance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="amortizationTableBody">
+                                        <!-- Dynamically populated -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Selection Modal -->
+            <div class="property-selection-modal" id="propertySelectionModal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3><i class="fas fa-building"></i> Select Property</h3>
+                        <button class="close-modal" onclick="closePropertySelection()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="property-search">
+                            <div class="search-input-wrapper">
+                                <i class="fas fa-search search-icon"></i>
+                                <input type="text" class="search-input" placeholder="Search properties..." id="propertySearchInput" onkeyup="filterProperties()">
+                            </div>
+                        </div>
+                        <div class="properties-list" id="propertiesListModal">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../data.js"></script>
+    <script src="payment-calculator.js"></script>
+</body>
+</html>
