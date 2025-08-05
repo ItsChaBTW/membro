@@ -806,4 +806,225 @@ function injectDetailPageStyles() {
     const styleSheet = document.createElement('style');
     styleSheet.textContent = additionalStyles;
     document.head.appendChild(styleSheet);
+}
+
+// Tab switching functionality for opportunity details
+function switchDetailsTab(tabName) {
+    // Remove active class from all tabs and content
+    document.querySelectorAll('.opportunity-details-tabs .tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelectorAll('.opportunity-details-tabs .tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    // Add active class to clicked tab and corresponding content
+    document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+    document.getElementById(`${tabName}-tab`).classList.add('active');
+    
+    // Load content for the specific tab
+    loadDetailsTabContent(tabName);
+}
+
+// Load content for each tab
+function loadDetailsTabContent(tabName) {
+    switch(tabName) {
+        case 'overview':
+            // Overview content is already loaded
+            break;
+        case 'requirements':
+            loadRequirementsContent();
+            break;
+        case 'promo':
+            loadPromoContent();
+            break;
+        case 'payment-terms':
+            loadPaymentTermsContent();
+            break;
+        case 'change-requests':
+            loadChangeRequestsContent();
+            break;
+    }
+}
+
+// Load Requirements Tab Content
+function loadRequirementsContent() {
+    const requiredDocs = [
+        { id: 1, name: 'Valid Government ID', status: 'submitted', type: 'required', description: 'Driver\'s License or SSS ID' },
+        { id: 2, name: 'Income Tax Return', status: 'pending', type: 'required', description: 'Latest ITR with BIR stamp' },
+        { id: 3, name: 'Certificate of Employment', status: 'missing', type: 'required', description: 'For employed buyers' },
+        { id: 4, name: 'Bank Statements', status: 'submitted', type: 'required', description: '3 months bank statements' }
+    ];
+    
+    const financialDocs = [
+        { id: 5, name: 'Payslips', status: 'submitted', type: 'financial', description: 'Latest 3 months payslips' },
+        { id: 6, name: 'Business License', status: 'missing', type: 'financial', description: 'For self-employed buyers' },
+        { id: 7, name: 'Audited Financial Statement', status: 'pending', type: 'financial', description: 'For business owners' }
+    ];
+    
+    const legalDocs = [
+        { id: 8, name: 'Marriage Certificate', status: 'submitted', type: 'legal', description: 'For married buyers' },
+        { id: 9, name: 'Birth Certificate', status: 'submitted', type: 'legal', description: 'Certified true copy' },
+        { id: 10, name: 'Special Power of Attorney', status: 'missing', type: 'legal', description: 'If represented by agent' }
+    ];
+    
+    // Populate required documents
+    const requiredContainer = document.getElementById('requiredDocuments');
+    requiredContainer.innerHTML = requiredDocs.map(doc => createDocumentItem(doc)).join('');
+    
+    // Populate financial documents
+    const financialContainer = document.getElementById('financialDocuments');
+    financialContainer.innerHTML = financialDocs.map(doc => createDocumentItem(doc)).join('');
+    
+    // Populate legal documents
+    const legalContainer = document.getElementById('legalDocuments');
+    legalContainer.innerHTML = legalDocs.map(doc => createDocumentItem(doc)).join('');
+}
+
+// Create document item HTML
+function createDocumentItem(doc) {
+    const iconClass = getDocumentIcon(doc.type);
+    return `
+        <div class="document-item">
+            <div class="document-info">
+                <div class="document-icon">
+                    <i class="${iconClass}"></i>
+                </div>
+                <div class="document-details">
+                    <h5>${doc.name}</h5>
+                    <p>${doc.description}</p>
+                </div>
+            </div>
+            <div class="document-status">
+                <span class="document-status-badge ${doc.status}">${doc.status.toUpperCase()}</span>
+                <button class="btn btn-sm btn-outline" onclick="viewDocument(${doc.id})">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+// Get document icon based on type
+function getDocumentIcon(type) {
+    switch(type) {
+        case 'required': return 'fas fa-id-card';
+        case 'financial': return 'fas fa-chart-line';
+        case 'legal': return 'fas fa-gavel';
+        default: return 'fas fa-file-alt';
+    }
+}
+
+// Load Promo Content (already exists in promosList)
+function loadPromoContent() {
+    // Promo content is already loaded via existing functions
+    console.log('Promo content loaded');
+}
+
+// Load Payment Terms Content
+function loadPaymentTermsContent() {
+    const paymentSchedule = [
+        { id: 1, payment: 'Reservation Fee', dueDate: '2024-01-15', amount: '₱50,000', status: 'paid' },
+        { id: 2, payment: 'Down Payment 1', dueDate: '2024-02-15', amount: '₱200,000', status: 'pending' },
+        { id: 3, payment: 'Down Payment 2', dueDate: '2024-03-15', amount: '₱200,000', status: 'upcoming' },
+        { id: 4, payment: 'Monthly Amortization', dueDate: '2024-04-15', amount: '₱35,000', status: 'upcoming' }
+    ];
+    
+    const scheduleBody = document.getElementById('paymentScheduleList');
+    scheduleBody.innerHTML = paymentSchedule.map(payment => `
+        <tr>
+            <td>${payment.id}</td>
+            <td>${new Date(payment.dueDate).toLocaleDateString()}</td>
+            <td>${payment.amount}</td>
+            <td><span class="status-badge ${payment.status}">${payment.status}</span></td>
+            <td>
+                <button class="btn btn-sm btn-outline" onclick="viewPaymentDetails(${payment.id})">View</button>
+                ${payment.status === 'pending' ? 
+                    '<button class="btn btn-sm btn-primary" onclick="processPayment(' + payment.id + ')">Pay Now</button>' : ''
+                }
+            </td>
+        </tr>
+    `).join('');
+}
+
+// Load Change Requests Content
+function loadChangeRequestsContent() {
+    const changeRequests = [
+        { id: 'CR001', type: 'Unit Transfer', description: 'Request to transfer from Block 1 to Block 2', status: 'pending', date: '2024-01-15' },
+        { id: 'CR002', type: 'Payment Terms', description: 'Request to extend payment terms', status: 'approved', date: '2024-01-10' },
+        { id: 'CR003', type: 'Buyer Information', description: 'Update contact information', status: 'completed', date: '2024-01-05' }
+    ];
+    
+    const requestsBody = document.getElementById('changeRequestsList');
+    requestsBody.innerHTML = changeRequests.map(request => `
+        <tr>
+            <td>${request.id}</td>
+            <td>${request.type}</td>
+            <td>${request.description}</td>
+            <td><span class="status-badge ${request.status}">${request.status}</span></td>
+            <td>${new Date(request.date).toLocaleDateString()}</td>
+            <td>
+                <button class="btn btn-sm btn-outline" onclick="viewChangeRequest('${request.id}')">View</button>
+                ${request.status === 'pending' ? 
+                    '<button class="btn btn-sm btn-success" onclick="approveChangeRequest(\'' + request.id + '\')">Approve</button>' : ''
+                }
+            </td>
+        </tr>
+    `).join('');
+    
+    // Load requirements status
+    const requirementsStatus = [
+        { requirement: 'Government ID', dueDate: '2024-01-20', status: 'submitted' },
+        { requirement: 'Income Documents', dueDate: '2024-01-25', status: 'pending' },
+        { requirement: 'Bank Statements', dueDate: '2024-01-30', status: 'missing' }
+    ];
+    
+    const requirementsBody = document.getElementById('requirementsList');
+    requirementsBody.innerHTML = requirementsStatus.map(req => `
+        <tr>
+            <td>${req.requirement}</td>
+            <td>${new Date(req.dueDate).toLocaleDateString()}</td>
+            <td><span class="status-badge ${req.status}">${req.status}</span></td>
+            <td>
+                <button class="btn btn-sm btn-outline" onclick="followUpRequirement('${req.requirement}')">Follow Up</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+// Helper functions for button actions
+function uploadDocument() {
+    alert('Upload document functionality to be implemented');
+}
+
+function editPaymentTerms() {
+    alert('Edit payment terms functionality to be implemented');
+}
+
+function createChangeRequest() {
+    alert('Create change request functionality to be implemented');
+}
+
+function viewDocument(id) {
+    alert(`View document ${id}`);
+}
+
+function viewPaymentDetails(id) {
+    alert(`View payment details ${id}`);
+}
+
+function processPayment(id) {
+    alert(`Process payment ${id}`);
+}
+
+function viewChangeRequest(id) {
+    alert(`View change request ${id}`);
+}
+
+function approveChangeRequest(id) {
+    alert(`Approve change request ${id}`);
+}
+
+function followUpRequirement(requirement) {
+    alert(`Follow up on ${requirement}`);
 } 
