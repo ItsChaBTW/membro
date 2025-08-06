@@ -11,27 +11,52 @@ const opportunities = [
                 email: "john.doe@email.com",
                 phone: "+63 912 345 6789",
                 address: "123 Main St, Makati City",
-                type: "primary"
+                type: "primary",
+                dob: "1985-06-15",
+                occupation: "Software Engineer",
+                workDetails: "ABC Technology Inc., 5 years experience",
+                nationality: "Filipino",
+                salaryBracket: "₱80,000 - ₱100,000",
+                maritalStatus: "married",
+                spouse: {
+                    name: "Jane Doe",
+                    dob: "1987-03-22",
+                    occupation: "Marketing Manager"
+                }
             }
         ],
         propertyName: "Modern 2BR Condo",
         propertyPrice: 2500000,
         propertyLocation: "Makati City",
+        propertyArea: "45 sqm",
+        propertyType: "Condominium",
+        propertyProject: "Vista Residences",
+        pricePerSqm: 55556,
         reservationDate: "2024-01-15",
         reservationFee: 125000,
+        reservationDueDate: "2024-01-10",
+        reservationDatePaid: "2024-01-08",
+        reservationPaymentType: "Bank Transfer",
+        reservationReceipt: "OR-2024-001234",
+        syncToAccounting: "Synced",
         rfPaid: true,
         stage: "requirements",
         status: "active",
         salesTeam: {
-            propertyConsultant: "Maria Santos",
-            manager: "Roberto Cruz",
-            salesDirector: "Ana Reyes"
+            pcName: "Maria Santos",
+            salesManagerName: "Roberto Cruz",
+            salesDirectorName: "Ana Reyes"
         },
         paymentTerms: {
             downPaymentPercent: 20,
             loanTerm: 15,
             interestRate: 6.5,
-            paymentFrequency: "monthly"
+            paymentFrequency: "monthly",
+            totalSellingPrice: 2500000,
+            netSellingPrice: 2375000,
+            downPaymentAmount: 500000,
+            balanceForFinancing: 1875000,
+            monthlyAmortization: 15500
         },
         promos: [
             {
@@ -47,6 +72,35 @@ const opportunities = [
             { name: "Bank Statement", status: "pending", dueDate: "2024-01-30" },
             { name: "COE", status: "pending", dueDate: "2024-02-05" }
         ],
+        requirementsInfo: {
+            complianceDate: "2024-02-05",
+            daysRemaining: 12,
+            status: "In Progress"
+        },
+        approvals: {
+            dateSubmitted: "2024-01-20",
+            dateApprovedRejected: null,
+            approver: null,
+            comments: "Pending review"
+        },
+        referral: {
+            referrorName: "Carlos Mendoza",
+            referralProperty: "Crown Heights Unit 201",
+            referrorId: "REF-2024-001"
+        },
+        activities: {
+            welcomeLetters: [
+                { date: "2024-01-15", subject: "Welcome to Vista Residences", status: "sent" }
+            ],
+            reminders: [
+                { date: "2024-01-22", subject: "Document Submission Reminder", status: "sent" },
+                { date: "2024-01-28", subject: "Pending Requirements Update", status: "pending" }
+            ],
+            allOtherEmails: [
+                { date: "2024-01-16", subject: "Property Tour Confirmation", status: "sent" },
+                { date: "2024-01-18", subject: "Payment Schedule Details", status: "sent" }
+            ]
+        },
         notes: "Customer is very interested and has good credit score"
     },
     {
@@ -129,6 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     setupEventListeners();
+    setupModalEventListeners();
     injectDetailPageStyles();
 });
 
@@ -175,6 +230,9 @@ function loadOpportunityDetails(opportunityId) {
     }
     
     displayOpportunityDetails(currentOpportunity);
+    
+    // Load customer tab by default
+    loadCustomerTabContent();
 }
 
 // Display opportunity details
@@ -191,28 +249,8 @@ function displayOpportunityDetails(opportunity) {
     document.getElementById('opportunityStatus').textContent = opportunity.status.charAt(0).toUpperCase() + opportunity.status.slice(1);
     document.getElementById('opportunityStatus').className = `status-badge ${opportunity.status}`;
     
-    // Update customer information
-    document.getElementById('customerName').textContent = primaryCustomer.name;
-    document.getElementById('customerEmail').textContent = primaryCustomer.email;
-    document.getElementById('customerPhone').textContent = primaryCustomer.phone;
-    document.getElementById('customerAddress').textContent = primaryCustomer.address;
-    
-    // Update property information
-    document.getElementById('propertyName').textContent = opportunity.propertyName;
-    document.getElementById('propertyPrice').textContent = formatCurrency(opportunity.propertyPrice);
-    document.getElementById('propertyLocation').textContent = opportunity.propertyLocation;
-    
-    // Update reservation details
-    document.getElementById('reservationDate').textContent = formatDate(opportunity.reservationDate);
-    document.getElementById('reservationFee').textContent = formatCurrency(opportunity.reservationFee);
-    document.getElementById('rfPaid').textContent = opportunity.rfPaid ? 'Yes' : 'No';
-    
-    // Display customers, sales team, payment terms, promos, and requirements
-    displayCustomers(opportunity.customers);
-    displaySalesTeam(opportunity.salesTeam);
-    displayPaymentTerms(opportunity.paymentTerms);
-    displayPromos(opportunity.promos);
-    displayRequirements(opportunity.requirements);
+    // Note: Individual field updates are now handled by tab-specific functions
+    // The tab content will be populated when each tab is loaded
 }
 
 // Display customers
@@ -829,25 +867,223 @@ function switchDetailsTab(tabName) {
 // Load content for each tab
 function loadDetailsTabContent(tabName) {
     switch(tabName) {
-        case 'overview':
-            // Overview content is already loaded
+        case 'customer':
+            loadCustomerTabContent();
+            break;
+        case 'sales-team':
+            loadSalesTeamTabContent();
+            break;
+        case 'reservation':
+            loadReservationTabContent();
             break;
         case 'requirements':
-            loadRequirementsContent();
+            loadRequirementsTabContent();
             break;
-        case 'promo':
-            loadPromoContent();
+        case 'payment-term':
+            loadPaymentTermTabContent();
             break;
-        case 'payment-terms':
-            loadPaymentTermsContent();
+        case 'approvals':
+            loadApprovalsTabContent();
             break;
-        case 'change-requests':
-            loadChangeRequestsContent();
+        case 'activities':
+            loadActivitiesTabContent();
             break;
     }
 }
 
+// Load Customer Tab Content
+function loadCustomerTabContent() {
+    const opportunity = getCurrentOpportunity();
+    if (!opportunity) return;
+    
+    const primaryCustomer = opportunity.customers.find(c => c.type === 'primary');
+    if (primaryCustomer) {
+        // Populate primary customer fields
+        document.getElementById('primaryCustomerName').textContent = primaryCustomer.name || '-';
+        document.getElementById('primaryCustomerEmail').textContent = primaryCustomer.email || '-';
+        document.getElementById('primaryCustomerPhone').textContent = primaryCustomer.phone || '-';
+        document.getElementById('primaryCustomerDOB').textContent = formatDate(primaryCustomer.dob) || '-';
+        document.getElementById('primaryCustomerOccupation').textContent = primaryCustomer.occupation || '-';
+        document.getElementById('primaryCustomerWorkDetails').textContent = primaryCustomer.workDetails || '-';
+        document.getElementById('primaryCustomerNationality').textContent = primaryCustomer.nationality || '-';
+        document.getElementById('primaryCustomerSalary').textContent = primaryCustomer.salaryBracket || '-';
+        document.getElementById('primaryCustomerMaritalStatus').textContent = primaryCustomer.maritalStatus || '-';
+        document.getElementById('primaryCustomerAddress').textContent = primaryCustomer.address || '-';
+        
+        // Show spouse info if married
+        if (primaryCustomer.maritalStatus === 'married' && primaryCustomer.spouse) {
+            document.getElementById('spouseSection').style.display = 'block';
+            document.getElementById('spouseInfo').textContent = 
+                `${primaryCustomer.spouse.name} (DOB: ${formatDate(primaryCustomer.spouse.dob)}, Occupation: ${primaryCustomer.spouse.occupation})`;
+        } else {
+            document.getElementById('spouseSection').style.display = 'none';
+        }
+    }
+    
+    // Populate all customers table
+    const allCustomersTableBody = document.getElementById('allCustomersTableBody');
+    allCustomersTableBody.innerHTML = opportunity.customers.map(customer => `
+        <tr>
+            <td>${customer.name}</td>
+            <td>${customer.email}</td>
+            <td>${customer.phone}</td>
+            <td><span class="customer-type-badge ${customer.type}">${customer.type}</span></td>
+            <td>
+                <button class="btn btn-sm btn-outline" onclick="editCustomer('${customer.name}')">
+                    <i class="fas fa-edit"></i>
+                </button>
+                ${customer.type !== 'primary' ? `<button class="btn btn-sm btn-danger" onclick="removeCustomer('${customer.name}')">
+                    <i class="fas fa-trash"></i>
+                </button>` : ''}
+            </td>
+        </tr>
+    `).join('');
+    
+    // Populate referral information
+    if (opportunity.referral) {
+        document.getElementById('referrorName').textContent = opportunity.referral.referrorName || '-';
+        document.getElementById('referralProperty').textContent = opportunity.referral.referralProperty || '-';
+        document.getElementById('referrorId').textContent = opportunity.referral.referrorId || '-';
+    }
+}
+
+// Load Sales Team Tab Content
+function loadSalesTeamTabContent() {
+    const opportunity = getCurrentOpportunity();
+    if (!opportunity || !opportunity.salesTeam) return;
+    
+    document.getElementById('pcName').textContent = opportunity.salesTeam.pcName || '-';
+    document.getElementById('salesManagerName').textContent = opportunity.salesTeam.salesManagerName || '-';
+    document.getElementById('salesDirectorName').textContent = opportunity.salesTeam.salesDirectorName || '-';
+}
+
+// Load Reservation Tab Content
+function loadReservationTabContent() {
+    const opportunity = getCurrentOpportunity();
+    if (!opportunity) return;
+    
+    document.getElementById('reservationFeeAmount').textContent = formatCurrency(opportunity.reservationFee) || '-';
+    document.getElementById('reservationDueDate').textContent = formatDate(opportunity.reservationDueDate) || '-';
+    document.getElementById('reservationStatus').textContent = opportunity.rfPaid ? 'Paid' : 'Pending';
+    document.getElementById('reservationDatePaid').textContent = formatDate(opportunity.reservationDatePaid) || '-';
+    document.getElementById('reservationPaymentType').textContent = opportunity.reservationPaymentType || '-';
+    document.getElementById('reservationReceipt').textContent = opportunity.reservationReceipt || '-';
+    document.getElementById('syncToAccounting').textContent = opportunity.syncToAccounting || '-';
+}
+
 // Load Requirements Tab Content
+function loadRequirementsTabContent() {
+    const opportunity = getCurrentOpportunity();
+    if (!opportunity) return;
+    
+    // Populate requirements info
+    if (opportunity.requirementsInfo) {
+        document.getElementById('complianceDate').textContent = formatDate(opportunity.requirementsInfo.complianceDate) || '-';
+        document.getElementById('daysRemaining').textContent = opportunity.requirementsInfo.daysRemaining || '-';
+        document.getElementById('requirementsStatus').textContent = opportunity.requirementsInfo.status || '-';
+    }
+    
+    // Populate requirements table
+    const requirementsTableBody = document.getElementById('requirementsTableBody');
+    requirementsTableBody.innerHTML = opportunity.requirements.map(req => `
+        <tr>
+            <td>${req.name}</td>
+            <td>${formatDate(req.dueDate)}</td>
+            <td><span class="requirement-status ${req.status}">${req.status}</span></td>
+            <td>
+                <button class="btn btn-sm btn-outline" onclick="editRequirement('${req.name}')">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="removeRequirement('${req.name}')">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+// Load Payment Term Tab Content
+function loadPaymentTermTabContent() {
+    const opportunity = getCurrentOpportunity();
+    if (!opportunity) return;
+    
+    // Populate property details
+    document.getElementById('paymentPropertyName').textContent = opportunity.propertyName || '-';
+    document.getElementById('paymentTSP').textContent = formatCurrency(opportunity.propertyPrice) || '-';
+    document.getElementById('paymentArea').textContent = opportunity.propertyArea || '-';
+    document.getElementById('paymentPricePerSqm').textContent = formatCurrency(opportunity.pricePerSqm) || '-';
+    document.getElementById('paymentPropertyType').textContent = opportunity.propertyType || '-';
+    document.getElementById('paymentProject').textContent = opportunity.propertyProject || '-';
+    
+    // Populate calculated fields
+    if (opportunity.paymentTerms) {
+        document.getElementById('calculatedNSP').textContent = formatCurrency(opportunity.paymentTerms.netSellingPrice) || '-';
+        document.getElementById('calculatedDPAmount').textContent = formatCurrency(opportunity.paymentTerms.downPaymentAmount) || '-';
+        document.getElementById('calculatedBalance').textContent = formatCurrency(opportunity.paymentTerms.balanceForFinancing) || '-';
+        document.getElementById('calculatedMonthlyPayment').textContent = formatCurrency(opportunity.paymentTerms.monthlyAmortization) || '-';
+    }
+}
+
+// Load Approvals Tab Content
+function loadApprovalsTabContent() {
+    const opportunity = getCurrentOpportunity();
+    if (!opportunity || !opportunity.approvals) return;
+    
+    document.getElementById('dateSubmitted').textContent = formatDate(opportunity.approvals.dateSubmitted) || '-';
+    document.getElementById('dateApprovedRejected').textContent = formatDate(opportunity.approvals.dateApprovedRejected) || '-';
+    document.getElementById('approver').textContent = opportunity.approvals.approver || '-';
+    document.getElementById('approvalComments').textContent = opportunity.approvals.comments || '-';
+}
+
+// Load Activities Tab Content
+function loadActivitiesTabContent() {
+    const opportunity = getCurrentOpportunity();
+    if (!opportunity || !opportunity.activities) return;
+    
+    // Populate welcome letters
+    const welcomeLettersContainer = document.getElementById('welcomeLetters');
+    welcomeLettersContainer.innerHTML = opportunity.activities.welcomeLetters.map(email => `
+        <div class="activity-item">
+            <div class="activity-icon">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="activity-details">
+                <h5>${email.subject}</h5>
+                <p>Date: ${formatDate(email.date)} | Status: ${email.status}</p>
+            </div>
+        </div>
+    `).join('');
+    
+    // Populate reminders
+    const remindersContainer = document.getElementById('reminders');
+    remindersContainer.innerHTML = opportunity.activities.reminders.map(email => `
+        <div class="activity-item">
+            <div class="activity-icon">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="activity-details">
+                <h5>${email.subject}</h5>
+                <p>Date: ${formatDate(email.date)} | Status: ${email.status}</p>
+            </div>
+        </div>
+    `).join('');
+    
+    // Populate all other emails
+    const allOtherEmailsContainer = document.getElementById('allOtherEmails');
+    allOtherEmailsContainer.innerHTML = opportunity.activities.allOtherEmails.map(email => `
+        <div class="activity-item">
+            <div class="activity-icon">
+                <i class="fas fa-mail-bulk"></i>
+            </div>
+            <div class="activity-details">
+                <h5>${email.subject}</h5>
+                <p>Date: ${formatDate(email.date)} | Status: ${email.status}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Load Requirements Tab Content (original function name for compatibility)
 function loadRequirementsContent() {
     const requiredDocs = [
         { id: 1, name: 'Valid Government ID', status: 'submitted', type: 'required', description: 'Driver\'s License or SSS ID' },
@@ -1027,4 +1263,266 @@ function approveChangeRequest(id) {
 
 function followUpRequirement(requirement) {
     alert(`Follow up on ${requirement}`);
+}
+
+// New interactive functions for enhanced opportunity details
+
+// Action buttons
+function cancelOpportunity() {
+    if (confirm('Are you sure you want to cancel this opportunity?')) {
+        alert('Opportunity cancelled successfully');
+        // In a real app, this would update the opportunity status
+    }
+}
+
+function submitForApproval() {
+    const opportunity = getCurrentOpportunity();
+    if (!opportunity) return;
+    
+    if (confirm('Submit this opportunity for approval?')) {
+        // Update the approval date
+        const currentDate = new Date().toISOString().split('T')[0];
+        opportunity.approvals.dateSubmitted = currentDate;
+        opportunity.stage = 'approval';
+        
+        // Refresh the data
+        displayOpportunityDetails(opportunity);
+        loadApprovalsTabContent();
+        
+        showNotification('Opportunity submitted for approval successfully', 'success');
+    }
+}
+
+function recallOpportunity() {
+    if (confirm('Recall this opportunity from approval?')) {
+        alert('Opportunity recalled successfully');
+        // In a real app, this would update the opportunity status
+    }
+}
+
+// Customer functions
+function editPrimaryCustomer() {
+    alert('Edit primary customer functionality to be implemented');
+}
+
+function addCustomer() {
+    // Reset form and set modal title
+    document.getElementById('customerForm').reset();
+    document.getElementById('customerModalTitle').textContent = 'Add Customer';
+    document.getElementById('editCustomerId').value = '';
+    
+    // Show modal
+    document.getElementById('customerModal').style.display = 'block';
+}
+
+function editCustomer(customerName) {
+    const opportunity = getCurrentOpportunity();
+    if (!opportunity) return;
+    
+    const customer = opportunity.customers.find(c => c.name === customerName);
+    if (!customer) return;
+    
+    // Populate form with customer data
+    document.getElementById('editCustomerId').value = customerName;
+    document.getElementById('customerModalTitle').textContent = 'Edit Customer';
+    document.getElementById('customerType').value = customer.type || 'co-buyer';
+    document.getElementById('customerFirstName').value = customer.name.split(' ')[0] || '';
+    document.getElementById('customerMiddleName').value = customer.name.split(' ')[1] || '';
+    document.getElementById('customerLastName').value = customer.name.split(' ').slice(2).join(' ') || '';
+    document.getElementById('customerEmail').value = customer.email || '';
+    document.getElementById('customerPhone').value = customer.phone || '';
+    document.getElementById('customerAddress').value = customer.address || '';
+    document.getElementById('customerDOB').value = customer.dob || '';
+    document.getElementById('customerOccupation').value = customer.occupation || '';
+    document.getElementById('customerWorkDetails').value = customer.workDetails || '';
+    document.getElementById('customerNationality').value = customer.nationality || '';
+    document.getElementById('customerSalary').value = customer.salaryBracket || '';
+    document.getElementById('customerMaritalStatus').value = customer.maritalStatus || '';
+    
+    // Show modal
+    document.getElementById('customerModal').style.display = 'block';
+}
+
+function removeCustomer(customerName) {
+    if (confirm(`Remove customer: ${customerName}?`)) {
+        alert(`Customer ${customerName} removed`);
+        // In a real app, this would remove the customer from the opportunity
+    }
+}
+
+// Requirement functions
+function addRequirement() {
+    // Reset form
+    document.getElementById('requirementsForm').reset();
+    
+    // Show modal
+    document.getElementById('requirementsModal').style.display = 'block';
+}
+
+function editRequirement(requirementName) {
+    alert(`Edit requirement: ${requirementName}`);
+}
+
+function removeRequirement(requirementName) {
+    if (confirm(`Remove requirement: ${requirementName}?`)) {
+        alert(`Requirement ${requirementName} removed`);
+        // In a real app, this would remove the requirement
+    }
+}
+
+// Utility functions
+function getCurrentOpportunity() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const opportunityId = parseInt(urlParams.get('id'));
+    return opportunities.find(opp => opp.id === opportunityId);
+}
+
+function formatDate(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+}
+
+function formatCurrency(amount) {
+    if (!amount) return '';
+    return new Intl.NumberFormat('en-PH', {
+        style: 'currency',
+        currency: 'PHP',
+        minimumFractionDigits: 0
+    }).format(amount);
+}
+
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        </div>
+        <button class="notification-close" onclick="this.parentElement.remove()">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    
+    // Add to page
+    document.body.appendChild(notification);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.remove();
+        }
+    }, 5000);
+}
+
+// Modal functions
+function closeCustomerModal() {
+    document.getElementById('customerModal').style.display = 'none';
+}
+
+function closeRequirementsModal() {
+    document.getElementById('requirementsModal').style.display = 'none';
+}
+
+// Form submission handlers
+function setupModalEventListeners() {
+    // Customer form submission
+    document.getElementById('customerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const opportunity = getCurrentOpportunity();
+        if (!opportunity) return;
+        
+        const editId = document.getElementById('editCustomerId').value;
+        const customerType = document.getElementById('customerType').value;
+        const firstName = document.getElementById('customerFirstName').value;
+        const middleName = document.getElementById('customerMiddleName').value;
+        const lastName = document.getElementById('customerLastName').value;
+        const email = document.getElementById('customerEmail').value;
+        const phone = document.getElementById('customerPhone').value;
+        const address = document.getElementById('customerAddress').value;
+        const dob = document.getElementById('customerDOB').value;
+        const occupation = document.getElementById('customerOccupation').value;
+        const workDetails = document.getElementById('customerWorkDetails').value;
+        const nationality = document.getElementById('customerNationality').value;
+        const salary = document.getElementById('customerSalary').value;
+        const maritalStatus = document.getElementById('customerMaritalStatus').value;
+        
+        const fullName = [firstName, middleName, lastName].filter(Boolean).join(' ');
+        
+        if (editId) {
+            // Edit existing customer
+            const customerIndex = opportunity.customers.findIndex(c => c.name === editId);
+            if (customerIndex !== -1) {
+                opportunity.customers[customerIndex] = {
+                    name: fullName,
+                    email: email,
+                    phone: phone,
+                    address: address,
+                    type: customerType,
+                    dob: dob,
+                    occupation: occupation,
+                    workDetails: workDetails,
+                    nationality: nationality,
+                    salaryBracket: salary,
+                    maritalStatus: maritalStatus
+                };
+                showNotification('Customer updated successfully', 'success');
+            }
+        } else {
+            // Add new customer
+            const newCustomer = {
+                name: fullName,
+                email: email,
+                phone: phone,
+                address: address,
+                type: customerType,
+                dob: dob,
+                occupation: occupation,
+                workDetails: workDetails,
+                nationality: nationality,
+                salaryBracket: salary,
+                maritalStatus: maritalStatus
+            };
+            opportunity.customers.push(newCustomer);
+            showNotification('Customer added successfully', 'success');
+        }
+        
+        // Refresh the customer tab
+        loadCustomerTabContent();
+        closeCustomerModal();
+    });
+    
+    // Requirements form submission
+    document.getElementById('requirementsForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const opportunity = getCurrentOpportunity();
+        if (!opportunity) return;
+        
+        const name = document.getElementById('requirementName').value;
+        const dueDate = document.getElementById('requirementDueDate').value;
+        const status = document.getElementById('requirementStatus').value;
+        const description = document.getElementById('requirementDescription').value;
+        
+        const newRequirement = {
+            name: name,
+            dueDate: dueDate,
+            status: status,
+            description: description
+        };
+        
+        opportunity.requirements.push(newRequirement);
+        showNotification('Requirement added successfully', 'success');
+        
+        // Refresh the requirements tab
+        loadRequirementsTabContent();
+        closeRequirementsModal();
+    });
 } 

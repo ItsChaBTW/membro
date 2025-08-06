@@ -142,145 +142,220 @@
                             <span class="stage-badge" id="opportunityStage">REQUIREMENTS</span>
                             <span class="status-badge" id="opportunityStatus">Active</span>
                         </div>
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" onclick="cancelOpportunity()">
+                                <i class="fas fa-times"></i>
+                                Cancel
+                            </button>
+                            <button class="btn btn-outline" onclick="submitForApproval()">
+                                <i class="fas fa-paper-plane"></i>
+                                Submit for Approval
+                            </button>
+                            <button class="btn btn-warning" onclick="recallOpportunity()">
+                                <i class="fas fa-undo"></i>
+                                Recall
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Tab Navigation -->
                     <div class="opportunity-details-tabs">
                         <div class="tab-header">
-                            <button class="tab-btn active" data-tab="overview" onclick="switchDetailsTab('overview')">
-                                <i class="fas fa-info-circle"></i>
-                                Overview
+                            <button class="tab-btn active" data-tab="customer" onclick="switchDetailsTab('customer')">
+                                <i class="fas fa-user"></i>
+                                Customer
+                            </button>
+                            <button class="tab-btn" data-tab="sales-team" onclick="switchDetailsTab('sales-team')">
+                                <i class="fas fa-users"></i>
+                                Sales Team
+                            </button>
+                            <button class="tab-btn" data-tab="reservation" onclick="switchDetailsTab('reservation')">
+                                <i class="fas fa-calendar-check"></i>
+                                Reservation
                             </button>
                             <button class="tab-btn" data-tab="requirements" onclick="switchDetailsTab('requirements')">
                                 <i class="fas fa-clipboard-list"></i>
                                 Requirements
                             </button>
-                            <button class="tab-btn" data-tab="promo" onclick="switchDetailsTab('promo')">
-                                <i class="fas fa-tag"></i>
-                                Promo
+                            <button class="tab-btn" data-tab="payment-term" onclick="switchDetailsTab('payment-term')">
+                                <i class="fas fa-calculator"></i>
+                                Payment Term
                             </button>
-                            <button class="tab-btn" data-tab="payment-terms" onclick="switchDetailsTab('payment-terms')">
-                                <i class="fas fa-credit-card"></i>
-                                Payment Terms
+                            <button class="tab-btn" data-tab="approvals" onclick="switchDetailsTab('approvals')">
+                                <i class="fas fa-check-circle"></i>
+                                Approvals
                             </button>
-                            <button class="tab-btn" data-tab="change-requests" onclick="switchDetailsTab('change-requests')">
-                                <i class="fas fa-edit"></i>
-                                Change Requests
+                            <button class="tab-btn" data-tab="activities" onclick="switchDetailsTab('activities')">
+                                <i class="fas fa-history"></i>
+                                Activities
                             </button>
                         </div>
 
-                        <!-- Overview Tab -->
-                        <div class="tab-content active" id="overview-tab">
-                            <!-- Primary Customer Information -->
+                        <!-- Customer Tab -->
+                        <div class="tab-content active" id="customer-tab">
+                            <!-- Primary Customer Section -->
                             <div class="form-section">
                                 <div class="section-header">
-                                    <h2>Primary Customer Information</h2>
+                                    <h3>Primary Customer</h3>
+                                    <button class="btn btn-sm btn-outline" onclick="editPrimaryCustomer()">
+                                        <i class="fas fa-edit"></i>
+                                        Edit
+                                    </button>
                                 </div>
                                 <div class="form-grid">
                                     <div class="form-field">
                                         <label>Full Name</label>
-                                        <div class="field-value" id="customerName">-</div>
+                                        <div class="field-value" id="primaryCustomerName">-</div>
                                     </div>
                                     <div class="form-field">
                                         <label>Email Address</label>
-                                        <div class="field-value" id="customerEmail">-</div>
+                                        <div class="field-value" id="primaryCustomerEmail">-</div>
                                     </div>
                                     <div class="form-field">
                                         <label>Phone Number</label>
-                                        <div class="field-value" id="customerPhone">-</div>
+                                        <div class="field-value" id="primaryCustomerPhone">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Date of Birth</label>
+                                        <div class="field-value" id="primaryCustomerDOB">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Occupation</label>
+                                        <div class="field-value" id="primaryCustomerOccupation">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Work Details</label>
+                                        <div class="field-value" id="primaryCustomerWorkDetails">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Foreigner/Filipino</label>
+                                        <div class="field-value" id="primaryCustomerNationality">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Salary Bracket</label>
+                                        <div class="field-value" id="primaryCustomerSalary">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Marital Status</label>
+                                        <div class="field-value" id="primaryCustomerMaritalStatus">-</div>
                                     </div>
                                     <div class="form-field full-width">
                                         <label>Address</label>
-                                        <div class="field-value" id="customerAddress">-</div>
+                                        <div class="field-value" id="primaryCustomerAddress">-</div>
+                                    </div>
+                                    <div class="form-field full-width" id="spouseSection" style="display: none;">
+                                        <label>Spouse Information</label>
+                                        <div class="field-value" id="spouseInfo">-</div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Property Information -->
+                            <!-- All Customers Section -->
                             <div class="form-section">
                                 <div class="section-header">
-                                    <h2>Property Information</h2>
-                                </div>
-                                <div class="form-grid">
-                                    <div class="form-field">
-                                        <label>Property Name</label>
-                                        <div class="field-value" id="propertyName">-</div>
-                                    </div>
-                                    <div class="form-field">
-                                        <label>Selling Price</label>
-                                        <div class="field-value amount" id="propertyPrice">-</div>
-                                    </div>
-                                    <div class="form-field">
-                                        <label>Location</label>
-                                        <div class="field-value" id="propertyLocation">-</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Reservation Details -->
-                            <div class="form-section">
-                                <div class="section-header">
-                                    <h2>Reservation Details</h2>
-                                </div>
-                                <div class="form-grid">
-                                    <div class="form-field">
-                                        <label>Reservation Date</label>
-                                        <div class="field-value" id="reservationDate">-</div>
-                                    </div>
-                                    <div class="form-field">
-                                        <label>Reservation Fee</label>
-                                        <div class="field-value amount" id="reservationFee">-</div>
-                                    </div>
-                                    <div class="form-field">
-                                        <label>RF Payment Status</label>
-                                        <div class="field-value status" id="rfPaid">-</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- All Customers -->
-                            <div class="form-section">
-                                <div class="section-header">
-                                    <h2>All Customers</h2>
-                                    <button class="btn btn-primary" onclick="openAddCustomerModal()">
-                                        <i class="fas fa-user-plus"></i>
+                                    <h3>All Customers</h3>
+                                    <button class="btn btn-sm btn-primary" onclick="addCustomer()">
+                                        <i class="fas fa-plus"></i>
                                         Add Customer
                                     </button>
                                 </div>
                                 <div class="customers-table-container">
-                                    <table class="data-table" id="customersTable">
+                                    <table class="customers-table">
                                         <thead>
                                             <tr>
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>Phone</th>
                                                 <th>Type</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="customersList">
-                                            <!-- Customers will be loaded here -->
+                                        <tbody id="allCustomersTableBody">
+                                            <!-- Customers will be populated here -->
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
 
-                            <!-- Sales Team -->
+                            <!-- Referral Section -->
                             <div class="form-section">
                                 <div class="section-header">
-                                    <h2>Sales Team</h2>
+                                    <h3>Referral Information</h3>
                                 </div>
                                 <div class="form-grid">
                                     <div class="form-field">
-                                        <label>Property Consultant</label>
-                                        <div class="field-value" id="propertyConsultant">-</div>
+                                        <label>Name of Referror</label>
+                                        <div class="field-value" id="referrorName">-</div>
                                     </div>
                                     <div class="form-field">
-                                        <label>Manager</label>
-                                        <div class="field-value" id="salesManager">-</div>
+                                        <label>Property (text field)</label>
+                                        <div class="field-value" id="referralProperty">-</div>
                                     </div>
                                     <div class="form-field">
-                                        <label>Sales Director</label>
-                                        <div class="field-value" id="salesDirector">-</div>
+                                        <label>Referror ID</label>
+                                        <div class="field-value" id="referrorId">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sales Team Tab -->
+                        <div class="tab-content" id="sales-team-tab">
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h3>Sales Team Information</h3>
+                                </div>
+                                <div class="form-grid">
+                                    <div class="form-field">
+                                        <label>PC Name</label>
+                                        <div class="field-value" id="pcName">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Sales Manager Name</label>
+                                        <div class="field-value" id="salesManagerName">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Sales Director Name</label>
+                                        <div class="field-value" id="salesDirectorName">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reservation Tab -->
+                        <div class="tab-content" id="reservation-tab">
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h3>Reservation Information</h3>
+                                </div>
+                                <div class="form-grid">
+                                    <div class="form-field">
+                                        <label>Reservation Fee</label>
+                                        <div class="field-value amount" id="reservationFeeAmount">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Due Date</label>
+                                        <div class="field-value" id="reservationDueDate">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Status</label>
+                                        <div class="field-value status" id="reservationStatus">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Date Paid</label>
+                                        <div class="field-value" id="reservationDatePaid">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Payment Type</label>
+                                        <div class="field-value" id="reservationPaymentType">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Receipt/OR</label>
+                                        <div class="field-value" id="reservationReceipt">-</div>
+                                    </div>
+                                    <div class="form-field full-width">
+                                        <label>Sync to Accounting</label>
+                                        <div class="field-value" id="syncToAccounting">-</div>
                                     </div>
                                 </div>
                             </div>
@@ -290,152 +365,28 @@
                         <div class="tab-content" id="requirements-tab">
                             <div class="form-section">
                                 <div class="section-header">
-                                    <h2><i class="fas fa-clipboard-list"></i> Document Requirements</h2>
-                                    <button class="btn btn-primary" onclick="uploadDocument()">
-                                        <i class="fas fa-upload"></i>
-                                        Upload Document
-                                    </button>
-                                </div>
-                                <div class="requirements-grid">
-                                    <div class="requirement-category">
-                                        <h4>Required Documents</h4>
-                                        <div class="requirement-list" id="requiredDocuments">
-                                            <!-- Required documents will be loaded here -->
-                                        </div>
-                                    </div>
-                                    <div class="requirement-category">
-                                        <h4>Financial Documents</h4>
-                                        <div class="requirement-list" id="financialDocuments">
-                                            <!-- Financial documents will be loaded here -->
-                                        </div>
-                                    </div>
-                                    <div class="requirement-category">
-                                        <h4>Legal Documents</h4>
-                                        <div class="requirement-list" id="legalDocuments">
-                                            <!-- Legal documents will be loaded here -->
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Promo Tab -->
-                        <div class="tab-content" id="promo-tab">
-                            <div class="form-section">
-                                <div class="section-header">
-                                    <h2><i class="fas fa-tag"></i> Active Promos</h2>
-                                    <button class="btn btn-primary" onclick="openAddPromoModal()">
+                                    <h3>Requirements Information</h3>
+                                    <button class="btn btn-sm btn-primary" onclick="addRequirement()">
                                         <i class="fas fa-plus"></i>
-                                        Add Promo
-                                    </button>
-                                </div>
-                                <div class="promos-table-container">
-                                    <table class="data-table" id="promosTable">
-                                        <thead>
-                                            <tr>
-                                                <th>Promo Name</th>
-                                                <th>Type</th>
-                                                <th>Value</th>
-                                                <th>Description</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="promosList">
-                                            <!-- Promos will be loaded here -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Payment Terms Tab -->
-                        <div class="tab-content" id="payment-terms-tab">
-                            <div class="form-section">
-                                <div class="section-header">
-                                    <h2><i class="fas fa-credit-card"></i> Payment Terms</h2>
-                                    <button class="btn btn-primary" onclick="editPaymentTerms()">
-                                        <i class="fas fa-edit"></i>
-                                        Edit Terms
+                                        Add Requirement
                                     </button>
                                 </div>
                                 <div class="form-grid">
                                     <div class="form-field">
-                                        <label>Down Payment</label>
-                                        <div class="field-value" id="downPaymentPercent">-</div>
+                                        <label>Compliance Date</label>
+                                        <div class="field-value" id="complianceDate">-</div>
                                     </div>
                                     <div class="form-field">
-                                        <label>Loan Term</label>
-                                        <div class="field-value" id="loanTerm">-</div>
+                                        <label>Number of days remaining</label>
+                                        <div class="field-value" id="daysRemaining">-</div>
                                     </div>
                                     <div class="form-field">
-                                        <label>Interest Rate</label>
-                                        <div class="field-value" id="interestRate">-</div>
-                                    </div>
-                                    <div class="form-field">
-                                        <label>Payment Frequency</label>
-                                        <div class="field-value" id="paymentFrequency">-</div>
+                                        <label>Requirements Status</label>
+                                        <div class="field-value status" id="requirementsStatus">-</div>
                                     </div>
                                 </div>
-
-                                <!-- Payment Schedule -->
-                                <div class="section-header">
-                                    <h3>Payment Schedule</h3>
-                                </div>
-                                <div class="payment-schedule-container">
-                                    <table class="data-table" id="paymentScheduleTable">
-                                        <thead>
-                                            <tr>
-                                                <th>Payment #</th>
-                                                <th>Due Date</th>
-                                                <th>Amount</th>
-                                                <th>Status</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="paymentScheduleList">
-                                            <!-- Payment schedule will be loaded here -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Change Requests Tab -->
-                        <div class="tab-content" id="change-requests-tab">
-                            <div class="form-section">
-                                <div class="section-header">
-                                    <h2><i class="fas fa-edit"></i> Change Requests</h2>
-                                    <button class="btn btn-primary" onclick="createChangeRequest()">
-                                        <i class="fas fa-plus"></i>
-                                        New Request
-                                    </button>
-                                </div>
-                                <div class="change-requests-table-container">
-                                    <table class="data-table" id="changeRequestsTable">
-                                        <thead>
-                                            <tr>
-                                                <th>Request ID</th>
-                                                <th>Type</th>
-                                                <th>Description</th>
-                                                <th>Status</th>
-                                                <th>Date</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="changeRequestsList">
-                                            <!-- Change requests will be loaded here -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <!-- Requirements Status (moved here from overview) -->
-                            <div class="form-section">
-                                <div class="section-header">
-                                    <h3>Document Requirements Status</h3>
-                                </div>
-                                <div class="requirements-status-container">
-                                    <table class="data-table" id="requirementsTable">
+                                <div class="requirements-table-container">
+                                    <table class="requirements-table">
                                         <thead>
                                             <tr>
                                                 <th>Requirement</th>
@@ -444,10 +395,186 @@
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="requirementsList">
-                                            <!-- Requirements will be loaded here -->
+                                        <tbody id="requirementsTableBody">
+                                            <!-- Requirements will be populated here -->
                                         </tbody>
                                     </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Term Tab -->
+                        <div class="tab-content" id="payment-term-tab">
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h3>Payment Term Configuration</h3>
+                                </div>
+                                <div class="form-grid">
+                                    <div class="form-field">
+                                        <label>Project</label>
+                                        <select id="paymentTermProject" class="form-control">
+                                            <option value="">Select project (Some project depends on project)</option>
+                                            <option value="vista-residences">Vista Residences</option>
+                                            <option value="crown-heights">Crown Heights</option>
+                                            <option value="metro-plaza">Metro Plaza</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Promo</label>
+                                        <select id="paymentTermPromo" class="form-control">
+                                            <option value="">Select promo dropdown</option>
+                                            <option value="early-bird">Early Bird Discount</option>
+                                            <option value="family-package">Family Package</option>
+                                            <option value="cash-payment">Cash Payment Bonus</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- Property Details Section -->
+                                <div class="section-header">
+                                    <h4>Property Details</h4>
+                                    <small>Basic details lang (Property Name, TSP, Area, Price/sqm, Type, Project)</small>
+                                </div>
+                                <div class="form-grid">
+                                    <div class="form-field">
+                                        <label>Property Name</label>
+                                        <div class="field-value" id="paymentPropertyName">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>TSP</label>
+                                        <div class="field-value amount" id="paymentTSP">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Area</label>
+                                        <div class="field-value" id="paymentArea">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Price/sqm</label>
+                                        <div class="field-value amount" id="paymentPricePerSqm">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Type</label>
+                                        <div class="field-value" id="paymentPropertyType">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Project</label>
+                                        <div class="field-value" id="paymentProject">-</div>
+                                    </div>
+                                </div>
+
+                                <!-- Payment Schedule Section -->
+                                <div class="section-header">
+                                    <h4>Payment Schedule</h4>
+                                    <small>Display all fields in the payment term in the form instead of pop up. Group fields: Editable, Read-only (Display calculations only)</small>
+                                </div>
+                                <div class="payment-schedule-form">
+                                    <!-- Editable Fields -->
+                                    <div class="subsection-header">
+                                        <h5>Editable Fields</h5>
+                                    </div>
+                                    <div class="form-grid">
+                                        <div class="form-field">
+                                            <label>Total Selling Price</label>
+                                            <input type="number" id="editableTSP" class="form-control" placeholder="Enter TSP">
+                                        </div>
+                                        <div class="form-field">
+                                            <label>Reservation Fee</label>
+                                            <input type="number" id="editableRF" class="form-control" placeholder="Enter RF">
+                                        </div>
+                                        <div class="form-field">
+                                            <label>Down Payment %</label>
+                                            <input type="number" id="editableDPPercent" class="form-control" placeholder="Enter DP %">
+                                        </div>
+                                        <div class="form-field">
+                                            <label>Payment Term</label>
+                                            <select id="editablePaymentTerm" class="form-control">
+                                                <option value="">Select Payment Term</option>
+                                                <option value="cash">Cash</option>
+                                                <option value="split">Split Payment</option>
+                                                <option value="loan">Bank Loan</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Read-only Fields -->
+                                    <div class="subsection-header">
+                                        <h5>Read-only (Display calculations only)</h5>
+                                    </div>
+                                    <div class="form-grid">
+                                        <div class="form-field">
+                                            <label>Net Selling Price</label>
+                                            <div class="field-value amount" id="calculatedNSP">-</div>
+                                        </div>
+                                        <div class="form-field">
+                                            <label>Down Payment Amount</label>
+                                            <div class="field-value amount" id="calculatedDPAmount">-</div>
+                                        </div>
+                                        <div class="form-field">
+                                            <label>Balance for Financing</label>
+                                            <div class="field-value amount" id="calculatedBalance">-</div>
+                                        </div>
+                                        <div class="form-field">
+                                            <label>Monthly Amortization</label>
+                                            <div class="field-value amount" id="calculatedMonthlyPayment">-</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Approvals Tab -->
+                        <div class="tab-content" id="approvals-tab">
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h3>Approval Information</h3>
+                                </div>
+                                <div class="form-grid">
+                                    <div class="form-field">
+                                        <label>Date Submitted</label>
+                                        <div class="field-value" id="dateSubmitted">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Date Approved/Rejected</label>
+                                        <div class="field-value" id="dateApprovedRejected">-</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Approver</label>
+                                        <div class="field-value" id="approver">-</div>
+                                    </div>
+                                    <div class="form-field full-width">
+                                        <label>Comments</label>
+                                        <div class="field-value" id="approvalComments">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activities Tab -->
+                        <div class="tab-content" id="activities-tab">
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h3>Email Activities</h3>
+                                    <small>For now display all emails sent to customer</small>
+                                </div>
+                                <div class="activities-container">
+                                    <div class="activity-category">
+                                        <h4>Welcome Letters</h4>
+                                        <div class="activity-list" id="welcomeLetters">
+                                            <!-- Welcome letters will be populated here -->
+                                        </div>
+                                    </div>
+                                    <div class="activity-category">
+                                        <h4>Reminders</h4>
+                                        <div class="activity-list" id="reminders">
+                                            <!-- Reminders will be populated here -->
+                                        </div>
+                                    </div>
+                                    <div class="activity-category">
+                                        <h4>All Other Emails</h4>
+                                        <div class="activity-list" id="allOtherEmails">
+                                            <!-- Other emails will be populated here -->
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -576,6 +703,141 @@
                     <div class="form-actions">
                         <button type="button" class="btn btn-outline" onclick="closeStageModal()">Cancel</button>
                         <button type="submit" class="btn btn-primary">Update Stage</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Add/Edit Customer Modal -->
+    <div id="customerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="customerModalTitle">Add Customer</h3>
+                <span class="close" onclick="closeCustomerModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="customerForm">
+                    <input type="hidden" id="editCustomerId">
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="customerType">Customer Type *</label>
+                            <select id="customerType" required>
+                                <option value="primary">Primary</option>
+                                <option value="co-buyer">Co-Buyer</option>
+                                <option value="spouse">Spouse</option>
+                                <option value="guarantor">Guarantor</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="customerFirstName">First Name *</label>
+                            <input type="text" id="customerFirstName" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="customerMiddleName">Middle Name</label>
+                            <input type="text" id="customerMiddleName">
+                        </div>
+                        <div class="form-field">
+                            <label for="customerLastName">Last Name *</label>
+                            <input type="text" id="customerLastName" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="customerEmail">Email Address *</label>
+                            <input type="email" id="customerEmail" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="customerPhone">Phone Number</label>
+                            <input type="tel" id="customerPhone">
+                        </div>
+                        <div class="form-field full-width">
+                            <label for="customerAddress">Address</label>
+                            <textarea id="customerAddress" rows="2"></textarea>
+                        </div>
+                        <div class="form-field">
+                            <label for="customerDOB">Date of Birth</label>
+                            <input type="date" id="customerDOB">
+                        </div>
+                        <div class="form-field">
+                            <label for="customerOccupation">Occupation</label>
+                            <input type="text" id="customerOccupation">
+                        </div>
+                        <div class="form-field">
+                            <label for="customerWorkDetails">Work Details</label>
+                            <input type="text" id="customerWorkDetails">
+                        </div>
+                        <div class="form-field">
+                            <label for="customerNationality">Nationality</label>
+                            <select id="customerNationality">
+                                <option value="">Select</option>
+                                <option value="Filipino">Filipino</option>
+                                <option value="Foreigner">Foreigner</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="customerSalary">Salary Bracket</label>
+                            <select id="customerSalary">
+                                <option value="">Select</option>
+                                <option value="₱20,000 - ₱40,000">₱20,000 - ₱40,000</option>
+                                <option value="₱40,000 - ₱60,000">₱40,000 - ₱60,000</option>
+                                <option value="₱60,000 - ₱80,000">₱60,000 - ₱80,000</option>
+                                <option value="₱80,000 - ₱100,000">₱80,000 - ₱100,000</option>
+                                <option value="₱100,000+">₱100,000+</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="customerMaritalStatus">Marital Status</label>
+                            <select id="customerMaritalStatus">
+                                <option value="">Select</option>
+                                <option value="single">Single</option>
+                                <option value="married">Married</option>
+                                <option value="divorced">Divorced</option>
+                                <option value="widowed">Widowed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeCustomerModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Customer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Requirements Modal -->
+    <div id="requirementsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Requirement</h3>
+                <span class="close" onclick="closeRequirementsModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="requirementsForm">
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="requirementName">Requirement Name *</label>
+                            <input type="text" id="requirementName" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="requirementDueDate">Due Date *</label>
+                            <input type="date" id="requirementDueDate" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="requirementStatus">Status</label>
+                            <select id="requirementStatus">
+                                <option value="pending">Pending</option>
+                                <option value="completed">Completed</option>
+                                <option value="missing">Missing</option>
+                            </select>
+                        </div>
+                        <div class="form-field full-width">
+                            <label for="requirementDescription">Description</label>
+                            <textarea id="requirementDescription" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeRequirementsModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Requirement</button>
                     </div>
                 </form>
             </div>
