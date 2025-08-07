@@ -447,6 +447,205 @@ var propertiesData = [
     }
 ];
 
+// Property Inventory for Sales (Seller Portal)
+var propertyInventory = [
+    {
+        id: 'inv_001',
+        propertyId: 'TGR_B1_L1',
+        unitNumber: '1',
+        block: '1',
+        phase: '4A',
+        project: 'Tandatangan Golf Residences',
+        lotType: 'Fairway',
+        area: 625,
+        price: 20000000,
+        reservationFee: 200000,
+        status: 'available', // available, reserved, sold, not_available
+        statusLastUpdated: new Date().toISOString(),
+        reservation: null, // Will hold reservation details when reserved
+        coordinates: { x: 50, y: 100 }, // For map positioning
+        geoCoordinates: { lat: 14.2145, lng: 121.0405 }, // Real geographic coordinates
+        address: 'Block 1, Lot 1, Tandatangan Golf Residences, Rizal',
+        images: [
+            'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=250&fit=crop'
+        ],
+        features: ['Corner Lot', 'Golf Course View', 'Premium Location'],
+        description: 'Premium corner lot with excellent golf course views'
+    },
+    {
+        id: 'inv_002',
+        propertyId: 'TGR_B1_L22',
+        unitNumber: '22',
+        block: '1',
+        phase: '4A',
+        project: 'Tandatangan Golf Residences',
+        lotType: 'Fairway',
+        area: 500,
+        price: 15000000,
+        reservationFee: 150000,
+        status: 'available',
+        statusLastUpdated: new Date().toISOString(),
+        reservation: null,
+        coordinates: { x: 150, y: 120 },
+        geoCoordinates: { lat: 14.2148, lng: 121.0410 },
+        address: 'Block 1, Lot 22, Tandatangan Golf Residences, Rizal',
+        images: [
+            'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=250&fit=crop'
+        ],
+        features: ['Regular Lot', 'Golf Course View', 'Good Location'],
+        description: 'Well-positioned lot with golf course access'
+    },
+    {
+        id: 'inv_003',
+        propertyId: 'TGR_B1_L23',
+        unitNumber: '23',
+        block: '1',
+        phase: '4A',
+        project: 'Tandatangan Golf Residences',
+        lotType: 'Fairway',
+        area: 550,
+        price: 16500000,
+        reservationFee: 165000,
+        status: 'reserved',
+        statusLastUpdated: new Date().toISOString(),
+        reservation: {
+            reservationId: 'RES-2024-001',
+            buyerName: 'Maria Santos',
+            buyerEmail: 'maria.santos@email.com',
+            buyerPhone: '+63 912 345 6789',
+            reservationDate: new Date().toISOString(),
+            expiryDate: new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)).toISOString(), // 3 days from now
+            paymentMethod: 'reservation_fee',
+            amountPaid: 165000,
+            transactionId: 'TXN-2024-001',
+            status: 'active' // active, expired, converted_to_sale, cancelled
+        },
+        coordinates: { x: 200, y: 140 },
+        geoCoordinates: { lat: 14.2146, lng: 121.0412 },
+        address: 'Block 1, Lot 23, Tandatangan Golf Residences, Rizal',
+        images: [
+            'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=250&fit=crop'
+        ],
+        features: ['Regular Lot', 'Golf Course View', 'Good Location'],
+        description: 'Well-positioned lot with golf course access'
+    },
+    {
+        id: 'inv_004',
+        propertyId: 'TGR_B2_L12',
+        unitNumber: '12',
+        block: '2',
+        phase: '4A',
+        project: 'Tandatangan Golf Residences',
+        lotType: 'Garden',
+        area: 480,
+        price: 14000000,
+        reservationFee: 140000,
+        status: 'available',
+        statusLastUpdated: new Date().toISOString(),
+        reservation: null,
+        coordinates: { x: 80, y: 220 },
+        geoCoordinates: { lat: 14.2150, lng: 121.0408 },
+        address: 'Block 2, Lot 12, Tandatangan Golf Residences, Rizal',
+        images: [
+            'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=400&h=250&fit=crop'
+        ],
+        features: ['Garden View', 'Quiet Location', 'Family-Friendly'],
+        description: 'Peaceful lot with garden surroundings'
+    },
+    {
+        id: 'inv_005',
+        propertyId: 'TGR_B2_L16',
+        unitNumber: '16',
+        block: '2',
+        phase: '4A',
+        project: 'Tandatangan Golf Residences',
+        lotType: 'Garden',
+        area: 520,
+        price: 15500000,
+        reservationFee: 155000,
+        status: 'sold',
+        statusLastUpdated: new Date().toISOString(),
+        reservation: null,
+        coordinates: { x: 160, y: 240 },
+        geoCoordinates: { lat: 14.2144, lng: 121.0415 },
+        address: 'Block 2, Lot 16, Tandatangan Golf Residences, Rizal',
+        images: [
+            'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=400&h=250&fit=crop'
+        ],
+        features: ['Garden View', 'Premium Location', 'Corner Lot'],
+        description: 'Premium corner lot with excellent garden views'
+    },
+    {
+        id: 'inv_006',
+        propertyId: 'TGR_B3_L5',
+        unitNumber: '5',
+        block: '3',
+        phase: '4A',
+        project: 'Tandatangan Golf Residences',
+        lotType: 'Lakeside',
+        area: 750,
+        price: 25000000,
+        reservationFee: 250000,
+        status: 'available',
+        statusLastUpdated: new Date().toISOString(),
+        reservation: null,
+        coordinates: { x: 250, y: 50 },
+        geoCoordinates: { lat: 14.2142, lng: 121.0418 },
+        address: 'Block 3, Lot 5, Tandatangan Golf Residences, Rizal',
+        images: [
+            'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=250&fit=crop'
+        ],
+        features: ['Lakeside View', 'Premium Location', 'Large Lot'],
+        description: 'Exclusive lakeside lot with panoramic water views'
+    },
+    {
+        id: 'inv_007',
+        propertyId: 'TGR_B3_L15',
+        unitNumber: '15',
+        block: '3',
+        phase: '4A',
+        project: 'Tandatangan Golf Residences',
+        lotType: 'Fairway',
+        area: 580,
+        price: 18000000,
+        reservationFee: 180000,
+        status: 'not_available',
+        statusLastUpdated: new Date().toISOString(),
+        reservation: null,
+        coordinates: { x: 300, y: 180 },
+        geoCoordinates: { lat: 14.2147, lng: 121.0420 },
+        address: 'Block 3, Lot 15, Tandatangan Golf Residences, Rizal',
+        images: [
+            'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=250&fit=crop'
+        ],
+        features: ['Golf Course View', 'Corner Lot', 'Premium Location'],
+        description: 'Premium corner lot overlooking the 18th hole'
+    },
+    {
+        id: 'inv_008',
+        propertyId: 'TGR_B4_L3',
+        unitNumber: '3',
+        block: '4',
+        phase: '4A',
+        project: 'Tandatangan Golf Residences',
+        lotType: 'Garden',
+        area: 460,
+        price: 13500000,
+        reservationFee: 135000,
+        status: 'available',
+        statusLastUpdated: new Date().toISOString(),
+        reservation: null,
+        coordinates: { x: 100, y: 300 },
+        geoCoordinates: { lat: 14.2149, lng: 121.0422 },
+        address: 'Block 4, Lot 3, Tandatangan Golf Residences, Rizal',
+        images: [
+            'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=400&h=250&fit=crop'
+        ],
+        features: ['Garden View', 'Quiet Area', 'Family-Friendly'],
+        description: 'Peaceful garden lot perfect for family homes'
+    }
+];
+
 // Lots Data
 var lotsData = [
     {
@@ -645,6 +844,238 @@ var MembroData = {
         return lotsData;
     },
 
+    // Property Inventory Management (Seller Portal)
+    getPropertyInventory: function() {
+        // Update reservation statuses before returning
+        this.updateReservationStatuses();
+        return propertyInventory;
+    },
+
+    // Get available properties only
+    getAvailableProperties: function() {
+        this.updateReservationStatuses();
+        return propertyInventory.filter(function(property) {
+            return property.status === 'available';
+        });
+    },
+
+    // Get reserved properties
+    getReservedProperties: function() {
+        this.updateReservationStatuses();
+        return propertyInventory.filter(function(property) {
+            return property.status === 'reserved';
+        });
+    },
+
+    // Reserve a property
+    reserveProperty: function(propertyId, reservationData) {
+        var property = propertyInventory.find(function(p) { return p.id === propertyId; });
+        
+        if (!property) {
+            throw new Error('Property not found');
+        }
+        
+        if (property.status !== 'available') {
+            throw new Error('Property is not available for reservation');
+        }
+
+        // Create reservation object
+        var reservationId = 'RES-' + new Date().getFullYear() + '-' + Date.now().toString().slice(-6);
+        var expiryDate = new Date();
+        
+        // Set expiry based on reservation type (default 3 days, configurable)
+        var reservationDays = reservationData.reservationDays || 3;
+        expiryDate.setDate(expiryDate.getDate() + reservationDays);
+
+        property.reservation = {
+            reservationId: reservationId,
+            buyerName: reservationData.buyerName,
+            buyerEmail: reservationData.buyerEmail,
+            buyerPhone: reservationData.buyerPhone,
+            reservationDate: new Date().toISOString(),
+            expiryDate: expiryDate.toISOString(),
+            paymentMethod: reservationData.paymentMethod || 'reservation_fee',
+            amountPaid: reservationData.amountPaid || property.reservationFee,
+            transactionId: reservationData.transactionId,
+            status: 'active',
+            reservationDays: reservationDays
+        };
+
+        property.status = 'reserved';
+        property.statusLastUpdated = new Date().toISOString();
+
+        // Save to storage
+        this.saveToStorage('propertyInventory', propertyInventory);
+        
+        // Create notification for seller
+        this.addNotification({
+            type: 'reservation',
+            title: 'New Property Reservation',
+            message: `Property ${property.unitNumber} in Block ${property.block} has been reserved by ${reservationData.buyerName}`,
+            avatar: 'https://ui-avatars.com/api/?name=Reservation&background=f59e0b&color=ffffff&size=40'
+        });
+
+        return {
+            success: true,
+            reservationId: reservationId,
+            property: property,
+            expiryDate: expiryDate.toISOString()
+        };
+    },
+
+    // Cancel a reservation
+    cancelReservation: function(propertyId, reason) {
+        var property = propertyInventory.find(function(p) { return p.id === propertyId; });
+        
+        if (!property || !property.reservation) {
+            throw new Error('Property or reservation not found');
+        }
+
+        var reservationId = property.reservation.reservationId;
+        var buyerName = property.reservation.buyerName;
+
+        // Clear reservation
+        property.reservation.status = 'cancelled';
+        property.reservation.cancellationReason = reason;
+        property.reservation.cancellationDate = new Date().toISOString();
+        
+        property.status = 'available';
+        property.statusLastUpdated = new Date().toISOString();
+
+        // Save to storage
+        this.saveToStorage('propertyInventory', propertyInventory);
+        
+        // Create notification
+        this.addNotification({
+            type: 'cancellation',
+            title: 'Reservation Cancelled',
+            message: `Reservation ${reservationId} for Property ${property.unitNumber} by ${buyerName} has been cancelled. Reason: ${reason}`,
+            avatar: 'https://ui-avatars.com/api/?name=Cancel&background=ef4444&color=ffffff&size=40'
+        });
+
+        return {
+            success: true,
+            reservationId: reservationId,
+            property: property
+        };
+    },
+
+    // Convert reservation to sale
+    convertReservationToSale: function(propertyId, saleData) {
+        var property = propertyInventory.find(function(p) { return p.id === propertyId; });
+        
+        if (!property || !property.reservation) {
+            throw new Error('Property or reservation not found');
+        }
+
+        var reservationId = property.reservation.reservationId;
+        var buyerName = property.reservation.buyerName;
+
+        // Update reservation status
+        property.reservation.status = 'converted_to_sale';
+        property.reservation.conversionDate = new Date().toISOString();
+        property.reservation.saleData = saleData;
+        
+        property.status = 'sold';
+        property.statusLastUpdated = new Date().toISOString();
+
+        // Save to storage
+        this.saveToStorage('propertyInventory', propertyInventory);
+        
+        // Create notification
+        this.addNotification({
+            type: 'sale',
+            title: 'Reservation Converted to Sale',
+            message: `Congratulations! Reservation ${reservationId} for Property ${property.unitNumber} by ${buyerName} has been converted to a sale.`,
+            avatar: 'https://ui-avatars.com/api/?name=Sale&background=10b981&color=ffffff&size=40'
+        });
+
+        return {
+            success: true,
+            reservationId: reservationId,
+            property: property
+        };
+    },
+
+    // Check and update expired reservations
+    updateReservationStatuses: function() {
+        var now = new Date();
+        var hasUpdates = false;
+
+        propertyInventory.forEach(function(property) {
+            if (property.status === 'reserved' && property.reservation && property.reservation.status === 'active') {
+                var expiryDate = new Date(property.reservation.expiryDate);
+                
+                if (now > expiryDate) {
+                    // Reservation has expired
+                    property.reservation.status = 'expired';
+                    property.status = 'available';
+                    property.statusLastUpdated = new Date().toISOString();
+                    hasUpdates = true;
+
+                    // Create notification for expired reservation
+                    MembroData.addNotification({
+                        type: 'expiry',
+                        title: 'Reservation Expired',
+                        message: `Reservation ${property.reservation.reservationId} for Property ${property.unitNumber} by ${property.reservation.buyerName} has expired.`,
+                        avatar: 'https://ui-avatars.com/api/?name=Expired&background=6b7280&color=ffffff&size=40'
+                    });
+                }
+            }
+        });
+
+        if (hasUpdates) {
+            this.saveToStorage('propertyInventory', propertyInventory);
+        }
+    },
+
+    // Get property by ID
+    getPropertyById: function(propertyId) {
+        this.updateReservationStatuses();
+        return propertyInventory.find(function(p) { return p.id === propertyId; });
+    },
+
+    // Get properties by status
+    getPropertiesByStatus: function(status) {
+        this.updateReservationStatuses();
+        return propertyInventory.filter(function(property) {
+            return property.status === status;
+        });
+    },
+
+    // Get reservation summary for dashboard
+    getReservationSummary: function() {
+        this.updateReservationStatuses();
+        
+        var summary = {
+            totalProperties: propertyInventory.length,
+            available: 0,
+            reserved: 0,
+            sold: 0,
+            notAvailable: 0,
+            activeReservations: [],
+            expiringReservations: []
+        };
+
+        var oneDayFromNow = new Date();
+        oneDayFromNow.setDate(oneDayFromNow.getDate() + 1);
+
+        propertyInventory.forEach(function(property) {
+            summary[property.status]++;
+            
+            if (property.status === 'reserved' && property.reservation && property.reservation.status === 'active') {
+                summary.activeReservations.push(property);
+                
+                var expiryDate = new Date(property.reservation.expiryDate);
+                if (expiryDate <= oneDayFromNow) {
+                    summary.expiringReservations.push(property);
+                }
+            }
+        });
+
+        return summary;
+    },
+
     // Notifications Management
     getNotifications: function() {
         return notificationsData;
@@ -710,7 +1141,8 @@ var MembroData = {
             vehicles: this.loadFromStorage('vehicles'),
             complaints: this.loadFromStorage('complaints'),
             facilities: this.loadFromStorage('facilities'),
-            notifications: this.loadFromStorage('notifications')
+            notifications: this.loadFromStorage('notifications'),
+            propertyInventory: this.loadFromStorage('propertyInventory')
         };
 
         // Update with saved data if available
@@ -722,6 +1154,18 @@ var MembroData = {
         if (savedData.complaints) complaintsData = savedData.complaints;
         if (savedData.facilities) facilitiesData = savedData.facilities;
         if (savedData.notifications) notificationsData = savedData.notifications;
+        if (savedData.propertyInventory) propertyInventory = savedData.propertyInventory;
+        
+        // Start automatic reservation status checking
+        this.startReservationStatusChecker();
+    },
+
+    // Automatic reservation status checker (runs every 5 minutes)
+    startReservationStatusChecker: function() {
+        var self = this;
+        setInterval(function() {
+            self.updateReservationStatuses();
+        }, 5 * 60 * 1000); // Check every 5 minutes
     }
 };
 

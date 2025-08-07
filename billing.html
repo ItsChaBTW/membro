@@ -323,7 +323,7 @@
                     </div>
                     
                     <div style="text-align: center; margin-top: 1.5rem;">
-                        <button class="btn btn-secondary">
+                        <button class="btn btn-secondary" onclick="viewAllPayments()">
                             <i class="fas fa-list"></i>
                             View All History
                         </button>
@@ -973,6 +973,282 @@
             
             // Reload payment history with filter
             loadPaymentHistory();
+        }
+
+        // Pagination variables for billing
+        var currentBillingPage = 1;
+        var billingItemsPerPage = 5;
+        var allBillingPayments = [];
+
+        function viewAllPayments() {
+            // Show full payment history modal
+            showAllPaymentsModal();
+        }
+
+        function showAllPaymentsModal() {
+            // Create modal for full payment history
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background: white;
+                border-radius: 12px;
+                max-width: 800px;
+                width: 90%;
+                max-height: 80vh;
+                overflow-y: auto;
+                position: relative;
+            `;
+
+            const billing = MembroData.getBilling();
+            allBillingPayments = billing.paymentHistory;
+
+            modalContent.innerHTML = `
+                <div style="padding: 1.5rem; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; color: var(--gray-900);">Complete Payment History</h3>
+                    <button onclick="closeAllPaymentsModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray-500);">&times;</button>
+                </div>
+                
+                <div style="padding: 1.5rem;">
+                    <!-- Pagination Controls -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <span style="font-weight: 600; color: var(--gray-700);">Items per page:</span>
+                            <select id="billingItemsPerPage" onchange="changeBillingItemsPerPage()" style="padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; background: white;">
+                                <option value="5" selected>5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <span style="font-weight: 600; color: var(--gray-700);">Filter:</span>
+                            <select id="billingFilter" onchange="filterBillingPayments()" style="padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; background: white;">
+                                <option value="all">All Payments</option>
+                                <option value="bills">Bills Only</option>
+                                <option value="bookings">Bookings Only</option>
+                                <option value="services">Services Only</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment History List -->
+                    <div id="allPaymentsList" style="margin-bottom: 1.5rem;">
+                        <!-- Payments will be loaded here -->
+                    </div>
+                    
+                    <!-- Pagination Controls -->
+                    <div id="billingPaginationControls" style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1.5rem;">
+                        <button id="billingPrevPage" class="pagination-btn" onclick="billingPreviousPage()" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                            Previous
+                        </button>
+                        
+                        <div id="billingPageNumbers" style="display: flex; gap: 0.5rem;">
+                            <!-- Page numbers will be generated here -->
+                        </div>
+                        
+                        <button id="billingNextPage" class="pagination-btn" onclick="billingNextPage()">
+                            Next
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Page Info -->
+                    <div id="billingPageInfo" style="text-align: center; margin-top: 1rem; color: var(--gray-600); font-size: 0.875rem;">
+                        <!-- Page info will be displayed here -->
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem;">
+                        <button class="btn btn-secondary" onclick="exportAllPayments()">
+                            <i class="fas fa-download"></i>
+                            Export All to CSV
+                        </button>
+                        <button class="btn btn-primary" onclick="closeAllPaymentsModal()">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+
+            // Load initial data
+            loadAllPaymentsView();
+        }
+
+        function closeAllPaymentsModal() {
+            const modal = document.querySelector('.modal.active');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function loadAllPaymentsView() {
+            const startIndex = (currentBillingPage - 1) * billingItemsPerPage;
+            const endIndex = startIndex + billingItemsPerPage;
+            const currentPayments = allBillingPayments.slice(startIndex, endIndex);
+            
+            const paymentsList = document.getElementById('allPaymentsList');
+            
+            if (currentPayments.length === 0) {
+                paymentsList.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--gray-500);">No payments found.</div>';
+            } else {
+                paymentsList.innerHTML = currentPayments.map(payment => createAllPaymentsItem(payment)).join('');
+            }
+            
+            updateBillingPagination();
+            updateBillingPageInfo();
+        }
+
+        function createAllPaymentsItem(payment) {
+            const typeColors = {
+                'bills': 'var(--primary)',
+                'services': 'var(--warning)',
+                'bookings': 'var(--secondary)'
+            };
+            
+            const typeBadges = {
+                'bills': 'Monthly Bills',
+                'services': 'Home Service',
+                'bookings': 'Facility Booking'
+            };
+            
+            const borderStyle = payment.type !== 'bills' ? 'border-left: 4px solid ' + typeColors[payment.type] + ';' : '';
+            
+            return `
+                <div class="payment-item" data-type="${payment.type}" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-md); margin-bottom: 1rem; ${borderStyle}">
+                    <div>
+                        <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem;">${payment.description}</div>
+                        <div style="color: var(--gray-600); font-size: 0.875rem;">Paid on ${formatDate(payment.date)}</div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                            <span class="payment-type-badge ${payment.type}">${typeBadges[payment.type]}</span>
+                            <span style="color: var(--gray-500); font-size: 0.75rem;">${payment.method}</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: 600; color: var(--gray-900);">₱${payment.amount.toLocaleString()}</div>
+                        <span class="status paid">Paid</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateBillingPagination() {
+            const totalPages = Math.ceil(allBillingPayments.length / billingItemsPerPage);
+            const pageNumbers = document.getElementById('billingPageNumbers');
+            const prevBtn = document.getElementById('billingPrevPage');
+            const nextBtn = document.getElementById('billingNextPage');
+            
+            // Update previous/next buttons
+            prevBtn.disabled = currentBillingPage === 1;
+            nextBtn.disabled = currentBillingPage === totalPages;
+            
+            // Generate page numbers
+            let pageNumbersHTML = '';
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentBillingPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                pageNumbersHTML += `
+                    <button class="page-number ${i === currentBillingPage ? 'active' : ''}" onclick="billingGoToPage(${i})" style="padding: 0.5rem 0.75rem; border: 1px solid var(--gray-300); background: var(--white); color: var(--gray-700); border-radius: 6px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; font-size: 0.875rem;">
+                        ${i}
+                    </button>
+                `;
+            }
+            
+            pageNumbers.innerHTML = pageNumbersHTML;
+        }
+
+        function updateBillingPageInfo() {
+            const totalItems = allBillingPayments.length;
+            const startIndex = (currentBillingPage - 1) * billingItemsPerPage + 1;
+            const endIndex = Math.min(currentBillingPage * billingItemsPerPage, totalItems);
+            const totalPages = Math.ceil(totalItems / billingItemsPerPage);
+            
+            document.getElementById('billingPageInfo').innerHTML = `
+                Showing ${startIndex}-${endIndex} of ${totalItems} payments (Page ${currentBillingPage} of ${totalPages})
+            `;
+        }
+
+        function billingPreviousPage() {
+            if (currentBillingPage > 1) {
+                currentBillingPage--;
+                loadAllPaymentsView();
+            }
+        }
+
+        function billingNextPage() {
+            const totalPages = Math.ceil(allBillingPayments.length / billingItemsPerPage);
+            if (currentBillingPage < totalPages) {
+                currentBillingPage++;
+                loadAllPaymentsView();
+            }
+        }
+
+        function billingGoToPage(page) {
+            currentBillingPage = page;
+            loadAllPaymentsView();
+        }
+
+        function changeBillingItemsPerPage() {
+            billingItemsPerPage = parseInt(document.getElementById('billingItemsPerPage').value);
+            currentBillingPage = 1; // Reset to first page
+            loadAllPaymentsView();
+        }
+
+        function filterBillingPayments() {
+            const filterValue = document.getElementById('billingFilter').value;
+            const billing = MembroData.getBilling();
+            
+            if (filterValue === 'all') {
+                allBillingPayments = billing.paymentHistory;
+            } else {
+                allBillingPayments = billing.paymentHistory.filter(payment => payment.type === filterValue);
+            }
+            
+            currentBillingPage = 1; // Reset to first page
+            loadAllPaymentsView();
+        }
+
+        function exportAllPayments() {
+            var csvContent = 'Date,Description,Amount,Method,Type\n';
+            
+            allBillingPayments.forEach(function(payment) {
+                csvContent += payment.date + ',' + payment.description + ',' + payment.amount + ',' + payment.method + ',' + payment.type + '\n';
+            });
+            
+            // Create and download CSV file
+            var blob = new Blob([csvContent], { type: 'text/csv' });
+            var url = window.URL.createObjectURL(blob);
+            var link = document.createElement('a');
+            link.href = url;
+            link.download = 'complete-payment-history.csv';
+            link.click();
+            window.URL.revokeObjectURL(url);
+            
+            showToast('Complete payment history exported successfully!');
         }
 
         function exportPayments() {

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Portal - Notifications</title>
+    <link rel="stylesheet" href="customer-styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="../logo.png" alt="Membro Logo" class="logo-img">
+                    <span class="logo-text">Customer Portal</span>
+                </div>
+            </div>
+            
+            <div class="nav-menu">
+                <div class="nav-section">
+                    <span class="nav-section-title">Main</span>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="index.html" class="nav-link">
+                                <i class="fas fa-home nav-icon"></i>
+                                <span class="nav-text">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="profile.html" class="nav-link">
+                                <i class="fas fa-user nav-icon"></i>
+                                <span class="nav-text">Profile</span>
+                            </a>
+                        </li>
+                        <li class="nav-item active">
+                            <a href="notifications.html" class="nav-link">
+                                <i class="fas fa-bell nav-icon"></i>
+                                <span class="nav-text">Notifications</span>
+                                <span class="notification-count">2</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <span class="nav-section-title">My Property</span>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="opportunities.html" class="nav-link">
+                                <i class="fas fa-chart-line nav-icon"></i>
+                                <span class="nav-text">My Opportunities</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="documents.html" class="nav-link">
+                                <i class="fas fa-file-alt nav-icon"></i>
+                                <span class="nav-text">Documents</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="reservation-agreements.html" class="nav-link">
+                                <i class="fas fa-file-contract nav-icon"></i>
+                                <span class="nav-text">Agreements</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="payments.html" class="nav-link">
+                                <i class="fas fa-credit-card nav-icon"></i>
+                                <span class="nav-text">Payments</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <span class="nav-section-title">Requests</span>
+                    <ul class="nav-list">
+                        <li class="nav-item" id="changeRequestNav">
+                            <a href="change-requests.html" class="nav-link">
+                                <i class="fas fa-edit nav-icon"></i>
+                                <span class="nav-text">Change Requests</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/40/667eea/ffffff?text=JD" alt="Profile" class="user-avatar">
+                    <div class="user-info">
+                        <span class="user-name">John Doe</span>
+                        <span class="user-role">Property Owner</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="window.location.href='../login.html'">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header notifications">
+                <div class="header-left">
+                    <h1 class="page-title">Notifications</h1>
+                </div>
+            </header>
+
+            <!-- Notifications Content -->
+            <div class="notifications-content">
+                <!-- Notification Filters -->
+                <div class="notification-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="payment">Payments</button>
+                    <button class="filter-btn" data-filter="document">Documents</button>
+                    <button class="filter-btn" data-filter="property">Property</button>
+                </div>
+
+                <!-- Notifications List -->
+                <div class="notifications-list">
+                    <div class="notification-item unread payment">
+                        <div class="notification-icon payment">
+                            <i class="fas fa-credit-card"></i>
+                                </div>
+                                <div class="notification-content">
+                            <h4>Payment Confirmed</h4>
+                            <p>Your reservation fee payment of ₱125,000 has been successfully processed.</p>
+                                        <span class="notification-time">2 hours ago</span>
+                        </div>
+                        <div class="notification-status">
+                            <span class="unread-dot"></span>
+                        </div>
+                    </div>
+
+                    <div class="notification-item unread document">
+                        <div class="notification-icon document">
+                            <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="notification-content">
+                            <h4>Document Uploaded</h4>
+                            <p>Your Valid ID and Income Certificate have been uploaded successfully.</p>
+                                        <span class="notification-time">1 day ago</span>
+                                    </div>
+                        <div class="notification-status">
+                            <span class="unread-dot"></span>
+                                </div>
+                            </div>
+
+                    <div class="notification-item property">
+                        <div class="notification-icon property">
+                            <i class="fas fa-building"></i>
+                                </div>
+                                <div class="notification-content">
+                            <h4>Property Reserved</h4>
+                            <p>Your Modern 2BR Condo in Makati has been successfully reserved.</p>
+                            <span class="notification-time">3 days ago</span>
+                                </div>
+                            </div>
+
+                    <div class="notification-item payment">
+                        <div class="notification-icon payment">
+                                    <i class="fas fa-credit-card"></i>
+                                </div>
+                                <div class="notification-content">
+                            <h4>Payment Reminder</h4>
+                            <p>Your next payment of ₱125,000 is due on January 30, 2024.</p>
+                                        <span class="notification-time">1 week ago</span>
+                                </div>
+                            </div>
+
+                    <div class="notification-item document">
+                        <div class="notification-icon document">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="notification-content">
+                            <h4>Document Review</h4>
+                            <p>Your submitted documents are currently under review.</p>
+                                        <span class="notification-time">1 week ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+     <!-- Mobile Navigation -->
+    <div class="tabs">
+        <div role="tablist" aria-label="Navigation">
+            <button role="tab" aria-selected="false" id="home" onclick="window.location.href='index.html'">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 10L3 8M3 8L10 1L17 8M3 8V18C3 18.2652 3.10536 18.5196 3.29289 18.7071C3.48043 18.8946 3.73478 19 4 19H7M17 8L19 10M17 8V18C17 18.2652 16.8946 18.5196 16.7071 18.7071C16.5196 18.8946 16.2652 19 16 19H13M7 19C7.26522 19 7.51957 18.8946 7.70711 18.7071C7.89464 18.5196 8 18.2652 8 18V14C8 13.7348 8.10536 13.4804 8.29289 13.2929C8.48043 13.1054 8.73478 13 9 13H11C11.2652 13 11.5196 13.1054 11.7071 13.2929C11.8946 13.4804 12 13.7348 12 14V18C12 18.2652 12.1054 18.5196 12.2929 18.7071C12.4804 18.8946 12.7348 19 13 19M7 19H13" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="label">Home</span>
+            </button>
+            <button role="tab" aria-selected="false" id="opportunities" onclick="window.location.href='opportunities.html'">
+                <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.31804 2.31799C1.90017 2.73586 1.5687 3.23194 1.34255 3.7779C1.1164 4.32387 1 4.90904 1 5.49999C1 6.09095 1.1164 6.67611 1.34255 7.22208C1.5687 7.76805 1.90017 8.26413 2.31804 8.68199L10 16.364L17.682 8.68199C18.526 7.83807 19.0001 6.69347 19.0001 5.49999C19.0001 4.30651 18.526 3.16191 17.682 2.31799C16.8381 1.47407 15.6935 0.999966 14.5 0.999966C13.3066 0.999966 12.162 1.47407 11.318 2.31799L10 3.63599L8.68204 2.31799C8.26417 1.90012 7.7681 1.56865 7.22213 1.3425C6.67616 1.11635 6.09099 0.999954 5.50004 0.999954C4.90909 0.999954 4.32392 1.11635 3.77795 1.3425C3.23198 1.56865 2.7359 1.90012 2.31804 2.31799V2.31799Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                <span class="label">Properties</span>
+            </button>
+            <button role="tab" aria-selected="false" id="documents" onclick="window.location.href='documents.html'">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 19L13 13L19 19ZM15 8C15 8.91925 14.8189 9.82951 14.4672 10.6788C14.1154 11.5281 13.5998 12.2997 12.9497 12.9497C12.2997 13.5998 11.5281 14.1154 10.6788 14.4672C9.82951 14.8189 8.91925 15 8 15C7.08075 15 6.1705 14.8189 5.32122 14.4672C4.47194 14.1154 3.70026 13.5998 3.05025 12.9497C2.40024 12.2997 1.88463 11.5281 1.53284 10.6788C1.18106 9.82951 1 8.91925 1 8C1 6.14348 1.7375 4.36301 3.05025 3.05025C4.36301 1.7375 6.14348 1 8 1C9.85652 1 11.637 1.7375 12.9497 3.05025C14.2625 4.36301 15 6.14348 15 8Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                <span class="label">Documents</span>
+            </button>
+            <button role="tab" aria-selected="false" id="payments" onclick="window.location.href='payments.html'">
+                <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 4.5C1 3.11929 2.11929 2 3.5 2H16.5C17.8807 2 19 3.11929 19 4.5V11.5C19 12.8807 17.8807 14 16.5 14H3.5C2.11929 14 1 12.8807 1 11.5V4.5Z" stroke="black" stroke-width="2"/>
+                    <path d="M5 8H5.01M9 8H13" stroke="black" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                <span class="label">Payments</span>
+            </button>
+            <button role="tab" aria-selected="false" id="agreements" onclick="window.location.href='reservation-agreements.html'">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 12L10 14L14 10" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18 10C18 14.9706 13.9706 19 9 19C4.02944 19 0 14.9706 0 10C0 5.02944 4.02944 1 9 1C13.9706 1 18 5.02944 18 10Z" stroke="black" stroke-width="2"/>
+                    </svg>
+                <span class="label">Agreements</span>
+            </button>
+            <button role="tab" aria-selected="false" id="requests" onclick="window.location.href='change-requests.html'">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 2H2C1.46957 2 0.960859 2.21071 0.585786 2.58579C0.210714 2.96086 0 3.46957 0 4V18C0 18.5304 0.210714 19.0391 0.585786 19.4142C0.960859 19.7893 1.46957 20 2 20H16C16.5304 20 17.0391 19.7893 17.4142 19.4142C17.7893 19.0391 18 18.5304 18 18V11" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M16.5 0.5C16.8978 0.102171 17.4374 -0.121322 18 -0.121322C18.5626 -0.121322 19.1022 0.102171 19.5 0.5C19.8978 0.897829 20.1213 1.43739 20.1213 2C20.1213 2.56261 19.8978 3.10217 19.5 3.5L10 13L6 14L7 10L16.5 0.5Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                <span class="label">Requests</span>
+            </button>
+            <button role="tab" aria-selected="true" id="notifications" onclick="window.location.href='notifications.html'">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 2C10.5523 2 11 2.44772 11 3V4.25313C13.9846 4.96968 16 7.58172 16 10.7083V15L18 17V18H2V17L4 15V10.7083C4 7.58172 6.01544 4.96968 9 4.25313V3C9 2.44772 9.44772 2 10 2Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7 18C7 19.1046 7.89543 20 9 20H11C12.1046 20 13 19.1046 13 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                <span class="label">Notifications</span>
+            </button>
+            <button role="tab" aria-selected="false" id="profile" onclick="window.location.href='profile.html'">
+                <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 5C12 6.06087 11.5786 7.07828 10.8284 7.82843C10.0783 8.57857 9.06087 9 8 9C6.93913 9 5.92172 8.57857 5.17157 7.82843C4.42143 7.07828 4 6.06087 4 5C4 3.93913 4.42143 2.92172 5.17157 2.17157C5.92172 1.42143 6.93913 1 8 1C9.06087 1 10.0783 1.42143 10.8284 2.17157C11.5786 2.92172 12 3.93913 12 5V5ZM8 12C6.14348 12 4.36301 12.7375 3.05025 14.0503C1.7375 15.363 1 17.1435 1 19H15C15 17.1435 14.2625 15.363 12.9497 14.0503C11.637 12.7375 9.85652 12 8 12V12Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                <span class="label">Profile</span>
+            </button>
+        </div>
+        <div role="tabpanel" aria-labelledby="home" hidden></div>
+        <div role="tabpanel" aria-labelledby="opportunities" hidden></div>
+        <div role="tabpanel" aria-labelledby="documents" hidden></div>
+        <div role="tabpanel" aria-labelledby="payments" hidden></div>
+        <div role="tabpanel" aria-labelledby="agreements" hidden></div>
+        <div role="tabpanel" aria-labelledby="requests" hidden></div>
+        <div role="tabpanel" aria-labelledby="notifications"></div>
+        <div role="tabpanel" aria-labelledby="profile" hidden></div>
+    </div>
+
+    <script src="customer-portal.js"></script>
+    <script src="notifications.js"></script>
+</body>
+</html> 
