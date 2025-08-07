@@ -100,6 +100,162 @@
             box-shadow: 0 8px 16px rgba(30, 64, 175, 0.3);
         }
 
+        /* View Options and Pagination Styles */
+        .view-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--gray-300);
+            background: var(--white);
+            color: var(--gray-700);
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .view-btn:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+
+        .view-btn.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .pagination-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--gray-300);
+            background: var(--white);
+            color: var(--gray-700);
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-number {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--gray-300);
+            background: var(--white);
+            color: var(--gray-700);
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+
+        .page-number:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+
+        .page-number.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        /* Detail View Styles */
+        .facility-detail-item {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .facility-detail-item:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            transform: translateY(-2px);
+        }
+
+        .facility-detail-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .facility-detail-content {
+            flex: 1;
+        }
+
+        .facility-detail-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .facility-detail-description {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+
+        .facility-detail-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        .facility-detail-price {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-left: auto;
+            margin-right: 1rem;
+        }
+
+        .facility-detail-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+
+        .facility-detail-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
         /* Modal Styles */
         .modal {
             display: none;
@@ -1380,8 +1536,33 @@
             <div id="facilitiesSection" style="display: none;">
                 <h3 style="margin-bottom: 2rem; color: var(--gray-900); font-weight: 700;">Community Facilities</h3>
                 
-                <!-- Facilities Grid -->
-                <div class="services-grid">
+                <!-- View Options and Pagination Controls -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <span style="font-weight: 600; color: var(--gray-700);">View:</span>
+                        <button id="thumbnailViewBtn" class="view-btn active" onclick="switchToThumbnailView()">
+                            <i class="fas fa-th"></i>
+                            Thumbnail
+                        </button>
+                        <button id="detailViewBtn" class="view-btn" onclick="switchToDetailView()">
+                            <i class="fas fa-list"></i>
+                            Detail
+                        </button>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <span style="font-weight: 600; color: var(--gray-700);">Items per page:</span>
+                        <select id="facilitiesItemsPerPage" onchange="changeFacilitiesItemsPerPage()" style="padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; background: white;">
+                            <option value="3" selected>3</option>
+                            <option value="6">6</option>
+                            <option value="9">9</option>
+                            <option value="12">12</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Facilities Grid (Thumbnail View) -->
+                <div id="facilitiesThumbnailView" class="services-grid">
                     <!-- Basketball Court -->
                     <div class="service-card" onclick="openFacilityModal('basketball')">
                         <div class="service-image" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);">
@@ -1483,6 +1664,35 @@
                             <button class="book-btn">Book Room</button>
                         </div>
                     </div>
+                </div>
+                
+                <!-- Facilities Detail View -->
+                <div id="facilitiesDetailView" style="display: none;">
+                    <div id="facilitiesDetailList">
+                        <!-- Detail view items will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Pagination Controls -->
+                <div id="facilitiesPaginationControls" style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 2rem;">
+                    <button id="facilitiesPrevPage" class="pagination-btn" onclick="facilitiesPreviousPage()" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                        Previous
+                    </button>
+                    
+                    <div id="facilitiesPageNumbers" style="display: flex; gap: 0.5rem;">
+                        <!-- Page numbers will be generated here -->
+                    </div>
+                    
+                    <button id="facilitiesNextPage" class="pagination-btn" onclick="facilitiesNextPage()">
+                        Next
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <!-- Page Info -->
+                <div id="facilitiesPageInfo" style="text-align: center; margin-top: 1rem; color: var(--gray-600); font-size: 0.875rem;">
+                    <!-- Page info will be displayed here -->
                 </div>
             </div>
         </main>
@@ -4164,6 +4374,264 @@
                 checkFontAwesome();
             }, 1000);
         });
+
+        // Facilities View Options and Pagination
+        var currentFacilitiesPage = 1;
+        var facilitiesItemsPerPage = 3;
+        var currentFacilitiesView = 'thumbnail';
+        var allFacilities = [];
+
+        // Sample facilities data
+        var sampleFacilities = [
+            {
+                id: 'basketball',
+                title: 'Basketball Court',
+                icon: 'fas fa-basketball-ball',
+                description: 'Full-size outdoor basketball court with professional hoops and lighting for evening games.',
+                price: '₱25/hour',
+                capacity: 'Up to 10 players',
+                gradient: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%)'
+            },
+            {
+                id: 'event-hall',
+                title: 'Community Event Hall',
+                icon: 'fas fa-calendar-alt',
+                description: 'Spacious air-conditioned hall perfect for parties, meetings, and community events.',
+                price: '₱150/day',
+                capacity: 'Up to 100 guests',
+                gradient: 'linear-gradient(135deg, var(--secondary) 0%, #059669 100%)'
+            },
+            {
+                id: 'pool',
+                title: 'Swimming Pool',
+                icon: 'fas fa-swimming-pool',
+                description: 'Olympic-size swimming pool with lifeguard on duty and pool equipment available.',
+                price: '₱20/hour',
+                capacity: 'Up to 20 swimmers',
+                gradient: 'linear-gradient(135deg, var(--info) 0%, #0891b2 100%)'
+            },
+            {
+                id: 'gym',
+                title: 'Fitness Center',
+                icon: 'fas fa-dumbbell',
+                description: 'Fully equipped gym with cardio machines, weights, and exercise equipment.',
+                price: '₱15/hour',
+                capacity: 'Up to 15 members',
+                gradient: 'linear-gradient(135deg, var(--warning) 0%, #d97706 100%)'
+            },
+            {
+                id: 'tennis',
+                title: 'Tennis Court',
+                icon: 'fas fa-table-tennis',
+                description: 'Professional tennis court with high-quality surface and net. Rackets available for rent.',
+                price: '₱30/hour',
+                capacity: '2-4 players',
+                gradient: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)'
+            },
+            {
+                id: 'function-room',
+                title: 'Function Room',
+                icon: 'fas fa-handshake',
+                description: 'Elegant meeting room with projector, sound system, and catering kitchen access.',
+                price: '₱100/day',
+                capacity: 'Up to 50 guests',
+                gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'
+            },
+            {
+                id: 'playground',
+                title: 'Children\'s Playground',
+                icon: 'fas fa-child',
+                description: 'Safe and fun playground with slides, swings, and climbing equipment for children.',
+                price: '₱10/hour',
+                capacity: 'Up to 25 children',
+                gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+            },
+            {
+                id: 'bbq-area',
+                title: 'BBQ Area',
+                icon: 'fas fa-fire',
+                description: 'Outdoor BBQ area with grills, seating, and picnic tables for family gatherings.',
+                price: '₱50/day',
+                capacity: 'Up to 30 people',
+                gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
+            }
+        ];
+
+        function switchToThumbnailView() {
+            currentFacilitiesView = 'thumbnail';
+            document.getElementById('thumbnailViewBtn').classList.add('active');
+            document.getElementById('detailViewBtn').classList.remove('active');
+            document.getElementById('facilitiesThumbnailView').style.display = 'grid';
+            document.getElementById('facilitiesDetailView').style.display = 'none';
+            loadFacilitiesView();
+        }
+
+        function switchToDetailView() {
+            currentFacilitiesView = 'detail';
+            document.getElementById('detailViewBtn').classList.add('active');
+            document.getElementById('thumbnailViewBtn').classList.remove('active');
+            document.getElementById('facilitiesThumbnailView').style.display = 'none';
+            document.getElementById('facilitiesDetailView').style.display = 'block';
+            loadFacilitiesView();
+        }
+
+        function loadFacilitiesView() {
+            allFacilities = sampleFacilities;
+            const startIndex = (currentFacilitiesPage - 1) * facilitiesItemsPerPage;
+            const endIndex = startIndex + facilitiesItemsPerPage;
+            const currentFacilities = allFacilities.slice(startIndex, endIndex);
+            
+            if (currentFacilitiesView === 'thumbnail') {
+                loadThumbnailView(currentFacilities);
+            } else {
+                loadDetailView(currentFacilities);
+            }
+            
+            updateFacilitiesPagination();
+            updateFacilitiesPageInfo();
+        }
+
+        function loadThumbnailView(facilities) {
+            const thumbnailView = document.getElementById('facilitiesThumbnailView');
+            
+            if (facilities.length === 0) {
+                thumbnailView.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--gray-500);">No facilities found.</div>';
+            } else {
+                thumbnailView.innerHTML = facilities.map(facility => createThumbnailItem(facility)).join('');
+            }
+        }
+
+        function loadDetailView(facilities) {
+            const detailList = document.getElementById('facilitiesDetailList');
+            
+            if (facilities.length === 0) {
+                detailList.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--gray-500);">No facilities found.</div>';
+            } else {
+                detailList.innerHTML = facilities.map(facility => createDetailItem(facility)).join('');
+            }
+        }
+
+        function createThumbnailItem(facility) {
+            return `
+                <div class="service-card" onclick="openFacilityModal('${facility.id}')">
+                    <div class="service-image" style="background: ${facility.gradient};">
+                        <i class="${facility.icon}"></i>
+                    </div>
+                    <div class="service-content">
+                        <div class="service-title">${facility.title}</div>
+                        <div class="service-description">${facility.description}</div>
+                        <div class="service-price">${facility.price}</div>
+                        <div class="service-duration">
+                            <i class="fas fa-users"></i>
+                            <span>${facility.capacity}</span>
+                        </div>
+                        <button class="book-btn">Book ${facility.title.split(' ')[0]}</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createDetailItem(facility) {
+            return `
+                <div class="facility-detail-item" onclick="openFacilityModal('${facility.id}')">
+                    <div class="facility-detail-icon" style="background: ${facility.gradient};">
+                        <i class="${facility.icon}"></i>
+                    </div>
+                    <div class="facility-detail-content">
+                        <div class="facility-detail-title">${facility.title}</div>
+                        <div class="facility-detail-description">${facility.description}</div>
+                        <div class="facility-detail-info">
+                            <span><i class="fas fa-users"></i> ${facility.capacity}</span>
+                            <span><i class="fas fa-clock"></i> Available daily</span>
+                            <span><i class="fas fa-map-marker-alt"></i> Ground floor</span>
+                        </div>
+                    </div>
+                    <div class="facility-detail-price">${facility.price}</div>
+                    <button class="facility-detail-btn">Book Now</button>
+                </div>
+            `;
+        }
+
+        function updateFacilitiesPagination() {
+            const totalPages = Math.ceil(allFacilities.length / facilitiesItemsPerPage);
+            const pageNumbers = document.getElementById('facilitiesPageNumbers');
+            const prevBtn = document.getElementById('facilitiesPrevPage');
+            const nextBtn = document.getElementById('facilitiesNextPage');
+            
+            // Update previous/next buttons
+            prevBtn.disabled = currentFacilitiesPage === 1;
+            nextBtn.disabled = currentFacilitiesPage === totalPages;
+            
+            // Generate page numbers
+            let pageNumbersHTML = '';
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentFacilitiesPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                pageNumbersHTML += `
+                    <button class="page-number ${i === currentFacilitiesPage ? 'active' : ''}" onclick="facilitiesGoToPage(${i})">
+                        ${i}
+                    </button>
+                `;
+            }
+            
+            pageNumbers.innerHTML = pageNumbersHTML;
+        }
+
+        function updateFacilitiesPageInfo() {
+            const totalItems = allFacilities.length;
+            const startIndex = (currentFacilitiesPage - 1) * facilitiesItemsPerPage + 1;
+            const endIndex = Math.min(currentFacilitiesPage * facilitiesItemsPerPage, totalItems);
+            const totalPages = Math.ceil(totalItems / facilitiesItemsPerPage);
+            
+            document.getElementById('facilitiesPageInfo').innerHTML = `
+                Showing ${startIndex}-${endIndex} of ${totalItems} facilities (Page ${currentFacilitiesPage} of ${totalPages})
+            `;
+        }
+
+        function facilitiesPreviousPage() {
+            if (currentFacilitiesPage > 1) {
+                currentFacilitiesPage--;
+                loadFacilitiesView();
+            }
+        }
+
+        function facilitiesNextPage() {
+            const totalPages = Math.ceil(allFacilities.length / facilitiesItemsPerPage);
+            if (currentFacilitiesPage < totalPages) {
+                currentFacilitiesPage++;
+                loadFacilitiesView();
+            }
+        }
+
+        function facilitiesGoToPage(page) {
+            currentFacilitiesPage = page;
+            loadFacilitiesView();
+        }
+
+        function changeFacilitiesItemsPerPage() {
+            facilitiesItemsPerPage = parseInt(document.getElementById('facilitiesItemsPerPage').value);
+            currentFacilitiesPage = 1; // Reset to first page
+            loadFacilitiesView();
+        }
+
+        // Initialize facilities view when facilities tab is shown
+        function showFacilities() {
+            document.getElementById('facilitiesTab').classList.add('active');
+            document.getElementById('servicesTab').classList.remove('active');
+            document.getElementById('servicesSection').style.display = 'none';
+            document.getElementById('facilitiesSection').style.display = 'block';
+            
+            // Initialize facilities view
+            setTimeout(function() {
+                loadFacilitiesView();
+            }, 100);
+        }
     </script>
 </body>
 </html> 
