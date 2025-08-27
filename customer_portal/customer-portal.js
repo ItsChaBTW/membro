@@ -755,6 +755,68 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeMobileNavTabs();
 });
 
+// Mobile Sidebar Navigation Functions
+function openMobileNav() {
+    const overlay = document.getElementById('mobileNavOverlay');
+    const sidebar = document.getElementById('mobileSidebar');
+    
+    if (overlay && sidebar) {
+        overlay.classList.add('active');
+        sidebar.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeMobileNav() {
+    const overlay = document.getElementById('mobileNavOverlay');
+    const sidebar = document.getElementById('mobileSidebar');
+    
+    if (overlay && sidebar) {
+        overlay.classList.remove('active');
+        sidebar.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Close mobile nav on escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeMobileNav();
+    }
+});
+
+// Initialize mobile sidebar navigation
+function initializeMobileSidebar() {
+    // Set active navigation item in mobile sidebar
+    const currentPage = window.location.pathname.split('/').pop();
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+    
+    mobileNavLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPage) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+    
+    // Update mobile change requests nav based on customer status
+    const customerData = getCustomerData();
+    const mobileChangeRequestNav = document.getElementById('mobileChangeRequestNav');
+    if (mobileChangeRequestNav) {
+        if (customerData.rfPaid) {
+            mobileChangeRequestNav.style.display = 'block';
+        } else {
+            mobileChangeRequestNav.style.display = 'none';
+        }
+    }
+}
+
+// Update DOM loaded event to include mobile sidebar initialization
+document.addEventListener('DOMContentLoaded', function() {
+    initializeMobileSidebar();
+});
+
 // Call UI enhancements after DOM is loaded
 document.addEventListener('DOMContentLoaded', initializeUIEnhancements);
 
@@ -884,4 +946,66 @@ function initializeMobileNavTabs() {
 // Initialize mobile nav tabs when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     initializeMobileNavTabs();
+});
+
+// Mobile Sidebar Navigation Functions
+function openMobileNav() {
+    const overlay = document.getElementById('mobileNavOverlay');
+    const sidebar = document.getElementById('mobileSidebar');
+    
+    if (overlay && sidebar) {
+        overlay.classList.add('active');
+        sidebar.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeMobileNav() {
+    const overlay = document.getElementById('mobileNavOverlay');
+    const sidebar = document.getElementById('mobileSidebar');
+    
+    if (overlay && sidebar) {
+        overlay.classList.remove('active');
+        sidebar.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Close mobile nav on escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeMobileNav();
+    }
+});
+
+// Initialize mobile sidebar navigation
+function initializeMobileSidebar() {
+    // Set active navigation item in mobile sidebar
+    const currentPage = window.location.pathname.split('/').pop();
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+    
+    mobileNavLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPage) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+    
+    // Update mobile change requests nav based on customer status
+    const customerData = getCustomerData();
+    const mobileChangeRequestNav = document.getElementById('mobileChangeRequestNav');
+    if (mobileChangeRequestNav) {
+        if (customerData.rfPaid) {
+            mobileChangeRequestNav.style.display = 'block';
+        } else {
+            mobileChangeRequestNav.style.display = 'none';
+        }
+    }
+}
+
+// Update DOM loaded event to include mobile sidebar initialization
+document.addEventListener('DOMContentLoaded', function() {
+    initializeMobileSidebar();
 });
