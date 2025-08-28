@@ -158,16 +158,33 @@
                     </div>
                 </div>
 
-                <!-- Agreement Details -->
+                <!-- Tabbed Agreement Content -->
                 <div class="dashboard-card">
                     <div class="card-header">
-                        <h3 class="card-title">Agreement Details</h3>
-                        <button class="btn btn-text" onclick="window.location.href='opportunities.html'">
-                            <i class="fas fa-external-link-alt"></i>
-                            View Opportunity
+                        <h3 class="card-title">Agreement Information</h3>
+                        <div class="tab-navigation">
+                            <button class="tab-btn active" onclick="switchTab('agreement-details')">
+                                <i class="fas fa-file-contract"></i>
+                                Agreement Details
+                            </button>
+                            <button class="tab-btn" onclick="switchTab('downpayment')">
+                                <i class="fas fa-hand-holding-usd"></i>
+                                Downpayment Schedule
+                            </button>
+                            <button class="tab-btn" onclick="switchTab('amortization')">
+                                <i class="fas fa-calendar-alt"></i>
+                                Amortization Schedule
+                            </button>
+                            <button class="tab-btn" onclick="switchTab('contracts')">
+                                <i class="fas fa-download"></i>
+                                Contracts
                         </button>
+                        </div>
                     </div>
+                    
                     <div class="card-content">
+                        <!-- Agreement Details Tab -->
+                        <div id="agreement-details" class="tab-content active">
                         <div class="agreement-details">
                             <div class="details-section">
                                 <h4>Property Information</h4>
@@ -244,6 +261,229 @@
                                         <div class="term-item">
                                             <label>Final Payment Due</label>
                                             <span>January 15, 2044</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Downpayment Schedule Tab -->
+                        <div id="downpayment" class="tab-content">
+                            <div class="payment-section">
+                                <h4>
+                                    <i class="fas fa-hand-holding-usd"></i>
+                                    Downpayment Schedule
+                                </h4>
+                                <div class="schedule-table-container">
+                                    <table class="schedule-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Payment #</th>
+                                                <th>Due Date</th>
+                                                <th>Description</th>
+                                                <th>Amount</th>
+                                                <th>Status</th>
+                                                <th>Payment Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>001</td>
+                                                <td>Feb 15, 2024</td>
+                                                <td>Reservation Fee</td>
+                                                <td>₱125,000</td>
+                                                <td><span class="status-badge success">Paid</span></td>
+                                                <td>Feb 10, 2024</td>
+                                            </tr>
+                                            <tr>
+                                                <td>002</td>
+                                                <td>Mar 15, 2024</td>
+                                                <td>1st Monthly DP</td>
+                                                <td>₱125,000</td>
+                                                <td><span class="status-badge success">Paid</span></td>
+                                                <td>Mar 12, 2024</td>
+                                            </tr>
+                                            <tr>
+                                                <td>003</td>
+                                                <td>Apr 15, 2024</td>
+                                                <td>2nd Monthly DP</td>
+                                                <td>₱125,000</td>
+                                                <td><span class="status-badge success">Paid</span></td>
+                                                <td>Apr 14, 2024</td>
+                                            </tr>
+                                            <tr>
+                                                <td>004</td>
+                                                <td>May 15, 2024</td>
+                                                <td>3rd Monthly DP</td>
+                                                <td>₱125,000</td>
+                                                <td><span class="status-badge warning">Pending</span></td>
+                                                <td>-</td>
+                                            </tr>
+                                            <tr>
+                                                <td>005</td>
+                                                <td>Jun 15, 2024</td>
+                                                <td>4th Monthly DP</td>
+                                                <td>₱125,000</td>
+                                                <td><span class="status-badge secondary">Future</span></td>
+                                                <td>-</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Amortization Schedule Tab -->
+                        <div id="amortization" class="tab-content">
+                            <div class="payment-section">
+                                <h4>
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Amortization Schedule (Sample - First 12 months)
+                                </h4>
+                                <div class="schedule-table-container">
+                                    <table class="schedule-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Payment #</th>
+                                                <th>Due Date</th>
+                                                <th>Payment Amount</th>
+                                                <th>Principal</th>
+                                                <th>Interest</th>
+                                                <th>Balance</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>001</td>
+                                                <td>Jul 15, 2024</td>
+                                                <td>₱18,500</td>
+                                                <td>₱12,000</td>
+                                                <td>₱6,500</td>
+                                                <td>₱1,875,000</td>
+                                                <td><span class="status-badge secondary">Future</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>002</td>
+                                                <td>Aug 15, 2024</td>
+                                                <td>₱18,500</td>
+                                                <td>₱12,050</td>
+                                                <td>₱6,450</td>
+                                                <td>₱1,862,950</td>
+                                                <td><span class="status-badge secondary">Future</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>003</td>
+                                                <td>Sep 15, 2024</td>
+                                                <td>₱18,500</td>
+                                                <td>₱12,100</td>
+                                                <td>₱6,400</td>
+                                                <td>₱1,850,850</td>
+                                                <td><span class="status-badge secondary">Future</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>004</td>
+                                                <td>Oct 15, 2024</td>
+                                                <td>₱18,500</td>
+                                                <td>₱12,150</td>
+                                                <td>₱6,350</td>
+                                                <td>₱1,838,700</td>
+                                                <td><span class="status-badge secondary">Future</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>005</td>
+                                                <td>Nov 15, 2024</td>
+                                                <td>₱18,500</td>
+                                                <td>₱12,200</td>
+                                                <td>₱6,300</td>
+                                                <td>₱1,826,500</td>
+                                                <td><span class="status-badge secondary">Future</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contracts Tab -->
+                        <div id="contracts" class="tab-content">
+                            <div class="contracts-section">
+                                <h4>
+                                    <i class="fas fa-file-pdf"></i>
+                                    Available Contracts for Download
+                                </h4>
+                                <p class="contracts-description">
+                                    Download your signed contracts and related documents. These are the official copies of your agreement.
+                                </p>
+                                
+                                <div class="contracts-list">
+                                    <div class="contract-item">
+                                        <div class="contract-info">
+                                            <div class="contract-icon">
+                                                <i class="fas fa-file-contract"></i>
+                                            </div>
+                                            <div class="contract-details">
+                                                <h5>Reservation Agreement</h5>
+                                                <p>Signed on January 15, 2024</p>
+                                                <small>PDF Document • 2.3 MB</small>
+                                            </div>
+                                        </div>
+                                        <div class="contract-actions">
+                                            <button class="btn btn-outline btn-sm" onclick="downloadContract('reservation-agreement')">
+                                                <i class="fas fa-download"></i>
+                                                Download
+                                            </button>
+                                            <button class="btn btn-text btn-sm" onclick="previewContract('reservation-agreement')">
+                                                <i class="fas fa-eye"></i>
+                                                Preview
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="contract-item">
+                                        <div class="contract-info">
+                                            <div class="contract-icon">
+                                                <i class="fas fa-file-signature"></i>
+                                            </div>
+                                            <div class="contract-details">
+                                                <h5>Payment Terms Agreement</h5>
+                                                <p>Payment schedule and terms</p>
+                                                <small>PDF Document • 1.8 MB</small>
+                                            </div>
+                                        </div>
+                                        <div class="contract-actions">
+                                            <button class="btn btn-outline btn-sm" onclick="downloadContract('payment-terms')">
+                                                <i class="fas fa-download"></i>
+                                                Download
+                                            </button>
+                                            <button class="btn btn-text btn-sm" onclick="previewContract('payment-terms')">
+                                                <i class="fas fa-eye"></i>
+                                                Preview
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="contract-item">
+                                        <div class="contract-info">
+                                            <div class="contract-icon">
+                                                <i class="fas fa-file-alt"></i>
+                                            </div>
+                                            <div class="contract-details">
+                                                <h5>Property Transfer Agreement</h5>
+                                                <p>Property ownership transfer terms</p>
+                                                <small>PDF Document • 3.1 MB</small>
+                                            </div>
+                                        </div>
+                                        <div class="contract-actions">
+                                            <button class="btn btn-outline btn-sm" onclick="downloadContract('property-transfer')">
+                                                <i class="fas fa-download"></i>
+                                                Download
+                                            </button>
+                                            <button class="btn btn-text btn-sm" onclick="previewContract('property-transfer')">
+                                                <i class="fas fa-eye"></i>
+                                                Preview
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
