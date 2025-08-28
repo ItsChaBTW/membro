@@ -2620,6 +2620,13 @@
     visibility: visible;
 }
 
+/* Prevent body scroll when mobile sidebar is open */
+body.mobile-sidebar-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+}
+
 .mobile-sidebar {
     position: fixed;
     top: 0;
@@ -2635,7 +2642,6 @@
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
     border-right: 1px solid rgba(220, 38, 38, 0.1);
-    overflow: hidden; /* Prevent body scroll when sidebar is open */
 }
 
 .mobile-sidebar.active {
@@ -2696,7 +2702,8 @@
     padding: 1.5rem 0;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    max-height: calc(100vh - 140px); /* Account for header and footer */
+    height: 0; /* Force flex to calculate height properly */
+    min-height: 0; /* Allow flex item to shrink */
 }
 
 .mobile-nav-section {
@@ -3085,9 +3092,16 @@ body::after {
     }
     
     /* Mobile sidebar scrolling improvements */
+    .mobile-sidebar {
+        overflow: hidden; /* Prevent body scroll when sidebar is open */
+    }
+    
     .mobile-nav-menu {
         scrollbar-width: thin;
         scrollbar-color: #dc2626 #f3f4f6;
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
     
     .mobile-nav-menu::-webkit-scrollbar {
@@ -3106,6 +3120,15 @@ body::after {
     
     .mobile-nav-menu::-webkit-scrollbar-thumb:hover {
         background: #b91c1c;
+    }
+    
+    /* Ensure mobile sidebar content is scrollable */
+    .mobile-nav-section {
+        margin-bottom: 1.5rem;
+    }
+    
+    .mobile-nav-section:last-child {
+        margin-bottom: 2rem;
     }
     
     /* Fix header layout on mobile - Override seller portal styles */
