@@ -113,9 +113,25 @@
                     <h1 class="page-title">Reservation Agreements</h1>
                 </div>
                 <div class="header-right">
-                    <div class="user-info-header">
-                        <span class="user-name-header">John Doe</span>
-                        <span class="user-role-header">Property Owner</span>
+                    <div class="profile-dropdown">
+                        <button class="profile-dropdown-btn" onclick="toggleProfileDropdown()">
+                            <div class="user-info-header">
+                                <span class="user-name-header">John Doe</span>
+                                <span class="user-role-header">Property Owner</span>
+                            </div>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="profile-dropdown-menu" id="profileDropdown">
+                            <a href="profile.html" class="dropdown-item">
+                                <i class="fas fa-user"></i>
+                                <span>My Profile</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <button class="dropdown-item logout-btn" onclick="logout()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -682,12 +698,7 @@
                             <span class="mobile-nav-text">Dashboard</span>
                         </a>
                     </li>
-                    <li class="mobile-nav-item">
-                        <a href="profile.html" class="mobile-nav-link">
-                            <i class="fas fa-user mobile-nav-icon"></i>
-                            <span class="mobile-nav-text">Profile</span>
-                        </a>
-                    </li>
+
                     <li class="mobile-nav-item">
                         <a href="notifications.html" class="mobile-nav-link">
                             <i class="fas fa-bell mobile-nav-icon"></i>
@@ -741,18 +752,7 @@
             </div>
         </div>
         
-        <div class="mobile-sidebar-footer">
-            <div class="mobile-user-profile">
-                <img src="https://via.placeholder.com/40/667eea/ffffff?text=JD" alt="Profile" class="mobile-user-avatar">
-                <div class="mobile-user-info">
-                    <span class="mobile-user-name">John Doe</span>
-                    <span class="mobile-user-role">Property Owner</span>
-                </div>
-            </div>
-            <button class="mobile-logout-btn" onclick="window.location.href='../login.html'">
-                <i class="fas fa-sign-out-alt"></i>
-            </button>
-        </div>
+
     </div>
 
     <script src="customer-portal.js"></script>

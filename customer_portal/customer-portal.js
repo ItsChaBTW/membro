@@ -614,30 +614,56 @@ function signOut() {
 
 // Profile Dropdown Functions
 function initializeProfileDropdown() {
-    // Close dropdown on escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            const dropdown = document.getElementById('profileDropdown');
-            if (dropdown) {
-                dropdown.classList.remove('active');
+    const profileDropdown = document.querySelector('.profile-dropdown');
+    if (!profileDropdown) return;
+    
+    // Only initialize dropdown functionality on mobile devices
+    if (window.innerWidth <= 768) {
+        // Close dropdown on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                profileDropdown.classList.remove('active');
             }
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!profileDropdown.contains(event.target)) {
+                profileDropdown.classList.remove('active');
+            }
+        });
+    }
+    
+    // Handle window resize to enable/disable dropdown functionality
+    window.addEventListener('resize', function() {
+        if (window.innerWidth <= 768) {
+            // Enable dropdown functionality on mobile
+            profileDropdown.style.pointerEvents = 'auto';
+        } else {
+            // Disable dropdown functionality on desktop
+            profileDropdown.style.pointerEvents = 'none';
+            profileDropdown.classList.remove('active');
         }
     });
 }
 
 function toggleProfileDropdown() {
-    const dropdown = document.getElementById('profileDropdown');
-    if (!dropdown) return;
+    const profileDropdown = document.querySelector('.profile-dropdown');
+    if (!profileDropdown) return;
     
-    dropdown.classList.toggle('active');
+    // Only allow dropdown toggle on mobile devices
+    if (window.innerWidth <= 768) {
+        profileDropdown.classList.toggle('active');
+    }
+}
+
+function logout() {
+    // Clear any stored data
+    localStorage.clear();
+    sessionStorage.clear();
     
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function closeDropdown(e) {
-        if (!dropdown.contains(e.target)) {
-            dropdown.classList.remove('active');
-            document.removeEventListener('click', closeDropdown);
-        }
-    });
+    // Redirect to login page
+    window.location.href = '../login.html';
 }
 
 // Initialize tooltips and other UI enhancements
