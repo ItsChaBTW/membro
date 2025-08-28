@@ -107,8 +107,13 @@
             <!-- Top Header -->
             <header class="top-header">
                 <div class="header-left">
-                    <h1 class="page-title">Dashboard</h1>
-                    <p class="page-subtitle">Your sales overview and key metrics</p>
+                    <button class="seller-mobile-menu-btn" onclick="openSellerMobileNav()" id="sellerMobileMenuBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-title-section">
+                        <h1 class="page-title">Dashboard</h1>
+                        <p class="page-subtitle">Your sales overview and key metrics</p>
+                    </div>
                 </div>
                 <div class="header-right">
                     <div class="header-actions">
@@ -506,6 +511,172 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- Seller Mobile Navigation Sidebar -->
+    <div class="seller-mobile-nav-overlay" id="sellerMobileNavOverlay" onclick="closeSellerMobileNav()"></div>
+    <div class="seller-mobile-sidebar" id="sellerMobileSidebar">
+        <div class="seller-mobile-sidebar-header">
+            <div class="seller-mobile-logo">
+                <img src="../logo.png" alt="Membro Logo" class="seller-mobile-logo-img">
+                <div class="seller-mobile-logo-text">
+                    <span class="seller-portal-title">Seller Portal</span>
+                    <span class="seller-portal-subtitle">Sales Dashboard</span>
+                </div>
+            </div>
+            <button class="seller-mobile-close-btn" onclick="closeSellerMobileNav()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="seller-mobile-nav-menu">
+            <div class="seller-mobile-nav-section">
+                <span class="seller-mobile-nav-section-title">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Main
+                </span>
+                <ul class="seller-mobile-nav-list">
+                    <li class="seller-mobile-nav-item">
+                        <a href="index.html" class="seller-mobile-nav-link active">
+                            <div class="seller-nav-icon-wrapper">
+                                <i class="fas fa-home seller-mobile-nav-icon"></i>
+                            </div>
+                            <div class="seller-nav-text-wrapper">
+                                <span class="seller-mobile-nav-text">Dashboard</span>
+                                <span class="seller-mobile-nav-desc">Overview & metrics</span>
+                            </div>
+                            <i class="fas fa-chevron-right seller-nav-arrow"></i>
+                        </a>
+                    </li>
+                    <li class="seller-mobile-nav-item">
+                        <a href="profile.html" class="seller-mobile-nav-link">
+                            <div class="seller-nav-icon-wrapper">
+                                <i class="fas fa-user seller-mobile-nav-icon"></i>
+                            </div>
+                            <div class="seller-nav-text-wrapper">
+                                <span class="seller-mobile-nav-text">Profile</span>
+                                <span class="seller-mobile-nav-desc">Account settings</span>
+                            </div>
+                            <i class="fas fa-chevron-right seller-nav-arrow"></i>
+                        </a>
+                    </li>
+                    <li class="seller-mobile-nav-item">
+                        <a href="notifications.html" class="seller-mobile-nav-link">
+                            <div class="seller-nav-icon-wrapper">
+                                <i class="fas fa-bell seller-mobile-nav-icon"></i>
+                            </div>
+                            <div class="seller-nav-text-wrapper">
+                                <span class="seller-mobile-nav-text">Notifications</span>
+                                <span class="seller-mobile-nav-desc">Updates & alerts</span>
+                            </div>
+                            <div class="seller-nav-badge-wrapper">
+                                <span class="seller-mobile-notification-count">3</span>
+                                <i class="fas fa-chevron-right seller-nav-arrow"></i>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="seller-mobile-nav-section">
+                <span class="seller-mobile-nav-section-title">
+                    <i class="fas fa-briefcase"></i>
+                    Business
+                </span>
+                <ul class="seller-mobile-nav-list">
+                    <li class="seller-mobile-nav-item">
+                        <a href="properties.html" class="seller-mobile-nav-link">
+                            <div class="seller-nav-icon-wrapper">
+                                <i class="fas fa-building seller-mobile-nav-icon"></i>
+                            </div>
+                            <div class="seller-nav-text-wrapper">
+                                <span class="seller-mobile-nav-text">Properties</span>
+                                <span class="seller-mobile-nav-desc">Manage listings</span>
+                            </div>
+                            <i class="fas fa-chevron-right seller-nav-arrow"></i>
+                        </a>
+                    </li>
+                    <li class="seller-mobile-nav-item">
+                        <a href="property-map.html" class="seller-mobile-nav-link">
+                            <div class="seller-nav-icon-wrapper">
+                                <i class="fas fa-map seller-mobile-nav-icon"></i>
+                            </div>
+                            <div class="seller-nav-text-wrapper">
+                                <span class="seller-mobile-nav-text">Property Map</span>
+                                <span class="seller-mobile-nav-desc">Location view</span>
+                            </div>
+                            <i class="fas fa-chevron-right seller-nav-arrow"></i>
+                        </a>
+                    </li>
+                    <li class="seller-mobile-nav-item">
+                        <a href="opportunities.html" class="seller-mobile-nav-link">
+                            <div class="seller-nav-icon-wrapper">
+                                <i class="fas fa-chart-line seller-mobile-nav-icon"></i>
+                            </div>
+                            <div class="seller-nav-text-wrapper">
+                                <span class="seller-mobile-nav-text">Opportunities</span>
+                                <span class="seller-mobile-nav-desc">Sales pipeline</span>
+                            </div>
+                            <i class="fas fa-chevron-right seller-nav-arrow"></i>
+                        </a>
+                    </li>
+                    <li class="seller-mobile-nav-item">
+                        <a href="change-requests.html" class="seller-mobile-nav-link">
+                            <div class="seller-nav-icon-wrapper">
+                                <i class="fas fa-edit seller-mobile-nav-icon"></i>
+                            </div>
+                            <div class="seller-nav-text-wrapper">
+                                <span class="seller-mobile-nav-text">Change Requests</span>
+                                <span class="seller-mobile-nav-desc">Client modifications</span>
+                            </div>
+                            <i class="fas fa-chevron-right seller-nav-arrow"></i>
+                        </a>
+                    </li>
+                    <li class="seller-mobile-nav-item">
+                        <a href="reservation-agreements.html" class="seller-mobile-nav-link">
+                            <div class="seller-nav-icon-wrapper">
+                                <i class="fas fa-file-contract seller-mobile-nav-icon"></i>
+                            </div>
+                            <div class="seller-nav-text-wrapper">
+                                <span class="seller-mobile-nav-text">Agreements</span>
+                                <span class="seller-mobile-nav-desc">Contracts & docs</span>
+                            </div>
+                            <i class="fas fa-chevron-right seller-nav-arrow"></i>
+                        </a>
+                    </li>
+                    <li class="seller-mobile-nav-item">
+                        <a href="reports.html" class="seller-mobile-nav-link">
+                            <div class="seller-nav-icon-wrapper">
+                                <i class="fas fa-chart-bar seller-mobile-nav-icon"></i>
+                            </div>
+                            <div class="seller-nav-text-wrapper">
+                                <span class="seller-mobile-nav-text">Reports</span>
+                                <span class="seller-mobile-nav-desc">Analytics & insights</span>
+                            </div>
+                            <i class="fas fa-chevron-right seller-nav-arrow"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="seller-mobile-sidebar-footer">
+            <div class="seller-mobile-user-profile">
+                <img src="https://via.placeholder.com/50/667eea/ffffff?text=JS" alt="Profile" class="seller-mobile-user-avatar">
+                <div class="seller-mobile-user-info">
+                    <span class="seller-mobile-user-name">John Seller</span>
+                    <span class="seller-mobile-user-role">Sales Agent</span>
+                    <div class="seller-mobile-user-stats">
+                        <span class="seller-stat">24 Sales</span>
+                        <span class="seller-stat-divider">•</span>
+                        <span class="seller-stat">₱2.5M Revenue</span>
+                    </div>
+                </div>
+            </div>
+            <button class="seller-mobile-logout-btn" onclick="window.location.href='../login.html'">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
     </div>
 
     <script src="seller-portal.js"></script>

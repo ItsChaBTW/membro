@@ -181,6 +181,10 @@
                                 <i class="fas fa-calculator"></i>
                                 Payment Term
                             </button>
+                            <button class="tab-btn" data-tab="change-requests" onclick="switchDetailsTab('change-requests')">
+                                <i class="fas fa-edit"></i>
+                                Change Requests
+                            </button>
                             <button class="tab-btn" data-tab="approvals" onclick="switchDetailsTab('approvals')">
                                 <i class="fas fa-check-circle"></i>
                                 Approvals
@@ -420,13 +424,65 @@
                                         </select>
                                     </div>
                                     <div class="form-field">
-                                        <label>Promo</label>
-                                        <select id="paymentTermPromo" class="form-control">
-                                            <option value="">Select promo dropdown</option>
-                                            <option value="early-bird">Early Bird Discount</option>
-                                            <option value="family-package">Family Package</option>
-                                            <option value="cash-payment">Cash Payment Bonus</option>
-                                        </select>
+                                        <label>Promos</label>
+                                        <div class="promo-selection-container">
+                                            <div class="promo-checkboxes">
+                                                <label class="checkbox-item">
+                                                    <input type="checkbox" value="early-bird" onchange="updateAppliedPromos()">
+                                                    <span class="checkmark"></span>
+                                                    Early Bird Discount (5%)
+                                                </label>
+                                                <label class="checkbox-item">
+                                                    <input type="checkbox" value="family-package" onchange="updateAppliedPromos()">
+                                                    <span class="checkmark"></span>
+                                                    Family Package (₱50,000 off)
+                                                </label>
+                                                <label class="checkbox-item">
+                                                    <input type="checkbox" value="cash-payment" onchange="updateAppliedPromos()">
+                                                    <span class="checkmark"></span>
+                                                    Cash Payment Bonus (₱100,000 off)
+                                                </label>
+                                                <label class="checkbox-item">
+                                                    <input type="checkbox" value="loyalty" onchange="updateAppliedPromos()">
+                                                    <span class="checkmark"></span>
+                                                    Loyalty Discount (3%)
+                                                </label>
+                                                <label class="checkbox-item">
+                                                    <input type="checkbox" value="referral" onchange="updateAppliedPromos()">
+                                                    <span class="checkmark"></span>
+                                                    Referral Bonus (₱25,000 off)
+                                                </label>
+                                            </div>
+                                            <button type="button" class="btn btn-sm btn-outline" onclick="addCustomPromo()">
+                                                <i class="fas fa-plus"></i>
+                                                Add Custom Promo
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Applied Promos Section -->
+                                <div class="section-header">
+                                    <h4>Applied Promos</h4>
+                                    <small>Currently active promos and their effects</small>
+                                </div>
+                                <div class="applied-promos-container">
+                                    <div class="applied-promos-list" id="appliedPromosList">
+                                        <div class="no-promos-message">
+                                            <i class="fas fa-tags"></i>
+                                            <p>No promos selected yet. Select promos above to see their effects.</p>
+                                        </div>
+                                    </div>
+                                    <div class="promo-summary">
+                                        <div class="summary-item">
+                                            <label>Total Discount:</label>
+                                            <span class="amount" id="totalDiscount">₱0</span>
+                                        </div>
+                                        <div class="summary-item">
+                                            <label>Final Price:</label>
+                                            <span class="amount" id="finalPrice">₱0</span>
+                                        </div>
+                                    </div>
                                     </div>
                                 </div>
                                 
@@ -475,19 +531,19 @@
                                     <div class="form-grid">
                                         <div class="form-field">
                                             <label>Total Selling Price</label>
-                                            <input type="number" id="editableTSP" class="form-control" placeholder="Enter TSP">
+                                            <input type="number" id="editableTSP" class="form-control" placeholder="Enter TSP" onchange="recalculatePaymentSchedule()">
                                         </div>
                                         <div class="form-field">
                                             <label>Reservation Fee</label>
-                                            <input type="number" id="editableRF" class="form-control" placeholder="Enter RF">
+                                            <input type="number" id="editableRF" class="form-control" placeholder="Enter RF" onchange="recalculatePaymentSchedule()">
                                         </div>
                                         <div class="form-field">
                                             <label>Down Payment %</label>
-                                            <input type="number" id="editableDPPercent" class="form-control" placeholder="Enter DP %">
+                                            <input type="number" id="editableDPPercent" class="form-control" placeholder="Enter DP %" onchange="recalculatePaymentSchedule()">
                                         </div>
                                         <div class="form-field">
                                             <label>Payment Term</label>
-                                            <select id="editablePaymentTerm" class="form-control">
+                                            <select id="editablePaymentTerm" class="form-control" onchange="recalculatePaymentSchedule()">
                                                 <option value="">Select Payment Term</option>
                                                 <option value="cash">Cash</option>
                                                 <option value="split">Split Payment</option>
@@ -522,28 +578,140 @@
                             </div>
                         </div>
 
+                        <!-- Change Requests Tab -->
+                        <div class="tab-content" id="change-requests-tab">
+                            <div class="form-section">
+                                <div class="section-header">
+                                    <h3>Change Requests</h3>
+                                    <button class="btn btn-sm btn-primary" onclick="createChangeRequest()">
+                                        <i class="fas fa-plus"></i>
+                                        Create Change Request
+                                    </button>
+                                </div>
+                                <div class="change-requests-container">
+                                    <div class="change-requests-list" id="changeRequestsList">
+                                        <!-- Change requests will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Approvals Tab -->
                         <div class="tab-content" id="approvals-tab">
                             <div class="form-section">
                                 <div class="section-header">
-                                    <h3>Approval Information</h3>
+                                    <h3>Approval Workflow</h3>
+                                    <button class="btn btn-sm btn-outline" onclick="submitForApproval()">
+                                        <i class="fas fa-paper-plane"></i>
+                                        Submit for Approval
+                                    </button>
+                                </div>
+                                
+                                <!-- Approval Status Overview -->
+                                <div class="approval-status-overview">
+                                    <div class="status-card pending">
+                                        <div class="status-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="status-content">
+                                            <h4>Current Status</h4>
+                                            <p class="status-value">Pending Approval</p>
+                                            <small>Waiting for Sales Manager review</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="status-card approved">
+                                        <div class="status-icon">
+                                            <i class="fas fa-check-circle"></i>
+                                        </div>
+                                        <div class="status-content">
+                                            <h4>Requirements</h4>
+                                            <p class="status-value">Approved</p>
+                                            <small>Completed on Jan 15, 2024</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="status-card pending">
+                                        <div class="status-icon">
+                                            <i class="fas fa-user-tie"></i>
+                                        </div>
+                                        <div class="status-content">
+                                            <h4>Sales Director</h4>
+                                            <p class="status-value">Pending</p>
+                                            <small>Next approval level</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Approval Details -->
+                                <div class="section-header">
+                                    <h4>Approval Details</h4>
                                 </div>
                                 <div class="form-grid">
                                     <div class="form-field">
                                         <label>Date Submitted</label>
-                                        <div class="field-value" id="dateSubmitted">-</div>
+                                        <div class="field-value" id="dateSubmitted">January 15, 2024</div>
                                     </div>
                                     <div class="form-field">
-                                        <label>Date Approved/Rejected</label>
-                                        <div class="field-value" id="dateApprovedRejected">-</div>
+                                        <label>Submitted By</label>
+                                        <div class="field-value" id="submittedBy">John Seller</div>
                                     </div>
                                     <div class="form-field">
-                                        <label>Approver</label>
-                                        <div class="field-value" id="approver">-</div>
+                                        <label>Current Approver</label>
+                                        <div class="field-value" id="currentApprover">Sales Manager</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Approval Level</label>
+                                        <div class="field-value" id="approvalLevel">2 of 3</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Expected Completion</label>
+                                        <div class="field-value" id="expectedCompletion">January 20, 2024</div>
                                     </div>
                                     <div class="form-field full-width">
-                                        <label>Comments</label>
-                                        <div class="field-value" id="approvalComments">-</div>
+                                        <label>Approval Comments</label>
+                                        <div class="field-value" id="approvalComments">Requirements verified and customer information validated. Ready for next level approval.</div>
+                                    </div>
+                                </div>
+
+                                <!-- Approval History -->
+                                <div class="section-header">
+                                    <h4>Approval History</h4>
+                                </div>
+                                <div class="approval-history">
+                                    <div class="approval-timeline">
+                                        <div class="timeline-item completed">
+                                            <div class="timeline-icon">
+                                                <i class="fas fa-check-circle"></i>
+                                            </div>
+                                            <div class="timeline-content">
+                                                <h5>Requirements Review</h5>
+                                                <p>All customer requirements verified and documents uploaded</p>
+                                                <small>Approved by: Admin Team • Jan 15, 2024</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="timeline-item current">
+                                            <div class="timeline-icon">
+                                                <i class="fas fa-clock"></i>
+                                            </div>
+                                            <div class="timeline-content">
+                                                <h5>Sales Manager Review</h5>
+                                                <p>Currently under review by Sales Manager</p>
+                                                <small>Pending • Started Jan 15, 2024</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="timeline-item pending">
+                                            <div class="timeline-icon">
+                                                <i class="fas fa-user-tie"></i>
+                                            </div>
+                                            <div class="timeline-content">
+                                                <h5>Sales Director Approval</h5>
+                                                <p>Final approval required from Sales Director</p>
+                                                <small>Not Started</small>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -553,26 +721,116 @@
                         <div class="tab-content" id="activities-tab">
                             <div class="form-section">
                                 <div class="section-header">
-                                    <h3>Email Activities</h3>
-                                    <small>For now display all emails sent to customer</small>
+                                    <h3>Activity Timeline</h3>
+                                    <button class="btn btn-sm btn-outline" onclick="exportActivities()">
+                                        <i class="fas fa-download"></i>
+                                        Export Activities
+                                    </button>
                                 </div>
+                                
+                                <!-- Activity Summary -->
+                                <div class="activity-summary">
+                                    <div class="summary-card">
+                                        <div class="summary-icon">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <div class="summary-content">
+                                            <h4>Total Emails Sent</h4>
+                                            <p class="summary-value">12</p>
+                                            <small>Last 30 days</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="summary-card">
+                                        <div class="summary-icon">
+                                            <i class="fas fa-phone"></i>
+                                        </div>
+                                        <div class="summary-content">
+                                            <h4>Calls Made</h4>
+                                            <p class="summary-value">8</p>
+                                            <small>Last 30 days</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="summary-card">
+                                        <div class="summary-icon">
+                                            <i class="fas fa-calendar-check"></i>
+                                        </div>
+                                        <div class="summary-content">
+                                            <h4>Meetings Scheduled</h4>
+                                            <p class="summary-value">3</p>
+                                            <small>Last 30 days</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Activity Categories -->
                                 <div class="activities-container">
                                     <div class="activity-category">
-                                        <h4>Welcome Letters</h4>
+                                        <h4>
+                                            <i class="fas fa-envelope-open"></i>
+                                            Welcome Letters
+                                        </h4>
                                         <div class="activity-list" id="welcomeLetters">
-                                            <!-- Welcome letters will be populated here -->
+                                            <div class="activity-item">
+                                                <div class="activity-icon">
+                                                    <i class="fas fa-envelope"></i>
+                                        </div>
+                                                <div class="activity-content">
+                                                    <h5>Welcome Email Sent</h5>
+                                                    <p>Welcome email sent to customer with property details and next steps</p>
+                                                    <small>Sent: Jan 15, 2024 • 10:30 AM</small>
+                                    </div>
+                                            </div>
                                         </div>
                                     </div>
+                                    
                                     <div class="activity-category">
-                                        <h4>Reminders</h4>
+                                        <h4>
+                                            <i class="fas fa-bell"></i>
+                                            Reminders
+                                        </h4>
                                         <div class="activity-list" id="reminders">
-                                            <!-- Reminders will be populated here -->
+                                            <div class="activity-item">
+                                                <div class="activity-icon">
+                                                    <i class="fas fa-bell"></i>
+                                        </div>
+                                                <div class="activity-content">
+                                                    <h5>Document Upload Reminder</h5>
+                                                    <p>Reminder sent for missing required documents</p>
+                                                    <small>Sent: Jan 16, 2024 • 2:15 PM</small>
+                                    </div>
+                                            </div>
                                         </div>
                                     </div>
+                                    
                                     <div class="activity-category">
-                                        <h4>All Other Emails</h4>
+                                        <h4>
+                                            <i class="fas fa-history"></i>
+                                            All Other Activities
+                                        </h4>
                                         <div class="activity-list" id="allOtherEmails">
-                                            <!-- Other emails will be populated here -->
+                                            <div class="activity-item">
+                                                <div class="activity-icon">
+                                                    <i class="fas fa-phone"></i>
+                                        </div>
+                                                <div class="activity-content">
+                                                    <h5>Follow-up Call</h5>
+                                                    <p>Follow-up call made to discuss payment terms</p>
+                                                    <small>Completed: Jan 17, 2024 • 11:00 AM</small>
+                                    </div>
+                                </div>
+                                            
+                                            <div class="activity-item">
+                                                <div class="activity-icon">
+                                                    <i class="fas fa-calendar"></i>
+                                                </div>
+                                                <div class="activity-content">
+                                                    <h5>Meeting Scheduled</h5>
+                                                    <p>Property viewing meeting scheduled for customer</p>
+                                                    <small>Scheduled: Jan 18, 2024 • 3:00 PM</small>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -838,6 +1096,98 @@
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary" onclick="closeRequirementsModal()">Cancel</button>
                         <button type="submit" class="btn btn-primary">Add Requirement</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Custom Promo Modal -->
+    <div id="customPromoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Custom Promo</h3>
+                <span class="close" onclick="closeCustomPromoModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="customPromoForm">
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="customPromoName">Promo Name *</label>
+                            <input type="text" id="customPromoName" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="customPromoType">Promo Type *</label>
+                            <select id="customPromoType" required onchange="updateCustomPromoValueLabel()">
+                                <option value="percentage">Percentage Discount</option>
+                                <option value="fixed">Fixed Amount Discount</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="customPromoValue" id="customPromoValueLabel">Percentage Value *</label>
+                            <input type="number" id="customPromoValue" required min="0" step="0.01">
+                        </div>
+                        <div class="form-field full-width">
+                            <label for="customPromoDescription">Description</label>
+                            <textarea id="customPromoDescription" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeCustomPromoModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Promo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Change Request Modal -->
+    <div id="changeRequestModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Change Request</h3>
+                <span class="close" onclick="closeChangeRequestModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="changeRequestForm">
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="changeRequestType">Change Type *</label>
+                            <select id="changeRequestType" required>
+                                <option value="">Select Change Type</option>
+                                <option value="customer-info">Customer Information</option>
+                                <option value="property-change">Property Change</option>
+                                <option value="payment-terms">Payment Terms</option>
+                                <option value="promo-addition">Add/Remove Promo</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="changeRequestPriority">Priority *</label>
+                            <select id="changeRequestPriority" required>
+                                <option value="">Select Priority</option>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                                <option value="urgent">Urgent</option>
+                            </select>
+                        </div>
+                        <div class="form-field full-width">
+                            <label for="changeRequestTitle">Change Title *</label>
+                            <input type="text" id="changeRequestTitle" required>
+                        </div>
+                        <div class="form-field full-width">
+                            <label for="changeRequestDescription">Detailed Description *</label>
+                            <textarea id="changeRequestDescription" rows="4" required placeholder="Describe the change in detail..."></textarea>
+                        </div>
+                        <div class="form-field full-width">
+                            <label for="changeRequestReason">Reason for Change *</label>
+                            <textarea id="changeRequestReason" rows="3" required placeholder="Explain why this change is needed..."></textarea>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeChangeRequestModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit Change Request</button>
                     </div>
                 </form>
             </div>

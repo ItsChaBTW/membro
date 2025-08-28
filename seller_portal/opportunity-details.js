@@ -185,6 +185,22 @@ document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
     setupModalEventListeners();
     injectDetailPageStyles();
+
+    // Initialize change requests
+    renderChangeRequests();
+    
+    // Set up form event listeners
+    document.getElementById('customPromoForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // Form submission is handled above
+    });
+    
+    document.getElementById('changeRequestForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // Form submission is handled above
+    });
+    
+    console.log('Opportunity Details page initialized');
 });
 
 // Setup event listeners
@@ -1526,3 +1542,399 @@ function setupModalEventListeners() {
         closeRequirementsModal();
     });
 } 
+
+// Promo management
+const availablePromos = {
+    'early-bird': { name: 'Early Bird Discount', type: 'percentage', value: 5, description: '5% discount for early buyers' },
+    'family-package': { name: 'Family Package', type: 'fixed', value: 50000, description: '₱50,000 off for family purchases' },
+    'cash-payment': { name: 'Cash Payment Bonus', type: 'fixed', value: 100000, description: '₱100,000 off for cash payments' },
+    'loyalty': { name: 'Loyalty Discount', type: 'percentage', value: 3, description: '3% discount for loyal customers' },
+    'referral': { name: 'Referral Bonus', type: 'fixed', value: 25000, description: '₱25,000 off for referrals' }
+};
+
+let appliedPromos = [];
+let customPromos = [];
+
+// Update applied promos when checkboxes change
+function updateAppliedPromos() {
+    appliedPromos = [];
+    const checkboxes = document.querySelectorAll('.promo-checkboxes input[type="checkbox"]:checked');
+    
+    checkboxes.forEach(checkbox => {
+        const promoKey = checkbox.value;
+        if (availablePromos[promoKey]) {
+            appliedPromos.push(availablePromos[promoKey]);
+        }
+    });
+    
+    // Add custom promos
+    appliedPromos = [...appliedPromos, ...customPromos];
+    
+    renderAppliedPromos();
+    recalculatePaymentSchedule();
+}
+
+// Render applied promos list
+function renderAppliedPromos() {
+    const appliedPromosList = document.getElementById('appliedPromosList');
+    
+    if (appliedPromos.length === 0) {
+        appliedPromosList.innerHTML = `
+            <div class="no-promos-message">
+                <i class="fas fa-tags"></i>
+                <p>No promos selected yet. Select promos above to see their effects.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    appliedPromosList.innerHTML = appliedPromos.map(promo => `
+        <div class="applied-promo-item">
+            <div class="applied-promo-info">
+                <div class="applied-promo-icon">
+                    <i class="fas fa-tag"></i>
+                </div>
+                <div class="applied-promo-details">
+                    <h6>${promo.name}</h6>
+                    <small>${promo.description}</small>
+                </div>
+            </div>
+            <div class="applied-promo-amount">
+                ${promo.type === 'percentage' ? `${promo.value}%` : `₱${promo.value.toLocaleString()}`}
+            </div>
+        </div>
+    `).join('');
+    
+    updatePromoSummary();
+}
+
+// Update promo summary calculations
+function updatePromoSummary() {
+    const totalDiscount = calculateTotalDiscount();
+    const tsp = parseFloat(document.getElementById('editableTSP').value) || 0;
+    const finalPrice = Math.max(0, tsp - totalDiscount);
+    
+    document.getElementById('totalDiscount').textContent = `₱${totalDiscount.toLocaleString()}`;
+    document.getElementById('finalPrice').textContent = `₱${finalPrice.toLocaleString()}`;
+}
+
+// Calculate total discount from all applied promos
+function calculateTotalDiscount() {
+    let totalDiscount = 0;
+    const tsp = parseFloat(document.getElementById('editableTSP').value) || 0;
+    
+    appliedPromos.forEach(promo => {
+        if (promo.type === 'percentage') {
+            totalDiscount += (tsp * promo.value / 100);
+        } else {
+            totalDiscount += promo.value;
+        }
+    });
+    
+    return totalDiscount;
+}
+
+// Add custom promo
+function addCustomPromo() {
+    document.getElementById('customPromoModal').style.display = 'flex';
+}
+
+// Close custom promo modal
+function closeCustomPromoModal() {
+    document.getElementById('customPromoModal').style.display = 'none';
+    document.getElementById('customPromoForm').reset();
+}
+
+// Update custom promo value label
+function updateCustomPromoValueLabel() {
+    const promoType = document.getElementById('customPromoType').value;
+    const label = document.getElementById('customPromoValueLabel');
+    
+    if (promoType === 'percentage') {
+        label.textContent = 'Percentage Value *';
+    } else {
+        label.textContent = 'Fixed Amount (₱) *';
+    }
+}
+
+// Handle custom promo form submission
+document.getElementById('customPromoForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const promoName = document.getElementById('customPromoName').value;
+    const promoType = document.getElementById('customPromoType').value;
+    const promoValue = parseFloat(document.getElementById('customPromoValue').value);
+    const promoDescription = document.getElementById('customPromoDescription').value;
+    
+    const customPromo = {
+        name: promoName,
+        type: promoType,
+        value: promoValue,
+        description: promoDescription || `${promoType === 'percentage' ? promoValue + '%' : '₱' + promoValue.toLocaleString()} discount`
+    };
+    
+    customPromos.push(customPromo);
+    appliedPromos.push(customPromo);
+    
+    // Add checkbox to the list
+    addCustomPromoCheckbox(customPromo);
+    
+    renderAppliedPromos();
+    recalculatePaymentSchedule();
+    closeCustomPromoModal();
+    
+    showNotification('Custom promo added successfully!', 'success');
+});
+
+// Add custom promo checkbox to the list
+function addCustomPromoCheckbox(promo) {
+    const promoCheckboxes = document.querySelector('.promo-checkboxes');
+    const checkboxItem = document.createElement('label');
+    checkboxItem.className = 'checkbox-item';
+    checkboxItem.innerHTML = `
+        <input type="checkbox" value="custom-${Date.now()}" onchange="updateAppliedPromos()" checked>
+        <span class="checkmark">${promo.name} (${promo.type === 'percentage' ? promo.value + '%' : '₱' + promo.value.toLocaleString()})</span>
+    `;
+    promoCheckboxes.appendChild(checkboxItem);
+}
+
+// Recalculate payment schedule when values change
+function recalculatePaymentSchedule() {
+    const tsp = parseFloat(document.getElementById('editableTSP').value) || 0;
+    const rf = parseFloat(document.getElementById('editableRF').value) || 0;
+    const dpPercent = parseFloat(document.getElementById('editableDPPercent').value) || 0;
+    const paymentTerm = document.getElementById('editablePaymentTerm').value;
+    
+    // Calculate with promos applied
+    const totalDiscount = calculateTotalDiscount();
+    const netSellingPrice = Math.max(0, tsp - totalDiscount);
+    const downPaymentAmount = (netSellingPrice * dpPercent / 100);
+    const balanceForFinancing = netSellingPrice - downPaymentAmount;
+    
+    // Calculate monthly payment (simplified calculation)
+    let monthlyPayment = 0;
+    if (paymentTerm === 'loan' && balanceForFinancing > 0) {
+        // Simple interest calculation (you can make this more sophisticated)
+        const annualInterestRate = 0.06; // 6% annual interest
+        const loanTerm = 20; // 20 years
+        const monthlyInterestRate = annualInterestRate / 12;
+        const numberOfPayments = loanTerm * 12;
+        
+        monthlyPayment = (balanceForFinancing * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments)) / 
+                        (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
+    }
+    
+    // Update calculated fields
+    document.getElementById('calculatedNSP').textContent = `₱${netSellingPrice.toLocaleString()}`;
+    document.getElementById('calculatedDPAmount').textContent = `₱${downPaymentAmount.toLocaleString()}`;
+    document.getElementById('calculatedBalance').textContent = `₱${balanceForFinancing.toLocaleString()}`;
+    document.getElementById('calculatedMonthlyPayment').textContent = `₱${monthlyPayment.toLocaleString()}`;
+    
+    // Update promo summary
+    updatePromoSummary();
+}
+
+// Change Request Management
+let changeRequests = [];
+
+// Create change request
+function createChangeRequest() {
+    document.getElementById('changeRequestModal').style.display = 'flex';
+}
+
+// Close change request modal
+function closeChangeRequestModal() {
+    document.getElementById('changeRequestModal').style.display = 'none';
+    document.getElementById('changeRequestForm').reset();
+}
+
+// Handle change request form submission
+document.getElementById('changeRequestForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const changeRequest = {
+        id: Date.now(),
+        type: document.getElementById('changeRequestType').value,
+        priority: document.getElementById('changeRequestPriority').value,
+        title: document.getElementById('changeRequestTitle').value,
+        description: document.getElementById('changeRequestDescription').value,
+        reason: document.getElementById('changeRequestReason').value,
+        status: 'pending',
+        dateCreated: new Date().toLocaleDateString(),
+        opportunityId: getOpportunityId() // You'll need to implement this
+    };
+    
+    changeRequests.push(changeRequest);
+    renderChangeRequests();
+    closeChangeRequestModal();
+    
+    showNotification('Change request created successfully!', 'success');
+});
+
+// Render change requests list
+function renderChangeRequests() {
+    const changeRequestsList = document.getElementById('changeRequestsList');
+    
+    if (changeRequests.length === 0) {
+        changeRequestsList.innerHTML = `
+            <div class="no-change-requests-message">
+                <i class="fas fa-edit"></i>
+                <p>No change requests yet. Create one to get started.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    changeRequestsList.innerHTML = changeRequests.map(request => `
+        <div class="change-request-item">
+            <div class="change-request-header">
+                <div>
+                    <h6 class="change-request-title">${request.title}</h6>
+                    <div class="change-request-meta">
+                        <span class="change-request-type">${getChangeRequestTypeLabel(request.type)}</span>
+                        <span class="change-request-priority priority-${request.priority}">${request.priority}</span>
+                        <span class="change-request-status status-${request.status}">${request.status}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="change-request-content">
+                <div class="change-request-description">${request.description}</div>
+                <div class="change-request-reason"><strong>Reason:</strong> ${request.reason}</div>
+            </div>
+            <div class="change-request-footer">
+                <div class="change-request-date">Created: ${request.dateCreated}</div>
+                <div class="change-request-actions">
+                    <button class="btn btn-sm btn-outline" onclick="editChangeRequest(${request.id})">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-sm btn-secondary" onclick="deleteChangeRequest(${request.id})">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Get change request type label
+function getChangeRequestTypeLabel(type) {
+    const labels = {
+        'customer-info': 'Customer Info',
+        'property-change': 'Property Change',
+        'payment-terms': 'Payment Terms',
+        'promo-addition': 'Promo Addition',
+        'other': 'Other'
+    };
+    return labels[type] || type;
+}
+
+// Edit change request
+function editChangeRequest(id) {
+    const request = changeRequests.find(r => r.id === id);
+    if (request) {
+        // Populate form with existing data
+        document.getElementById('changeRequestType').value = request.type;
+        document.getElementById('changeRequestPriority').value = request.priority;
+        document.getElementById('changeRequestTitle').value = request.title;
+        document.getElementById('changeRequestDescription').value = request.description;
+        document.getElementById('changeRequestReason').value = request.reason;
+        
+        // Show modal in edit mode
+        document.getElementById('changeRequestModal').style.display = 'flex';
+        document.querySelector('#changeRequestModal .modal-header h3').textContent = 'Edit Change Request';
+        
+        // Update form submission handler for editing
+        const form = document.getElementById('changeRequestForm');
+        form.onsubmit = function(e) {
+            e.preventDefault();
+            updateChangeRequest(id);
+        };
+    }
+}
+
+// Update change request
+function updateChangeRequest(id) {
+    const index = changeRequests.findIndex(r => r.id === id);
+    if (index !== -1) {
+        changeRequests[index] = {
+            ...changeRequests[index],
+            type: document.getElementById('changeRequestType').value,
+            priority: document.getElementById('changeRequestPriority').value,
+            title: document.getElementById('changeRequestTitle').value,
+            description: document.getElementById('changeRequestDescription').value,
+            reason: document.getElementById('changeRequestReason').value
+        };
+        
+        renderChangeRequests();
+        closeChangeRequestModal();
+        showNotification('Change request updated successfully!', 'success');
+        
+        // Reset form submission handler
+        const form = document.getElementById('changeRequestForm');
+        form.onsubmit = function(e) {
+            e.preventDefault();
+            createChangeRequest();
+        };
+        document.querySelector('#changeRequestModal .modal-header h3').textContent = 'Create Change Request';
+    }
+}
+
+// Delete change request
+function deleteChangeRequest(id) {
+    if (confirm('Are you sure you want to delete this change request?')) {
+        changeRequests = changeRequests.filter(r => r.id !== id);
+        renderChangeRequests();
+        showNotification('Change request deleted successfully!', 'success');
+    }
+}
+
+// Get opportunity ID (implement based on your URL structure)
+function getOpportunityId() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('id') || 'OPP-001';
+}
+
+// Show notification
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        </div>
+        <button class="notification-close" onclick="this.parentElement.remove()">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    
+    // Add to page
+    document.body.appendChild(notification);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.remove();
+        }
+    }, 5000);
+}
+
+// Initialize page when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize change requests
+    renderChangeRequests();
+    
+    // Set up form event listeners
+    document.getElementById('customPromoForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // Form submission is handled above
+    });
+    
+    document.getElementById('changeRequestForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // Form submission is handled above
+    });
+    
+    console.log('Opportunity Details page initialized');
+}); 

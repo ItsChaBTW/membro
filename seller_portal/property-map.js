@@ -965,14 +965,18 @@ var propertyMap = {
         marker.on('mouseover', (e) => {
             const markerElement = e.target.getElement();
             if (markerElement) {
-                markerElement.style.transform = 'scale(1.1)';
+                markerElement.style.transform = 'scale(1.1) translateY(-5px)';
+                markerElement.style.zIndex = '1000';
+                markerElement.style.boxShadow = '0 8px 20px rgba(0,0,0,0.4)';
             }
         });
 
         marker.on('mouseout', (e) => {
             const markerElement = e.target.getElement();
             if (markerElement) {
-                markerElement.style.transform = 'scale(1)';
+                markerElement.style.transform = 'scale(1) translateY(0)';
+                markerElement.style.zIndex = '100';
+                markerElement.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
             }
         });
 

@@ -323,4 +323,55 @@ const loadingStyles = `
 // Add styles to document
 const styleSheet = document.createElement('style');
 styleSheet.textContent = loadingStyles;
-document.head.appendChild(styleSheet); 
+document.head.appendChild(styleSheet);
+
+// Seller Mobile Sidebar Navigation Functions
+function openSellerMobileNav() {
+    const overlay = document.getElementById('sellerMobileNavOverlay');
+    const sidebar = document.getElementById('sellerMobileSidebar');
+    
+    if (overlay && sidebar) {
+        overlay.classList.add('active');
+        sidebar.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeSellerMobileNav() {
+    const overlay = document.getElementById('sellerMobileNavOverlay');
+    const sidebar = document.getElementById('sellerMobileSidebar');
+    
+    if (overlay && sidebar) {
+        overlay.classList.remove('active');
+        sidebar.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Close seller mobile nav on escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeSellerMobileNav();
+    }
+});
+
+// Initialize seller mobile sidebar navigation
+function initializeSellerMobileSidebar() {
+    // Set active navigation item in mobile sidebar
+    const currentPage = window.location.pathname.split('/').pop();
+    const mobileNavLinks = document.querySelectorAll('.seller-mobile-nav-link');
+    
+    mobileNavLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPage) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+}
+
+// Update DOM loaded event to include seller mobile sidebar initialization
+document.addEventListener('DOMContentLoaded', function() {
+    initializeSellerMobileSidebar();
+}); 
